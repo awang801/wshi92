@@ -74,7 +74,7 @@ public class Tower : MonoBehaviour {
 			currentTarget = other.gameObject;
 			currentTargetUnit = currentTarget.GetComponent<Unit> ();
 			currentTargetT = currentTarget.transform;
-			Debug.Log ("Current Target changed to : " + currentTarget);
+			//Debug.Log ("Current Target changed to : " + currentTarget);
 		} 
 	}
 
@@ -82,7 +82,7 @@ public class Tower : MonoBehaviour {
 	{
 		if (currentTarget == other.gameObject) {
 			currentTarget = null;
-			Debug.Log ("Current Target Left Range");
+			//Debug.Log ("Current Target Left Range");
 		}
 	}
 
