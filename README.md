@@ -2,4 +2,4 @@
 
 ## . . . Potato
 
-![Alt text](http://data.whicdn.com/images/20067738/funny,words,letter,quotes,black,brown-cb3a3f92a873608f923be79361a90b8f_h_large.jpg "Potato")
+![Alt text](http://media-cache-ec0.pinimg.com/736x/c0/7b/69/c07b69fd724e44a428e04eb5c8c220cb.jpg "Potato")
