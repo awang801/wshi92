@@ -94,7 +94,7 @@ public class MouseFunctions : MonoBehaviour {
 		Ray camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
 		RaycastHit tileHit;
 
-		Debug.DrawRay (Camera.main.transform.position, Input.mousePosition);
+		//Debug.DrawRay (Camera.main.transform.position, Input.mousePosition);
 		if (Physics.Raycast (camRay, out tileHit, camRayLength, floorMask)) 
 		{
 			currentMousePosNode = grid.NodeFromWorldPoint (tileHit.point);
@@ -205,7 +205,11 @@ public class MouseFunctions : MonoBehaviour {
 	void MoveSelection()
 	{
 		if (SelHighlight != null && currentMousePosNode.worldPosition != null) {
-			SelHighlight.transform.position = currentMousePosNode.worldPosition + (Vector3.up * 0.1f);
+			if (currentMousePosNode.hasWall == true) {
+				SelHighlight.transform.position = currentMousePosNode.worldPosition + (Vector3.up * 1.1f);
+			} else {
+				SelHighlight.transform.position = currentMousePosNode.worldPosition + (Vector3.up * 0.1f);
+			}
 		}
 	}
 

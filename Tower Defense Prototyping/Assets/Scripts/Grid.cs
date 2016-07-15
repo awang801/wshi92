@@ -74,12 +74,12 @@ public class Grid : MonoBehaviour {
 		return new Vector3 (((n2.worldPosition.x + n1.worldPosition.x) / 2), 0, ((n2.worldPosition.z + n1.worldPosition.z) / 2));
 	}
 
-	public float DistanceBetweenTwoNodesX(Node n1, Node n2)
+	public int DistanceBetweenTwoNodesX(Node n1, Node n2) 
 	{
 		return (int)Mathf.Abs (n2.worldPosition.x - n1.worldPosition.x);
 	}
 	
-	public float DistanceBetweenTwoNodesY(Node n1, Node n2)
+	public int DistanceBetweenTwoNodesY(Node n1, Node n2)
 	{
 		return (int)Mathf.Abs (n2.worldPosition.z - n1.worldPosition.z);
 	}
@@ -90,8 +90,9 @@ public class Grid : MonoBehaviour {
 			
 	}
 
-	public bool NodeLineContainsWall(Node start, Node end, string xory)
+	public bool NodeLineContainsWall(Node start, Node end, string xory) 
 	{
+		//Checks if the nodes between start and end nodes contain a wall. (Start and end must be on the same X or Y plane)
 		int rangeStart = 0;
 		int rangeEnd = 0;
 
@@ -102,7 +103,7 @@ public class Grid : MonoBehaviour {
 			rangeEnd =  Mathf.Max (start.gridX, end.gridX);
 			otherAxis =  start.gridY;
 
-			for (int i = rangeStart; i < rangeEnd; i++) {
+			for (int i = rangeStart; i <= rangeEnd; i++) {
 				if (grid [i, otherAxis].hasWall == true) {
 					return true;
 				}
@@ -112,7 +113,7 @@ public class Grid : MonoBehaviour {
 			rangeEnd =  Mathf.Max (start.gridY, end.gridY);
 			otherAxis = start.gridX;
 
-			for (int i = rangeStart; i < rangeEnd; i++) {
+			for (int i = rangeStart; i <= rangeEnd; i++) {
 				if (grid [otherAxis, i].hasWall == true) {
 					return true;
 				}
@@ -124,6 +125,7 @@ public class Grid : MonoBehaviour {
 
 	public void setNodesAlongAxis(Node start, Node end, string xory, bool hasWall)
 	{
+		//Sets the nodes between start and end nodes to have walls or not. (Start and end must be on the same X or Y plane)
 		int rangeStart = 0;
 		int rangeEnd = 0;
 
@@ -134,7 +136,7 @@ public class Grid : MonoBehaviour {
 			rangeEnd =  Mathf.Max (start.gridX, end.gridX);
 			otherAxis =  start.gridY;
 
-			for (int i = rangeStart; i < rangeEnd; i++) {
+			for (int i = rangeStart; i <= rangeEnd; i++) {
 				grid [i, otherAxis].hasWall = hasWall;
 				Debug.Log ("X == " + i + " " + otherAxis + " SET!");
 			}
@@ -143,7 +145,7 @@ public class Grid : MonoBehaviour {
 			rangeEnd =  Mathf.Max (start.gridY, end.gridY);
 			otherAxis = start.gridX;
 
-			for (int i = rangeStart; i < rangeEnd; i++) {
+			for (int i = rangeStart; i <= rangeEnd; i++) {
 				grid [otherAxis, i].hasWall = hasWall;
 				Debug.Log ("Y == " + otherAxis + " " + i + " SET!");
 			}
