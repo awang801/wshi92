@@ -31,6 +31,7 @@ public class MouseFunctions : MonoBehaviour {
 	Node endWallModeNode;
 	string buildWallModeXY;
 	GameObject wallGhost;
+    float wallsToBuild;
 
 	string buildStructure;
 	Vector3 positionToBuildStart;
@@ -161,11 +162,13 @@ public class MouseFunctions : MonoBehaviour {
 					endWallModeNode = grid.NodeFromCoordinates (currentMousePosNode.gridX, startWallModeNode.gridY);
 					//Debug.Log ("X ===" +endWallModeNode.worldPosition + "   Current Node = " + currentMousePosNode.worldPosition + "     StartWall = " + startWallModeNode.worldPosition);
 					buildWallModeXY = "x";
+                    wallsToBuild = difference.x;
 
 				} else if (Mathf.Abs(difference.y) > Mathf.Abs(difference.x)) {
 
 					endWallModeNode = grid.NodeFromCoordinates (startWallModeNode.gridX, currentMousePosNode.gridY);
 					buildWallModeXY = "y";
+                    wallsToBuild = difference.y;
 					//Debug.Log ("Y ===" +endWallModeNode.worldPosition + "   Current Node = " + currentMousePosNode.worldPosition + "     StartWall = " + startWallModeNode.worldPosition);
 	
 				}
@@ -178,8 +181,35 @@ public class MouseFunctions : MonoBehaviour {
 
 			if (grid.NodeLineContainsWall (startWallModeNode, endWallModeNode, buildWallModeXY) == false) {
 				Debug.Log ("buildWallModeXY = " + buildWallModeXY);
-				newStructure = ((GameObject)(Instantiate (Resources.Load (buildStructure), wallGhost.transform.position, Quaternion.identity)));
-				newStructure.transform.localScale = wallGhost.transform.localScale;
+                Node tempStart = startWallModeNode;
+				newStructure = ((GameObject)(Instantiate (Resources.Load (buildStructure), startWallModeNode.worldPosition, Quaternion.identity)));
+                for (int i = 0; i<Mathf.Abs(wallsToBuild); i++)
+                {
+                    if (buildWallModeXY == "x")
+                    {
+                        if (wallsToBuild > 0)
+                        {
+                            tempStart = grid.NodeFromCoordinates(tempStart.gridX + 1, tempStart.gridY);
+                        }
+                        else
+                        {
+                            tempStart = grid.NodeFromCoordinates(tempStart.gridX - 1, tempStart.gridY);
+                        }
+                    }
+                    else
+                    {
+                        if (wallsToBuild > 0)
+                        {
+                            tempStart = grid.NodeFromCoordinates(tempStart.gridX, tempStart.gridY + 1);
+                        }
+                        else
+                        {
+                            tempStart = grid.NodeFromCoordinates(tempStart.gridX, tempStart.gridY - 1);
+                        }
+                    }
+                    newStructure = ((GameObject)(Instantiate(Resources.Load(buildStructure), tempStart.worldPosition, Quaternion.identity)));
+                }
+				//newStructure.transform.localScale = wallGhost.transform.lossyScale;
 				grid.setNodesAlongAxis (startWallModeNode, endWallModeNode, buildWallModeXY, true);
 
 
