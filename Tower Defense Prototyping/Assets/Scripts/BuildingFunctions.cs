@@ -59,13 +59,15 @@ public class BuildingFunctions : MonoBehaviour {
 			
 			if (isBuilding == true) {
 
-				if (SelectedTowerToBuild == false) {
-					Debug.Log ("BUILDING Z TOWER");
+				if (SelectedTowerToBuild == false)
+                {
+                    mFunc.SelHighlight = ((GameObject)(Instantiate(Resources.Load("SelectionHighlight"))));
+                }
+                Debug.Log ("BUILDING Z TOWER");
 					towerToBuild = "Wall";
 					SelectedTowerToBuild = true;
 					mFunc.Selecting = true;
-					mFunc.SelHighlight = ((GameObject)(Instantiate (Resources.Load ("SelectionHighlight"))));
-				}
+
 
 
 
@@ -74,14 +76,15 @@ public class BuildingFunctions : MonoBehaviour {
 		} else if (Input.GetButtonDown ("X")) {
 
 				if (isBuilding == true) {
-					if (SelectedTowerToBuild == false) {
-						Debug.Log ("BUILDING X TOWER");
+					if (SelectedTowerToBuild == false)
+                {
+                    mFunc.SelHighlight = ((GameObject)(Instantiate(Resources.Load("SelectionHighlight"))));
+                }
+                Debug.Log ("BUILDING X TOWER");
 						towerToBuild = "Tower";
 						SelectedTowerToBuild = true;
 						mFunc.Selecting = true;
 
-						mFunc.SelHighlight = ((GameObject)(Instantiate (Resources.Load ("SelectionHighlight"))));
-					}
 				}
 			}
 

@@ -25,7 +25,7 @@ public class Grid : MonoBehaviour {
 
 		for (int x = 0; x < gridSizeX; x++) {
 			for (int y = 0; y < gridSizeY; y++) {
-				grid[x,y] = new Node(false, false, new Vector3(x, 0, y), x, y);
+				grid[x,y] = new Node(new Vector3(x, 0, y), x, y);
 			}
 		}
 	}
@@ -104,7 +104,7 @@ public class Grid : MonoBehaviour {
 			otherAxis =  start.gridY;
 
 			for (int i = rangeStart; i <= rangeEnd; i++) {
-				if (grid [i, otherAxis].hasWall == true) {
+				if (grid [i, otherAxis].Wall != null) {
 					return true;
 				}
 			}
@@ -114,7 +114,7 @@ public class Grid : MonoBehaviour {
 			otherAxis = start.gridX;
 
 			for (int i = rangeStart; i <= rangeEnd; i++) {
-				if (grid [otherAxis, i].hasWall == true) {
+				if (grid [otherAxis, i].Wall != null) {
 					return true;
 				}
 			}
@@ -123,7 +123,7 @@ public class Grid : MonoBehaviour {
 		return false;
 	}
 
-	public void setNodesAlongAxis(Node start, Node end, string xory, bool hasWall)
+	/*public void setNodesAlongAxis(Node start, Node end, string xory, bool hasWall)
 	{
 		//Sets the nodes between start and end nodes to have walls or not. (Start and end must be on the same X or Y plane)
 		int rangeStart = 0;
@@ -152,6 +152,6 @@ public class Grid : MonoBehaviour {
 		}
 
 		Debug.Log ("LINE NODES SET");
-	}
+	}*/
 
 }
