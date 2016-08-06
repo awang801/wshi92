@@ -4,11 +4,12 @@ using System.Collections;
 //This class manages mouse functions including selection on the grid, cursor hiding/showing
 public class MouseFunctions : MonoBehaviour {
 
-
+	AudioClip BuildFX;
+	AudioSource sourceSFX;
 	public GameObject newStructure;
 
-
 	Grid grid;
+
 	BuildingFunctions bFunc;  
 
 	float camRayLength = 200f;
@@ -20,7 +21,7 @@ public class MouseFunctions : MonoBehaviour {
 	NavMeshAgent pathBlockChecker;
 	NavMeshPath path;
 
-	Node currentMousePosNode;
+	Node currentMouseNode;
 
 	Transform target; //Target of the enemies (need to change this in the future)
 
@@ -43,7 +44,12 @@ public class MouseFunctions : MonoBehaviour {
 		pathBlockChecker = GameObject.Find ("PathBlockCheck").GetComponent<NavMeshAgent> ();
 		target = GameObject.Find ("Destination").transform;
 		grid = GetComponent<Grid> ();
+
+		BuildFX = (AudioClip)(Resources.Load ("BuildingPlacement", typeof(AudioClip)));
+		sourceSFX = this.gameObject.GetComponent<AudioSource> ();
+
 	}
+
 
 	void Start () {
 		floorMask = LayerMask.GetMask ("Terrain");
@@ -63,12 +69,6 @@ public class MouseFunctions : MonoBehaviour {
 		if (buildWallMode) {
 			MoveWallGhost ();
 		}
-			
-
-
-
-
-
 
 	}
 
@@ -91,14 +91,19 @@ public class MouseFunctions : MonoBehaviour {
 	//=====================================================
 
 	void UpdateMouseNode()
+	/*
+	 * Updates the node that the mouse is currently over
+	 * 
+	 * Saves information in "currentMouseNode"
+	 */
 	{
 		Ray camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
-		RaycastHit tileHit;
+		RaycastHit nodeHit;
 
 		//Debug.DrawRay (Camera.main.transform.position, Input.mousePosition);
-		if (Physics.Raycast (camRay, out tileHit, camRayLength, floorMask)) 
+		if (Physics.Raycast (camRay, out nodeHit, camRayLength, floorMask)) 
 		{
-			currentMousePosNode = grid.NodeFromWorldPoint (tileHit.point);
+			currentMouseNode = grid.NodeFromWorldPoint (nodeHit.point);
 		}
 	}
 
@@ -106,14 +111,15 @@ public class MouseFunctions : MonoBehaviour {
 	{
 
 		if (buildStructure == "Tower") {
-			if (currentMousePosNode.Wall != null) {
-				if (currentMousePosNode.Tower != null) {
+			if (currentMouseNode.Wall != null) {
+				if (currentMouseNode.Tower != null) {
 
 					Debug.Log ("CANNOT BUILD TOWER, TOWER ALREADY EXISTS");
 
 				} else {
-					positionToBuildStart = currentMousePosNode.worldPosition + (Vector3.up * 1.25f);
-					currentMousePosNode.Tower = ((GameObject)(Instantiate (Resources.Load (buildStructure), positionToBuildStart, Quaternion.identity)));
+					sourceSFX.PlayOneShot (BuildFX);
+					positionToBuildStart = currentMouseNode.worldPosition + (Vector3.up * 1f);
+					currentMouseNode.Tower = ((GameObject)(Instantiate (Resources.Load ("BasicOrbTower"), positionToBuildStart, Quaternion.identity)));
 				}
 
 			} else {
@@ -124,10 +130,10 @@ public class MouseFunctions : MonoBehaviour {
 
 	/*
 	  if (buildStructure == "Wall") {
-			if (currentMousePosNode.hasWall == false) {
-				positionToBuildStart = currentMousePosNode.worldPosition + (Vector3.up * 0.5f);
+			if (currentMouseNode.hasWall == false) {
+				positionToBuildStart = currentMouseNode.worldPosition + (Vector3.up * 0.5f);
 				newStructure = ((GameObject)(Instantiate (Resources.Load (buildStructure), positionToBuildStart, Quaternion.identity)));
-				currentMousePosNode.hasWall = true;
+				currentMouseNode.hasWall = true;
 			} else {
 				Debug.Log ("CANNOT BUILD HERE, WALL ALREADY EXISTS");
 			}
@@ -141,9 +147,9 @@ public class MouseFunctions : MonoBehaviour {
 		if (Input.GetButtonDown("Fire1")) {
 					
 			buildStructure = bFunc.TowerToBuild;
-			positionToBuildStart = currentMousePosNode.worldPosition;
+			positionToBuildStart = currentMouseNode.worldPosition;
 			if (buildStructure == "Wall") {
-				startWallModeNode = currentMousePosNode;
+				startWallModeNode = currentMouseNode;
 				buildWallMode = true;
 				wallGhost = ((GameObject)(Instantiate (Resources.Load ("WallGhost"))));
 			} else {
@@ -154,21 +160,21 @@ public class MouseFunctions : MonoBehaviour {
 		{
 			if (buildWallMode == true) {
 				
-				Vector2 difference = grid.NodeDifference (startWallModeNode, currentMousePosNode);
+				Vector2 difference = grid.NodeDifference (startWallModeNode, currentMouseNode);
 
 				if (Mathf.Abs(difference.x) >= Mathf.Abs(difference.y)) {
 					
-					endWallModeNode = grid.NodeFromCoordinates (currentMousePosNode.gridX, startWallModeNode.gridY);
-					//Debug.Log ("X ===" +endWallModeNode.worldPosition + "   Current Node = " + currentMousePosNode.worldPosition + "     StartWall = " + startWallModeNode.worldPosition);
+					endWallModeNode = grid.NodeFromCoordinates (currentMouseNode.gridX, startWallModeNode.gridY);
+					//Debug.Log ("X ===" +endWallModeNode.worldPosition + "   Current Node = " + currentMouseNode.worldPosition + "     StartWall = " + startWallModeNode.worldPosition);
 					buildWallModeXY = "x";
                     wallsToBuild = difference.x;
 
 				} else if (Mathf.Abs(difference.y) > Mathf.Abs(difference.x)) {
 
-					endWallModeNode = grid.NodeFromCoordinates (startWallModeNode.gridX, currentMousePosNode.gridY);
+					endWallModeNode = grid.NodeFromCoordinates (startWallModeNode.gridX, currentMouseNode.gridY);
 					buildWallModeXY = "y";
                     wallsToBuild = difference.y;
-					//Debug.Log ("Y ===" +endWallModeNode.worldPosition + "   Current Node = " + currentMousePosNode.worldPosition + "     StartWall = " + startWallModeNode.worldPosition);
+					//Debug.Log ("Y ===" +endWallModeNode.worldPosition + "   Current Node = " + currentMouseNode.worldPosition + "     StartWall = " + startWallModeNode.worldPosition);
 	
 				}
 			}
@@ -181,7 +187,8 @@ public class MouseFunctions : MonoBehaviour {
 			if (grid.NodeLineContainsWall (startWallModeNode, endWallModeNode, buildWallModeXY) == false) {
 				Debug.Log ("buildWallModeXY = " + buildWallModeXY);
                 Node tempStart = startWallModeNode;
-				tempStart.Wall = ((GameObject)(Instantiate (Resources.Load (buildStructure), startWallModeNode.worldPosition, Quaternion.identity)));
+				tempStart.Wall = ((GameObject)(Instantiate (Resources.Load ("WallConnector"), startWallModeNode.worldPosition, Quaternion.identity)));
+				sourceSFX.PlayOneShot (BuildFX);
                 for (int i = 0; i<Mathf.Abs(wallsToBuild); i++)
                 {
                     if (buildWallModeXY == "x")
@@ -206,7 +213,7 @@ public class MouseFunctions : MonoBehaviour {
                             tempStart = grid.NodeFromCoordinates(tempStart.gridX, tempStart.gridY - 1);
                         }
                     }
-                    tempStart.Wall = ((GameObject)(Instantiate(Resources.Load(buildStructure), tempStart.worldPosition, Quaternion.identity)));
+					tempStart.Wall = ((GameObject)(Instantiate(Resources.Load("WallConnector"), tempStart.worldPosition, Quaternion.identity)));
                 }
 				//newStructure.transform.localScale = wallGhost.transform.lossyScale;
 				//grid.setNodesAlongAxis (startWallModeNode, endWallModeNode, buildWallModeXY, true);
@@ -222,35 +229,24 @@ public class MouseFunctions : MonoBehaviour {
 		}
 
 	}
-
-	void HandleWallBuild()
-	{
-		if (buildWallMode) {
-
-		}
-	}
 		
-
 	void MoveSelection()
 	{
-		if (SelHighlight != null && currentMousePosNode.worldPosition != null) {
-			if (currentMousePosNode.Wall != null) {
-				SelHighlight.transform.position = currentMousePosNode.worldPosition + (Vector3.up * 1.1f);
+		if (SelHighlight != null && currentMouseNode.worldPosition != null) {
+			if (currentMouseNode.Wall != null) {
+				SelHighlight.transform.position = currentMouseNode.worldPosition + (Vector3.up * 1.1f);
 			} else {
-				SelHighlight.transform.position = currentMousePosNode.worldPosition + (Vector3.up * 0.1f);
+				SelHighlight.transform.position = currentMouseNode.worldPosition + (Vector3.up * 0.1f);
 			}
 		}
 	}
 
 	void MoveWallGhost()
 	{
+		//Moves the pre-building wall ghost to the proper location while drag building
 		if (wallGhost != null && endWallModeNode != null) {
 			
-
 			wallGhost.transform.position = grid.CenterOfTwoNodes (startWallModeNode, endWallModeNode);
-
-
-			//Debug.Log (wallGhost.transform.position + "       SW " + startWallModeNode.worldPosition + "       EW " + endWallModeNode.worldPosition);
 
 			if (buildWallModeXY == "x") {
 				wallGhost.transform.localScale = new Vector3 (grid.DistanceBetweenTwoNodesX (startWallModeNode, endWallModeNode) + 1, 1, 1);

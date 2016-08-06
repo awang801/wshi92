@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class Node{
+	//Used to create a grid representing each selectable point in the terrain
 
 	public GameObject Wall;
 	public GameObject Tower;

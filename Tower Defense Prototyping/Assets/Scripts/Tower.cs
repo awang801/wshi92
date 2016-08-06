@@ -19,6 +19,7 @@ public class Tower : MonoBehaviour {
 	bool recentNewTarget;
 
 	GameObject currentTarget;
+
 	Unit currentTargetUnit;
 	Transform currentTargetT;
 
@@ -37,6 +38,7 @@ public class Tower : MonoBehaviour {
 
 		shootSFX = (AudioClip)(Resources.Load ("shoot", typeof(AudioClip)));
 		sourceSFX = this.gameObject.GetComponent<AudioSource> ();
+
 	}
 
 	// Update is called once per frame
@@ -49,7 +51,6 @@ public class Tower : MonoBehaviour {
 				
 			if (recentNewTarget) {
 				SlowRotate ();
-
 			} 
 			else {
 				transform.LookAt (currentTarget.transform);

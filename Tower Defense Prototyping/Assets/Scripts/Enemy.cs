@@ -8,7 +8,7 @@ public class Enemy : MonoBehaviour {
 	NavMeshAgent agent;
 	NavMeshPath path;
 	NavMeshPath calcPath;
-	MouseFunctions gmMFunc;
+
 	bool ableToFind;
 	bool calculating;
 
@@ -23,9 +23,8 @@ public class Enemy : MonoBehaviour {
 	void Start()
 	{
 		
-		
-		gmMFunc = GameObject.Find ("GameManager").GetComponent<MouseFunctions>();
 		target = GameObject.Find ("Destination").transform;
+
 		agent = GetComponent<NavMeshAgent> ();
 		agent.SetDestination (target.position);
 		agent.transform.LookAt (target);

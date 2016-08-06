@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Bullet : MonoBehaviour {
 
+	//Script attached to any bullet projectiles
 	public Unit target;
 	Transform targetT;
 

@@ -1,0 +1,172 @@
+fileFormatVersion: 2
+guid: d42f03e1004da6b44a77e113e9d7d875
+timeCreated: 1469086259
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: ButtonBar
+    21300002: BuildButton
+    21300004: OrbTowerButton
+    21300006: WallButton
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: 0
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: ButtonBar
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 898
+        width: 1760
+        height: 109
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 772.12213, y: 39.42206}
+        - {x: 763.12213, y: 48.42206}
+        - {x: -762.87787, y: 48.42206}
+        - {x: -767.87787, y: 43.42206}
+        - {x: -769.87787, y: 42.42206}
+        - {x: -769.87787, y: 40.42206}
+        - {x: -771.87787, y: 38.42206}
+        - {x: -771.87787, y: -36.57794}
+        - {x: -763.87787, y: -45.57794}
+        - {x: -758.87787, y: -47.57794}
+        - {x: 759.12213, y: -47.57794}
+        - {x: 764.12213, y: -45.57794}
+        - {x: 772.12213, y: -37.57794}
+    - name: BuildButton
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 641
+        height: 642
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 279.5, y: -271.5}
+        - {x: 281.5, y: -266.5}
+        - {x: 281.5, y: 265.5}
+        - {x: 279.5, y: 268.5}
+        - {x: 278.5, y: 271.5}
+        - {x: 276.5, y: 272.5}
+        - {x: 276.5, y: 273.5}
+        - {x: 271.5, y: 278.5}
+        - {x: 270.5, y: 278.5}
+        - {x: 268.5, y: 281.5}
+        - {x: -268.5, y: 281.5}
+        - {x: -273.5, y: 279.5}
+        - {x: -280.5, y: 271.5}
+        - {x: -280.5, y: 270.5}
+        - {x: -281.5, y: 269.5}
+        - {x: -281.5, y: -272.5}
+        - {x: -272.5, y: -281.5}
+        - {x: 268.5, y: -281.5}
+        - {x: 269.5, y: -280.5}
+        - {x: 270.5, y: -280.5}
+    - name: OrbTowerButton
+      rect:
+        serializedVersion: 2
+        x: 843
+        y: 0
+        width: 641
+        height: 642
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 281.69464, y: -267.5}
+        - {x: 281.69464, y: 266.5}
+        - {x: 280.69464, y: 267.5}
+        - {x: 279.69464, y: 271.5}
+        - {x: 273.69464, y: 277.5}
+        - {x: 272.69464, y: 277.5}
+        - {x: 269.69464, y: 281.5}
+        - {x: -268.30536, y: 281.5}
+        - {x: -271.30536, y: 279.5}
+        - {x: -279.30536, y: 271.5}
+        - {x: -280.30536, y: 267.5}
+        - {x: -281.30536, y: 266.5}
+        - {x: -281.30536, y: -267.5}
+        - {x: -280.30536, y: -268.5}
+        - {x: -279.30536, y: -272.5}
+        - {x: -271.30536, y: -281.5}
+        - {x: 271.69464, y: -281.5}
+        - {x: 279.69464, y: -272.5}
+        - {x: 280.69464, y: -268.5}
+    - name: WallButton
+      rect:
+        serializedVersion: 2
+        x: 1694
+        y: 0
+        width: 641
+        height: 642
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 281.90417, y: 271.5}
+        - {x: 272.90417, y: 280.5}
+        - {x: 269.90417, y: 281.5}
+        - {x: -267.09583, y: 281.5}
+        - {x: -276.09583, y: 273.5}
+        - {x: -276.09583, y: 272.5}
+        - {x: -278.09583, y: 271.5}
+        - {x: -281.09583, y: 264.5}
+        - {x: -281.09583, y: -265.5}
+        - {x: -278.09583, y: -272.5}
+        - {x: -271.09583, y: -279.5}
+        - {x: -270.09583, y: -279.5}
+        - {x: -268.09583, y: -281.5}
+        - {x: 272.90417, y: -281.5}
+        - {x: 281.90417, y: -272.5}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

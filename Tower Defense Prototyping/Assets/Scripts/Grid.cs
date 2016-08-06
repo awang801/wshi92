@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Grid : MonoBehaviour {
 
-	public Vector2 gridWorldSize;
+	public Vector2 gridWorldSize; //Set in editor
 	public float nodeRadius;
 	public LayerMask terrainMask;
 	Node[,] grid;
@@ -21,6 +21,9 @@ public class Grid : MonoBehaviour {
 
 	void CreateGrid()
 	{
+		/*
+		 * Generates the array of nodes of size gridSizeX and gridSizeY, stored as "grid"
+		 */
 		grid = new Node[gridSizeX,gridSizeY];
 
 		for (int x = 0; x < gridSizeX; x++) {
@@ -32,12 +35,17 @@ public class Grid : MonoBehaviour {
 
 	void OnDrawGizmos()
 	{
+		/*
+		 * Draws a representation of the grid that is visible only in the editor as a white outline
+		 */
 		Vector3 box = new Vector3 (gridWorldSize.x, 1, gridWorldSize.y);
 		Gizmos.DrawWireCube (transform.position + box * 0.5f, box);
 	}
 
 	public Node NodeFromWorldPoint(Vector3 worldPosition)
 	{
+		// Returns a Node from a world position
+
 		int x = Mathf.CeilToInt (worldPosition.x);
 		int y = Mathf.CeilToInt (worldPosition.z);
 
@@ -61,31 +69,37 @@ public class Grid : MonoBehaviour {
 
 	public Node NodeFromCoordinates(int x, int y)
 	{
+		//Returns a Node from coordinates in integers
 		return grid [x, y];
 	}
 
 	public Node NodeFromCoordinates(float x, float y)
 	{
+		//Returns a Node from coordinates in floats
 		return grid [(int)x, (int)y];
 	}
 
 	public Vector3 CenterOfTwoNodes(Node n1, Node n2)
 	{
+		//Returns a Vector3 as the center of two nodes
 		return new Vector3 (((n2.worldPosition.x + n1.worldPosition.x) / 2), 0, ((n2.worldPosition.z + n1.worldPosition.z) / 2));
 	}
 
 	public int DistanceBetweenTwoNodesX(Node n1, Node n2) 
 	{
+		//Returns an integer as the distance between two nodes' X values
 		return (int)Mathf.Abs (n2.worldPosition.x - n1.worldPosition.x);
 	}
 	
 	public int DistanceBetweenTwoNodesY(Node n1, Node n2)
 	{
+		//Returns an integer as the distance between two nodes' Y values
 		return (int)Mathf.Abs (n2.worldPosition.z - n1.worldPosition.z);
 	}
 	
 	public Vector2 NodeDifference(Node start, Node end)
 	{
+		//Returns a Vector2 storing the difference between two node's X and Y positions in its x and y values
 		return new Vector2 (end.worldPosition.x - start.worldPosition.x, end.worldPosition.z - start.worldPosition.z);
 			
 	}
