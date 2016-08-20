@@ -1636,6 +1636,8 @@ GameObject:
   - 114: {fileID: 1347273615}
   - 114: {fileID: 1347273616}
   - 82: {fileID: 1347273617}
+  - 114: {fileID: 1347273619}
+  - 114: {fileID: 1347273618}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1772,6 +1774,28 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!114 &1347273618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1347273612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87c5eb20ebd1d704f9d244044350c386, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1347273619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1347273612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a54626e677ad7044af024b6168265c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1382940106
 GameObject:
   m_ObjectHideFlags: 0
