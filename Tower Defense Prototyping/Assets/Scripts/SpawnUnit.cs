@@ -1,44 +1,48 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SpawnUnit : MonoBehaviour {
+public class SpawnUnit : MonoBehaviour
+{
 
-	public GameObject spawnUnit;
+    public GameObject spawnUnit;
 
-	public Transform[] waypoints;
+    public Transform[] waypoints;
 
-	public int startIndex;
+    public int startIndex;
 
-	public float moveSpeed;
+    public float moveSpeed;
 
-	public float spawnDelay;
+    public float spawnDelay;
 
-	private float timeSinceSpawn;
+    private float timeSinceSpawn;
 
-	// Use this for initialization
-	void Start () {
-		startIndex = 0;
-		moveSpeed = 10f;
-		spawnDelay = 3f;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		timeSinceSpawn += Time.deltaTime;
+    // Use this for initialization
+    void Start()
+    {
+        startIndex = 0;
+        moveSpeed = 10f;
+        spawnDelay = 3f;
+    }
 
-		if (timeSinceSpawn >= spawnDelay) {
-			Spawn ();
-			timeSinceSpawn = 0;
-		}
-	}
+    // Update is called once per frame
+    void Update()
+    {
+        timeSinceSpawn += Time.deltaTime;
 
-	void Spawn()
-	{
-		GameObject newUnit = ((GameObject)(Instantiate (spawnUnit, transform.position, transform.rotation)));
+        if (timeSinceSpawn >= spawnDelay)
+        {
+            Spawn();
+            timeSinceSpawn = 0;
+        }
+    }
 
-		UnitMove newUnitMover = newUnit.GetComponent<UnitMove> ();
+    void Spawn()
+    {
+        GameObject newUnit = ((GameObject)(Instantiate(spawnUnit, transform.position, transform.rotation)));
 
-		newUnitMover.Setup (waypoints, startIndex, moveSpeed);
+        UnitMove newUnitMover = newUnit.GetComponent<UnitMove>();
 
-	}
+        newUnitMover.Setup(waypoints, startIndex, moveSpeed);
+
+    }
 }

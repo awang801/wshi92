@@ -28,7 +28,7 @@ public class Unit : MonoBehaviour {
 
 	void Death()
 	{
-		Instantiate (Resources.Load ("EnemyDeath"), transform.position, transform.rotation);
+		Instantiate (Resources.Load ("Enemies/EnemyDeath"), transform.position, transform.rotation);
 		Destroy (gameObject);
 	}
 }
