@@ -1,32 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Bank : MonoBehaviour {
-    private int money;
+public class Bank:MonoBehaviour{
+    private int money = 100;
 
-
-    void Start () {
-        money = 0;
-	}
-
-
-    void addMoney(int amount)
+    public void setMoney(int amount)
+    {
+        money = amount;
+    }
+    public void addMoney(int amount)
     {
         money = money + amount;
     }
 
 
-    void subractMoney(int amount)
+    public void subractMoney(int amount)
     {
         money = money - amount;
     }
 
-    int getMoney()
+    public int getMoney()
     {
         return money;
     }
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

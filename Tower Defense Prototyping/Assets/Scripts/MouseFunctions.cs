@@ -11,6 +11,8 @@ public class MouseFunctions : MonoBehaviour
 
     Grid grid;
 
+    Bank bank;
+
     BuildingFunctions bFunc;
 
     float camRayLength = 200f;
@@ -45,6 +47,8 @@ public class MouseFunctions : MonoBehaviour
         pathBlockChecker = GameObject.Find("PathBlockCheck").GetComponent<NavMeshAgent>();
         target = GameObject.Find("Destination").transform;
         grid = GetComponent<Grid>();
+
+        bank = GameObject.Find("GameManager").GetComponent<Bank>();
 
         BuildFX = (AudioClip)(Resources.Load("Sounds/BuildingPlacement", typeof(AudioClip)));
         sourceSFX = this.gameObject.GetComponent<AudioSource>();
@@ -125,8 +129,14 @@ public class MouseFunctions : MonoBehaviour
                     Debug.Log("CANNOT BUILD TOWER, TOWER ALREADY EXISTS");
 
                 }
+                else if (bank.getMoney() - 20 < 0)
+                {
+                    Debug.Log("Not enough Money");
+                }
                 else
                 {
+                    bank.addMoney(-20);
+                    Debug.Log(bank.getMoney());
                     sourceSFX.PlayOneShot(BuildFX);
                     positionToBuildStart = currentMouseNode.worldPosition + (Vector3.up * 1f);
                     currentMouseNode.Tower = ((GameObject)(Instantiate(Resources.Load("Towers/BasicOrbTower"), positionToBuildStart, Quaternion.identity)));
@@ -163,7 +173,7 @@ public class MouseFunctions : MonoBehaviour
             positionToBuildStart = currentMouseNode.worldPosition;
             if (buildStructure == "Wall")
             {
-                startWallModeNode = currentMouseNode;
+                startWallModeNode = currentMouseNode; 
                 buildWallMode = true;
                 wallGhost = ((GameObject)(Instantiate(Resources.Load("Walls/WallGhost"))));
             }
@@ -204,47 +214,57 @@ public class MouseFunctions : MonoBehaviour
         {
 
             buildWallMode = false;
-
-            if (grid.NodeLineContainsWall(startWallModeNode, endWallModeNode, buildWallModeXY) == false)
+            if (bank.getMoney() - ((wallsToBuild+1) * 5 )>= 0)
             {
-                Debug.Log("buildWallModeXY = " + buildWallModeXY);
-                Node tempStart = startWallModeNode;
-                tempStart.Wall = ((GameObject)(Instantiate(Resources.Load("Walls/WallConnector"), startWallModeNode.worldPosition, Quaternion.identity)));
-                sourceSFX.PlayOneShot(BuildFX);
-                for (int i = 0; i < Mathf.Abs(wallsToBuild); i++)
+                if (grid.NodeLineContainsWall(startWallModeNode, endWallModeNode, buildWallModeXY) == false)
                 {
-                    if (buildWallModeXY == "x")
+                    Debug.Log("buildWallModeXY = " + buildWallModeXY);
+                    Node tempStart = startWallModeNode;
+                    tempStart.Wall = ((GameObject)(Instantiate(Resources.Load("Walls/WallConnector"), startWallModeNode.worldPosition, Quaternion.identity)));
+                    bank.addMoney(-5);
+                    sourceSFX.PlayOneShot(BuildFX);
+                    for (int i = 0; i < Mathf.Abs(wallsToBuild); i++)
                     {
-                        if (wallsToBuild > 0)
+                        if (buildWallModeXY == "x")
                         {
-                            tempStart = grid.NodeFromCoordinates(tempStart.gridX + 1, tempStart.gridY);
+                            if (wallsToBuild > 0)
+                            {
+                                tempStart = grid.NodeFromCoordinates(tempStart.gridX + 1, tempStart.gridY);
+                            }
+                            else
+                            {
+                                tempStart = grid.NodeFromCoordinates(tempStart.gridX - 1, tempStart.gridY);
+                            }
                         }
                         else
                         {
-                            tempStart = grid.NodeFromCoordinates(tempStart.gridX - 1, tempStart.gridY);
+                            if (wallsToBuild > 0)
+                            {
+                                tempStart = grid.NodeFromCoordinates(tempStart.gridX, tempStart.gridY + 1);
+                            }
+                            else
+                            {
+                                tempStart = grid.NodeFromCoordinates(tempStart.gridX, tempStart.gridY - 1);
+
+                            }
                         }
+                        tempStart.Wall = ((GameObject)(Instantiate(Resources.Load("Walls/WallConnector"), tempStart.worldPosition, Quaternion.identity)));
+                        bank.addMoney(-5);
                     }
-                    else
-                    {
-                        if (wallsToBuild > 0)
-                        {
-                            tempStart = grid.NodeFromCoordinates(tempStart.gridX, tempStart.gridY + 1);
-                        }
-                        else
-                        {
-                            tempStart = grid.NodeFromCoordinates(tempStart.gridX, tempStart.gridY - 1);
-                        }
-                    }
-                    tempStart.Wall = ((GameObject)(Instantiate(Resources.Load("Walls/WallConnector"), tempStart.worldPosition, Quaternion.identity)));
+                    Debug.Log(bank.getMoney());
+                    //newStructure.transform.localScale = wallGhost.transform.lossyScale;
+                    //grid.setNodesAlongAxis (startWallModeNode, endWallModeNode, buildWallModeXY, true);
+
+
                 }
-                //newStructure.transform.localScale = wallGhost.transform.lossyScale;
-                //grid.setNodesAlongAxis (startWallModeNode, endWallModeNode, buildWallModeXY, true);
-
-
+                else
+                {
+                    Debug.Log("CANNOT PLACE, WALL IN LINE");
+                }
             }
             else
             {
-                Debug.Log("CANNOT PLACE, WALL IN LINE");
+                Debug.Log("Not enough Money");
             }
 
             Destroy(wallGhost);

@@ -2,11 +2,11 @@
 using System.Collections;
 
 public class FinishLine : MonoBehaviour {
-
+    Lives lives;
 	// Use this for initialization
 	void Start () {
-	
-	}
+        lives = GameObject.Find("GameManager").GetComponent<Lives>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -16,8 +16,9 @@ public class FinishLine : MonoBehaviour {
 	void OnTriggerEnter(Collider other)
 	{
 		if (other.gameObject.CompareTag ("Enemy")) {
-			other.gameObject.GetComponent<Unit> ().Damage (100f);
-
-		} 
+            other.gameObject.GetComponent<Unit>().Finish();
+            lives.loseLife();
+            Debug.Log(lives.getLives());
+        } 
 	}
 }

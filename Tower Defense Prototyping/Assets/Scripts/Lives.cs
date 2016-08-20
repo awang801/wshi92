@@ -1,35 +1,30 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Lives : MonoBehaviour {
-    private int lives;
-    // Use this for initialization
-    void Start()
-    {
-        lives = 30;
-    }
+public class Lives:MonoBehaviour{
+    private int lives = 30;
 
-    void loseLife()
+    public void setLives(int amount)
+    {
+        lives = amount;
+    }
+    public void loseLife()
     {
         lives = lives - 1;
     }
 
-	void addLives(int amount)
+	public void addLives(int amount)
     {
         lives = lives + amount;
     }
 
-    void loseLives(int amount)
+    public void loseLives(int amount)
     {
         lives = lives - amount;
     }
 
-    int getLives()
+    public int getLives()
     {
         return lives;
     }
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }
