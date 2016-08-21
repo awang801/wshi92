@@ -5,7 +5,7 @@ using UnityEngine.UI; // include UI namespace since references UI Buttons direct
 public class BuildButtonPress : MonoBehaviour {
 
 	GameObject gm;
-	BuildingFunctions bf;
+	KeyboardFunctions kf;
 	MouseFunctions mf;
 	GameObject panel;
 	RectTransform panelTransform;
@@ -21,9 +21,9 @@ public class BuildButtonPress : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		gm = GameObject.Find ("GameManager");
-		bf = gm.GetComponent<BuildingFunctions> ();
+		kf = gm.GetComponent<KeyboardFunctions> ();
 		mf = gm.GetComponent<MouseFunctions> ();
-		panel = GameObject.Find ("Panel");
+		panel = GameObject.Find ("ButtonPanel");
 		panelTransform = panel.GetComponent<RectTransform> ();
 		towerButton = GameObject.Find ("OrbTowerButton");
 		wallButton = GameObject.Find ("WallButton");
@@ -40,11 +40,11 @@ public class BuildButtonPress : MonoBehaviour {
 
 	public void BuildToggle()
 	{
-		if (bf.isBuilding == true) {
-			bf.CancelBuild ();
+		if (kf.mode == 1) {
+			kf.CancelBuild ();
 			changeDirection = -1;
 		} else {
-			bf.Build ();
+			kf.Build ();
 			changeDirection = 1;
 			towerButton.SetActive (true);
 			wallButton.SetActive (true);

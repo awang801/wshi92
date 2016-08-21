@@ -49,20 +49,27 @@ public class Grid : MonoBehaviour {
 		int x = Mathf.CeilToInt (worldPosition.x);
 		int y = Mathf.CeilToInt (worldPosition.z);
 
-		if (x > gridSizeX && y > gridSizeY) {
+		if (x >= gridSizeX && y >= gridSizeY) {
 			
-			return grid [gridSizeX, gridSizeY];
+			return grid [gridSizeX - 1, gridSizeY - 1];
 
-		}
-		else if (x > gridSizeX) {
+		} else if (x >= gridSizeX) {
 			
-			return grid [gridSizeX, y];
+			return grid [gridSizeX - 1, y];
 
-		} else if (y > gridSizeY) {
+		} else if (y >= gridSizeY) {
 			
-			return grid [x, gridSizeY];
+			return grid [x, gridSizeY - 1];
 
-		}else {
+		} else if (x <= 0) {
+
+			return grid [0, y];
+
+		} else if (y <= 0) {
+
+			return grid [x, 0];
+
+		} else {
 			return grid [x, y];
 		}
 	}

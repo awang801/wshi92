@@ -4,25 +4,25 @@ using System.Collections;
 public class TowerButtonPress : MonoBehaviour {
 
 	GameObject gm;
-	BuildingFunctions bf;
+	KeyboardFunctions kf;
 	MouseFunctions mf;
 
 	void Awake () {
 		gm = GameObject.Find ("GameManager");
-		bf = gm.GetComponent<BuildingFunctions> ();
+		kf = gm.GetComponent<KeyboardFunctions> ();
 		mf = gm.GetComponent<MouseFunctions> ();
 	}
 
 	public void TowerToggle()
 	{
-		if (bf.isBuilding == true) {
-			if (bf.SelectedTowerToBuild == false)
+		if (kf.mode == 1) {
+			if (kf.SelectedTowerToBuild == false)
 			{
 				mf.SelHighlight = ((GameObject)(Instantiate(Resources.Load("SelectionHighlight")))); //Creates green selection box
 			}
 			Debug.Log ("BUILDING X TOWER");
-			bf.towerToBuild = "Tower";
-			bf.SelectedTowerToBuild = true;
+			kf.towerToBuild = "Tower";
+			kf.SelectedTowerToBuild = true;
 			mf.Selecting = true;
 
 		}

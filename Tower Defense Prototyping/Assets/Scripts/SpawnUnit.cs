@@ -5,44 +5,71 @@ public class SpawnUnit : MonoBehaviour
 {
 
     public GameObject spawnUnit;
+	public Transform target;
 
-    public Transform[] waypoints;
-
-    public int startIndex;
-
-    public float moveSpeed;
+	public GameObject attackPlayer;
+	public GameObject sendPlayer;
 
     public float spawnDelay;
-
     private float timeSinceSpawn;
 
-    // Use this for initialization
+	Bank bank;
+
+	GameObject enemyType1;
+
+	void Awake()
+	{
+		enemyType1 = (GameObject)Resources.Load ("Enemies/EnemyType1");
+		bank = sendPlayer.GetComponent<Bank> ();
+	}
+
     void Start()
     {
-        startIndex = 0;
-        moveSpeed = 10f;
         spawnDelay = 3f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        timeSinceSpawn += Time.deltaTime;
+        /*timeSinceSpawn += Time.deltaTime;
 
         if (timeSinceSpawn >= spawnDelay)
         {
             Spawn();
             timeSinceSpawn = 0;
-        }
+        }*/
     }
 
-    void Spawn()
-    {
-        GameObject newUnit = ((GameObject)(Instantiate(spawnUnit, transform.position, transform.rotation)));
+	public void Spawn(string unitName) //For Spawning specific units by name
+	{
+		int unitCost = 0;
+		int incomeGain = 0;
 
-        UnitMove newUnitMover = newUnit.GetComponent<UnitMove>();
+		switch (unitName) {
+		case "EnemyType1":
+			unitCost = 5;
+			incomeGain = 1;
+			spawnUnit = enemyType1;
+			Debug.Log ("Send Enemy1!");
+			break;
+		default:
+			Debug.Log ("Send DEFAULT");
+			break;
+		}
+			
+		if (bank.getMoney() >= unitCost) {
+			GameObject newUnitObject = ((GameObject)(Instantiate(spawnUnit, transform.position, transform.rotation)));
+			Unit newUnit = newUnitObject.GetComponent<Unit> ();
+			newUnitObject.transform.SetParent (this.transform);
+			newUnit.setTarget (target);
+			newUnit.attackPlayer = attackPlayer;
+			newUnit.sendPlayer = sendPlayer;
+			bank.subtractMoney (unitCost);
+			bank.addIncome (incomeGain);
+		} else {
+			Debug.Log ("Not enough money to send!");
+		}
 
-        newUnitMover.Setup(waypoints, startIndex, moveSpeed);
-
-    }
+	}
+		
 }

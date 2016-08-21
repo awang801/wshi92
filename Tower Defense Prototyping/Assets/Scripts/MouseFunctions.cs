@@ -11,17 +11,16 @@ public class MouseFunctions : MonoBehaviour
 
     Grid grid;
 
+	public GameObject player;
     Bank bank;
 
-    BuildingFunctions bFunc;
+    KeyboardFunctions kFunc;
 
     float camRayLength = 200f;
 
     GameObject selHighlight;
     bool selecting;
 
-
-    NavMeshAgent pathBlockChecker;
     NavMeshPath path;
 
     Node currentMouseNode;
@@ -43,12 +42,11 @@ public class MouseFunctions : MonoBehaviour
 
     void Awake()
     {
-        bFunc = this.gameObject.GetComponent<BuildingFunctions>();
-        pathBlockChecker = GameObject.Find("PathBlockCheck").GetComponent<NavMeshAgent>();
-        target = GameObject.Find("Destination").transform;
+		kFunc = this.gameObject.GetComponent<KeyboardFunctions>();
+        target = GameObject.Find("Destination 1").transform;
         grid = GetComponent<Grid>();
 
-        bank = GameObject.Find("GameManager").GetComponent<Bank>();
+        bank = player.GetComponent<Bank>();
 
         BuildFX = (AudioClip)(Resources.Load("Sounds/BuildingPlacement", typeof(AudioClip)));
         sourceSFX = this.gameObject.GetComponent<AudioSource>();
@@ -136,7 +134,6 @@ public class MouseFunctions : MonoBehaviour
                 else
                 {
                     bank.addMoney(-20);
-                    Debug.Log(bank.getMoney());
                     sourceSFX.PlayOneShot(BuildFX);
                     positionToBuildStart = currentMouseNode.worldPosition + (Vector3.up * 1f);
                     currentMouseNode.Tower = ((GameObject)(Instantiate(Resources.Load("Towers/BasicOrbTower"), positionToBuildStart, Quaternion.identity)));
@@ -169,7 +166,7 @@ public class MouseFunctions : MonoBehaviour
         if (Input.GetButtonDown("Fire1"))
         {
 
-            buildStructure = bFunc.TowerToBuild;
+            buildStructure = kFunc.TowerToBuild;
             positionToBuildStart = currentMouseNode.worldPosition;
             if (buildStructure == "Wall")
             {
