@@ -224,6 +224,14 @@ public class KeyboardFunctions : MonoBehaviour
            
 
         }
+		else if (Input.GetButtonDown("X"))
+		{
+			if (mode == 1) {
+				BuildTower ();
+			} else if (mode == 2) {
+				//Future different unit to send here
+			}
+		}
         else if (Input.GetButtonDown("T"))
         {
 			SendToggle ();
