@@ -111,6 +111,45 @@ public class Grid : MonoBehaviour {
 			
 	}
 
+	public Node[] GetNeighbors(Node n)
+	{
+		Node[] neighbors = new Node[4];
+		bool[] isEdge = new bool[4];
+
+		int x = n.gridX;
+		int y = n.gridY;
+
+		if (x == 0) {
+			isEdge [3] = true;
+		} else if (x == gridSizeX - 1) {
+			isEdge [1] = true;
+		}
+
+		if (y == 0) {
+			isEdge [2] = true;
+		} else if (y == gridSizeY - 1) {
+			isEdge [0] = true;
+		}
+
+		if (isEdge [0] == false) {
+			neighbors [0] = grid [x, y + 1];
+		}
+
+		if (isEdge [1] == false) {
+			neighbors [1] = grid [x + 1, y];
+		}
+
+		if (isEdge [2] == false) {
+			neighbors [2] = grid [x, y - 1];
+		}
+
+		if (isEdge [3] == false) {
+			neighbors [3] = grid [x - 1, y];
+		}
+			
+		return neighbors;
+	}
+
 	public bool NodeLineContainsWall(Node start, Node end, string xory) 
 	{
 		//Checks if the nodes between start and end nodes contain a wall. (Start and end must be on the same X or Y plane)

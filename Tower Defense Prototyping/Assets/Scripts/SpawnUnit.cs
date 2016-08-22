@@ -46,6 +46,7 @@ public class SpawnUnit : MonoBehaviour
 		int incomeGain = 0;
 
 		switch (unitName) {
+
 		case "EnemyType1":
 			unitCost = 5;
 			incomeGain = 1;
@@ -55,6 +56,7 @@ public class SpawnUnit : MonoBehaviour
 		default:
 			Debug.Log ("Send DEFAULT");
 			break;
+
 		}
 			
 		if (bank.getMoney() >= unitCost) {

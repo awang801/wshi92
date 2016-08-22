@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 //This class manages mouse functions including selection on the grid, cursor hiding/showing
 public class MouseFunctions : MonoBehaviour
@@ -40,6 +41,17 @@ public class MouseFunctions : MonoBehaviour
     Vector3 positionToBuildStart;
     Vector3 positionToBuildEnd;
 
+	GameObject wall2Way;
+	GameObject wall3Way;
+	GameObject wall4Way;
+	GameObject wallEnd;
+	GameObject wallCorner;
+	GameObject wallSolo;
+
+	GameObject wallGhostLoaded;
+
+	GameObject orbTower;
+
     void Awake()
     {
 		kFunc = this.gameObject.GetComponent<KeyboardFunctions>();
@@ -47,6 +59,18 @@ public class MouseFunctions : MonoBehaviour
         grid = GetComponent<Grid>();
 
         bank = player.GetComponent<Bank>();
+
+
+		wall2Way = (GameObject)(Resources.Load ("Walls/Wall2Way"));
+		wall3Way = (GameObject)(Resources.Load ("Walls/Wall3Way"));
+		wall4Way = (GameObject)(Resources.Load ("Walls/Wall4Way"));
+		wallEnd = (GameObject)(Resources.Load ("Walls/WallEnd"));
+		wallCorner = (GameObject)(Resources.Load ("Walls/WallCorner"));
+		wallSolo = (GameObject)(Resources.Load ("Walls/WallSolo"));
+
+		wallGhostLoaded = (GameObject)(Resources.Load ("Walls/WallGhost"));
+
+		orbTower = (GameObject)(Resources.Load ("Towers/BasicOrbTower"));
 
         BuildFX = (AudioClip)(Resources.Load("Sounds/BuildingPlacement", typeof(AudioClip)));
         sourceSFX = this.gameObject.GetComponent<AudioSource>();
@@ -136,7 +160,7 @@ public class MouseFunctions : MonoBehaviour
                     bank.addMoney(-20);
                     sourceSFX.PlayOneShot(BuildFX);
                     positionToBuildStart = currentMouseNode.worldPosition + (Vector3.up * 1f);
-                    currentMouseNode.Tower = ((GameObject)(Instantiate(Resources.Load("Towers/BasicOrbTower"), positionToBuildStart, Quaternion.identity)));
+                    currentMouseNode.Tower = ((GameObject)(Instantiate(orbTower, positionToBuildStart, Quaternion.identity)));
                 }
 
             }
@@ -172,7 +196,7 @@ public class MouseFunctions : MonoBehaviour
             {
                 startWallModeNode = currentMouseNode; 
                 buildWallMode = true;
-                wallGhost = ((GameObject)(Instantiate(Resources.Load("Walls/WallGhost"))));
+				wallGhost = ((GameObject)(Instantiate(wallGhostLoaded)));
             }
             else
             {
@@ -210,47 +234,85 @@ public class MouseFunctions : MonoBehaviour
         if (Input.GetButtonUp("Fire1"))
         {
 
+			List<Node> alreadyChecked = new List<Node> ();
+			List<Node> toCheck = new List<Node> ();
+
             buildWallMode = false;
-            if (bank.getMoney() - ((wallsToBuild+1) * 5 )>= 0)
+			if (bank.getMoney() >= ((Mathf.Abs(wallsToBuild) + 1) * 5 ))
             {
                 if (grid.NodeLineContainsWall(startWallModeNode, endWallModeNode, buildWallModeXY) == false)
                 {
+					
                     Debug.Log("buildWallModeXY = " + buildWallModeXY);
-                    Node tempStart = startWallModeNode;
-                    tempStart.Wall = ((GameObject)(Instantiate(Resources.Load("Walls/WallConnector"), startWallModeNode.worldPosition, Quaternion.identity)));
-                    bank.addMoney(-5);
-                    sourceSFX.PlayOneShot(BuildFX);
-                    for (int i = 0; i < Mathf.Abs(wallsToBuild); i++)
-                    {
-                        if (buildWallModeXY == "x")
-                        {
-                            if (wallsToBuild > 0)
-                            {
-                                tempStart = grid.NodeFromCoordinates(tempStart.gridX + 1, tempStart.gridY);
-                            }
-                            else
-                            {
-                                tempStart = grid.NodeFromCoordinates(tempStart.gridX - 1, tempStart.gridY);
-                            }
-                        }
-                        else
-                        {
-                            if (wallsToBuild > 0)
-                            {
-                                tempStart = grid.NodeFromCoordinates(tempStart.gridX, tempStart.gridY + 1);
-                            }
-                            else
-                            {
-                                tempStart = grid.NodeFromCoordinates(tempStart.gridX, tempStart.gridY - 1);
 
-                            }
-                        }
-                        tempStart.Wall = ((GameObject)(Instantiate(Resources.Load("Walls/WallConnector"), tempStart.worldPosition, Quaternion.identity)));
-                        bank.addMoney(-5);
-                    }
+					Node currentNode = startWallModeNode;
+					Node nextNode = currentNode;
+					Node[] neighbors;
+					GameObject dummyWall = new GameObject();
+
+					GameObject newWall;
+
+                   
+                    sourceSFX.PlayOneShot(BuildFX);
+
+                    for (int i = 0; i <= Mathf.Abs(wallsToBuild); i++)
+                    {
+						neighbors = grid.GetNeighbors (currentNode);
+
+
+						if (i != Mathf.Abs (wallsToBuild)) { //If statement so we don't try to go OVER the grid boundaries on last iteration
+
+							if (buildWallModeXY == "x") {
+								
+								if (wallsToBuild > 0) {
+
+									neighbors [1].Wall = dummyWall;
+									nextNode = grid.NodeFromCoordinates (currentNode.gridX + 1, currentNode.gridY);
+								} else {
+									neighbors [3].Wall = dummyWall;
+									nextNode = grid.NodeFromCoordinates (currentNode.gridX - 1, currentNode.gridY);
+								}
+
+							} else {
+								
+								if (wallsToBuild > 0) {
+									neighbors [0].Wall = dummyWall;
+									nextNode = grid.NodeFromCoordinates (currentNode.gridX, currentNode.gridY + 1);
+								} else {
+									neighbors [2].Wall = dummyWall;
+									nextNode = grid.NodeFromCoordinates (currentNode.gridX, currentNode.gridY - 1);
+								}
+
+							}
+
+						} 
+
+						newWall = wallType (currentNode, neighbors);
+						currentNode.Wall = newWall;
+						bank.addMoney(-5);
+
+						alreadyChecked.Add (currentNode);
+
+						for(int j = 0; j < 4; j++)
+						{
+							if (!alreadyChecked.Contains(neighbors[j]) && neighbors[j].Wall != null)
+							{
+								toCheck.Add(neighbors[j]);
+							}
+						}
+
+						currentNode = nextNode;
+
+                    } // END FOR
+
+					foreach (var node in toCheck) {
+						neighbors = grid.GetNeighbors (node);
+						Destroy (node.Wall);
+						newWall = wallType (node, neighbors);
+						node.Wall = newWall;
+					}
+
                     Debug.Log(bank.getMoney());
-                    //newStructure.transform.localScale = wallGhost.transform.lossyScale;
-                    //grid.setNodesAlongAxis (startWallModeNode, endWallModeNode, buildWallModeXY, true);
 
 
                 }
@@ -270,6 +332,121 @@ public class MouseFunctions : MonoBehaviour
         }
 
     }
+
+	GameObject wallType(Node n, Node[] neighbors)
+	{
+		//Returns the correct wall type, location, and rotation
+		GameObject myWall;
+
+		int number = 0;
+		int sum = 0;
+		int nullIndex = 0;
+
+		int[] nonNullIndexes = new int[4];
+
+		neighbors = grid.GetNeighbors (n);
+
+		for (int i = 0; i < 4; i++) {
+			if (neighbors [i].Wall != null) {
+				nonNullIndexes[number] = i;
+				number++;
+				sum += (i + 1);
+			} else {
+				nullIndex = i;
+			}
+		}
+
+		switch (number) {
+		case 0:
+
+			myWall = (GameObject)Instantiate(wallSolo);
+			break;
+		case 1:
+
+			myWall = (GameObject)Instantiate(wallEnd);
+
+			myWall.transform.Rotate(0, 90f * (nonNullIndexes[0] - 1), 0);
+
+			break;
+
+		case 2:
+			if (sum % 2 == 0) { //Even means straight connector
+				
+				myWall = (GameObject)Instantiate(wall2Way);
+
+				//wall2Way is vertical by default
+				if (nonNullIndexes [0] == 1) {
+					myWall.transform.Rotate(0, 90f, 0); //Rotate Horizontal
+				} 
+
+			} else { //Odd means corner
+
+				myWall = (GameObject)Instantiate(wallCorner);
+
+				switch (nonNullIndexes [0]) {
+
+				case 0:
+					if (nonNullIndexes [1] == 1) {
+						myWall.transform.Rotate(0, 180f, 0);
+					} else {
+						myWall.transform.Rotate(0, 90f, 0);
+					}
+					break;
+				case 1:
+					myWall.transform.Rotate(0, 270f, 0);
+					break;
+				case 2:
+					//No rotation needed
+					break;
+				default:					
+					break;
+				}
+			}
+			break;
+
+		case 3:
+
+			myWall = (GameObject)Instantiate(wall3Way);
+			switch (nullIndex) {
+			case 0:
+				myWall.transform.Rotate(0, 270f, 0);
+				break;
+			case 1:
+				//No rotation needed
+				break;
+			case 2:
+				myWall.transform.Rotate(0, 90f, 0);
+				break;
+			case 3:
+				myWall.transform.Rotate(0, 180f, 0);
+				break;
+			}
+			break;
+
+		case 4:
+
+			myWall = (GameObject)Instantiate(wall4Way);
+			break;
+
+		default:
+			myWall = (GameObject)Instantiate(wallSolo); //Default so unity will stop yelling at me
+			break;
+		}
+
+		myWall.transform.position = n.worldPosition;
+
+		return myWall;
+
+	}
+
+	void HandleWallBuild()
+	{
+
+
+
+
+
+	}
 
     void MoveSelection()
     {

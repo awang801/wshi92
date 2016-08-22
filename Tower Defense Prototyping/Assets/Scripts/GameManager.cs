@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour {
 	Bank[] bank = new Bank[2];
 	Lives[] lives = new Lives[2];
 
+
 	void Start()
 	{
 		for (int i = 0; i < 2; i++) { //NUMBER OF PLAYERS HERE
@@ -19,16 +20,15 @@ public class GameManager : MonoBehaviour {
 			lives [i] = player [i].GetComponent<Lives> ();
 		}
 		incomeTimer = incomeDelay;
+
 	}
 
 	// Update is called once per frame
 	void Update () {
 		incomeTimer = incomeTimer - Time.deltaTime;
 		UpdateTimerText ();
-
 		if (incomeTimer <= 0) {
 			incomeTimer = incomeDelay;
-
 			for (int i = 0; i < 2; i++) { //NUMBER OF PLAYERS HERE
 				bank[i].giveIncome();
 			}
