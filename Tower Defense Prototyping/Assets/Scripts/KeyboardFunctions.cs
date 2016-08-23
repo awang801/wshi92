@@ -219,7 +219,7 @@ public class KeyboardFunctions : MonoBehaviour
 			if (mode == 1) {
 				BuildWall();
 			} else if (mode == 2) {
-				SendUnit("EnemyType1");
+				SendUnit("Potato");
 			}
            
 

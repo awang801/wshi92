@@ -10,34 +10,38 @@ public class SpawnUnit : MonoBehaviour
 	public GameObject attackPlayer;
 	public GameObject sendPlayer;
 
-    public float spawnDelay;
-    private float timeSinceSpawn;
+    
+  
 
 	Bank bank;
 
 	GameObject enemyType1;
+	GameObject potato;
+
+	public bool playTestAutoSend;
+	public float spawnDelay;
+	private float timeSinceSpawn;
 
 	void Awake()
 	{
 		enemyType1 = (GameObject)Resources.Load ("Enemies/EnemyType1");
+		potato = (GameObject)Resources.Load ("Enemies/Potato");
 		bank = sendPlayer.GetComponent<Bank> ();
 	}
-
-    void Start()
-    {
-        spawnDelay = 3f;
-    }
 
     // Update is called once per frame
     void Update()
     {
-        /*timeSinceSpawn += Time.deltaTime;
+		if (playTestAutoSend == true) {
+			timeSinceSpawn += Time.deltaTime;
 
-        if (timeSinceSpawn >= spawnDelay)
-        {
-            Spawn();
-            timeSinceSpawn = 0;
-        }*/
+			if (timeSinceSpawn >= spawnDelay)
+			{
+				Spawn("Potato");
+				timeSinceSpawn = 0;
+			}
+		}
+        
     }
 
 	public void Spawn(string unitName) //For Spawning specific units by name
@@ -52,6 +56,12 @@ public class SpawnUnit : MonoBehaviour
 			incomeGain = 1;
 			spawnUnit = enemyType1;
 			Debug.Log ("Send Enemy1!");
+			break;
+		case "Potato":
+			unitCost = 5;
+			incomeGain = 1;
+			spawnUnit = potato;
+			Debug.Log ("Send potato!");
 			break;
 		default:
 			Debug.Log ("Send DEFAULT");

@@ -295,9 +295,10 @@ public class MouseFunctions : MonoBehaviour
 
 						for(int j = 0; j < 4; j++)
 						{
-							if (!alreadyChecked.Contains(neighbors[j]) && neighbors[j].Wall != null)
-							{
-								toCheck.Add(neighbors[j]);
+							if (neighbors [j] != null) {
+								if (!alreadyChecked.Contains (neighbors [j]) && neighbors [j].Wall != null) {
+									toCheck.Add (neighbors [j]);
+								}
 							}
 						}
 
@@ -310,10 +311,11 @@ public class MouseFunctions : MonoBehaviour
 						Destroy (node.Wall);
 						newWall = wallType (node, neighbors);
 						node.Wall = newWall;
+
 					}
 
                     Debug.Log(bank.getMoney());
-
+					Destroy (dummyWall);
 
                 }
                 else
@@ -347,13 +349,16 @@ public class MouseFunctions : MonoBehaviour
 		neighbors = grid.GetNeighbors (n);
 
 		for (int i = 0; i < 4; i++) {
-			if (neighbors [i].Wall != null) {
-				nonNullIndexes[number] = i;
-				number++;
-				sum += (i + 1);
-			} else {
-				nullIndex = i;
+			if (neighbors [i] != null) {
+				if (neighbors [i].Wall != null) {
+					nonNullIndexes[number] = i;
+					number++;
+					sum += (i + 1);
+				} else {
+					nullIndex = i;
+				}
 			}
+
 		}
 
 		switch (number) {

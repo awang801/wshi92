@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class TowerOrb : MonoBehaviour
 {
@@ -27,6 +28,8 @@ public class TowerOrb : MonoBehaviour
     Unit currentTargetUnit;
     Transform currentTargetT;
 
+	List<GameObject> unitsInRange;
+
 
     void Awake()
     {
@@ -45,6 +48,8 @@ public class TowerOrb : MonoBehaviour
         sourceSFX = this.gameObject.GetComponent<AudioSource>();
 
         rotatePartTransform = gameObject.transform.GetChild(0);
+
+		unitsInRange = new List<GameObject>();
     }
 
     // Update is called once per frame
@@ -53,51 +58,84 @@ public class TowerOrb : MonoBehaviour
 
         timeSinceAttack += Time.deltaTime;
 
-        if (currentTarget != null)
-        {
+		if (currentTarget != null) {
+			if (targetIsDead () == false) {
+				if (recentNewTarget) {
+					SlowRotate ();
+				} else {
+					rotatePartTransform.LookAt (currentTarget.transform);
 
-            if (recentNewTarget)
-            {
-                SlowRotate();
-            }
-            else
-            {
-                rotatePartTransform.LookAt(currentTarget.transform);
-
-                if (timeSinceAttack >= attackDelay)
-                {
-                    Attack();
-                }
-            }
-
-        }
+					if (timeSinceAttack >= attackDelay) {
+						Attack ();
+					}
+				}
+			} else {
+				findNewTarget ();
+			}
+		} else if (unitsInRange.Count > 0){
+			findNewTarget ();
+		}
 
     }
 
 
 
+	void OnTriggerEnter(Collider other)
+	{
 
+		GameObject newTarget = other.gameObject;
 
-    void OnTriggerStay(Collider other)
-    {
-        if (currentTarget == null && other.gameObject.CompareTag("Enemy"))
-        {
-            recentNewTarget = true;
-            currentTarget = other.gameObject;
-            currentTargetUnit = currentTarget.GetComponent<Unit>();
-            currentTargetT = currentTarget.transform;
-            //Debug.Log ("Current Target changed to : " + currentTarget);
-        }
-    }
+		if (newTarget.CompareTag ("Enemy")) {
+			if (!unitsInRange.Contains (newTarget)) {
+				unitsInRange.Add (newTarget);
+			}
+
+			/*if (currentTarget == null && other.gameObject.CompareTag("Enemy") && other.GetComponent<Unit>().isDying == false)
+			{
+				recentNewTarget = true;
+				currentTarget = other.gameObject;
+				currentTargetUnit = currentTarget.GetComponent<Unit>();
+				currentTargetT = currentTarget.transform;
+				//Debug.Log ("Current Target changed to : " + currentTarget);
+			}*/
+		}
+
+	}
 
     void OnTriggerExit(Collider other)
     {
-        if (currentTarget == other.gameObject)
-        {
-            currentTarget = null;
-            //Debug.Log ("Current Target Left Range");
-        }
+		GameObject newTarget = other.gameObject;
+
+		if (newTarget.CompareTag ("Enemy")) {
+			if (!unitsInRange.Contains (newTarget)) {
+				unitsInRange.Remove (newTarget);
+			}
+		}
     }
+
+	void findNewTarget()
+	{
+		//Target priority will be
+
+		foreach (var unit in unitsInRange) {
+			currentTargetUnit = unit.GetComponent<Unit>();
+			if (currentTargetUnit.isDying == false) {
+				currentTarget = unit;
+				currentTargetT = currentTarget.transform;
+			}
+		}
+	}
+
+	bool targetIsDead()
+	{
+		if (currentTargetUnit.isDying == true) {
+			unitsInRange.Remove (currentTarget);
+			return true;
+		} else {
+			return false;
+		}
+
+	}
 
     void Attack()
     {

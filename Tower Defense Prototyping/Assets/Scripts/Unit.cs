@@ -3,14 +3,36 @@ using System.Collections;
 
 public class Unit : MonoBehaviour {
 
+	//From Dead Earth Tutorial
+	//**************************************************************
+	//Inspector Assigned Variables
+	public bool HasPath = false;
+	public bool PathPending = false;
+	public bool PathStale = false;
+	public NavMeshPathStatus PathStatus = NavMeshPathStatus.PathInvalid;
+
+	//Private Variables
+	NavMeshAgent navAgent = null;
+	Animator animator = null;
+
+	int angleHash;
+	int speedHash;
+	int deathHash;
+
+	float smoothAngle = 0f;
+	public bool MixedMode = false;
+
+	//**************************************************************
 	float health;
 
 	public Transform target;
-	NavMeshAgent agent;
 	NavMeshPath path;
+	NavMeshPath calcPath;
 
 	public GameObject attackPlayer;
 	public GameObject sendPlayer;
+
+	public bool isDying;
 
 	bool ableToFind;
 	bool calculating;
@@ -22,29 +44,21 @@ public class Unit : MonoBehaviour {
 	void Awake()
 	{
 		mFunc = GameObject.Find("GameManager").GetComponent<MouseFunctions>();
+		navAgent = GetComponent<NavMeshAgent> ();
+		animator = GetComponent<Animator> ();
+		angleHash = Animator.StringToHash ("Angle");
+		speedHash = Animator.StringToHash ("Speed");
+		deathHash = Animator.StringToHash ("Dead");
 
-		agent = GetComponent<NavMeshAgent>();
+		navAgent.updateRotation = false;
 	}
 
 	// Use this for initialization
 	void Start () {
 		
-		health = 3;
-
+		health = 5;
 		bank = attackPlayer.GetComponent<Bank>();
 
-
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
-	public void setTarget (Transform targetT)
-	{
-		target = targetT;
-		agent.SetDestination (target.position);
 	}
 
 	public void Damage(float dmg)
@@ -55,55 +69,99 @@ public class Unit : MonoBehaviour {
 		}
 	}
 
+	public void setTarget(Transform _target)
+	{
+		target = _target;
+		navAgent.SetDestination (target.position);
+	}
+
 	void Death()
 	{
-        
-		Instantiate (Resources.Load ("Enemies/EnemyDeath"), transform.position, transform.rotation);
-		Destroy (gameObject);
+		isDying = true;
+		animator.SetTrigger (deathHash);
+		//Instantiate (Resources.Load ("Enemies/EnemyDeath"), transform.position, transform.rotation);
+		Destroy (gameObject, animator.GetCurrentAnimatorClipInfo(0).Length + 1);
         bank.addMoney(15);
     }
 
     public void Finish()
     {
-        Instantiate(Resources.Load("Enemies/EnemyDeath"), transform.position, transform.rotation);
+		isDying = true;
+        Instantiate(Resources.Load("Enemies/EnemyDeath"), transform.position, transform.rotation); //Play some sort of teleport animation here
         Destroy(gameObject);
     }
 
+	void OnAnimatorMove() //Access to Root Motion 
+	{
+		if (MixedMode && !animator.GetCurrentAnimatorStateInfo (0).IsName ("Base Layer.Locomotion")) {
+			transform.rotation = animator.rootRotation;
+		}
+
+		navAgent.velocity = animator.deltaPosition / Time.deltaTime;
+	}
 
 	//FROM OLD ENEMY SCRIPT, MIGHT NOT NEED
-	/*void Update()
+	void Update()
     {
-        if (agent.pathStatus == NavMeshPathStatus.PathInvalid)
+		//FROM DEAD EARTH TUTORIAL
+		//**************************************************************************************
+		HasPath = navAgent.hasPath;
+		PathPending = navAgent.pathPending;
+		PathStale = navAgent.isPathStale;
+		PathStatus = navAgent.pathStatus;
+
+		Vector3 localDesiredVelocity = transform.InverseTransformVector (navAgent.desiredVelocity);
+		float angle = Mathf.Atan2 (localDesiredVelocity.x, localDesiredVelocity.z) * Mathf.Rad2Deg;
+		smoothAngle = Mathf.MoveTowardsAngle (smoothAngle, angle, 80.0f * Time.deltaTime);
+
+		float speed = localDesiredVelocity.z;
+
+		animator.SetFloat (angleHash, smoothAngle);
+		animator.SetFloat (speedHash, speed, 0.1f, Time.deltaTime);
+
+		if (navAgent.desiredVelocity.sqrMagnitude > Mathf.Epsilon) {
+			if (!MixedMode || (MixedMode && Mathf.Abs(angle) < 80f && animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Locomotion") )) {
+				Quaternion lookRotation = Quaternion.LookRotation (navAgent.desiredVelocity, Vector3.up);
+				transform.rotation = Quaternion.Slerp (transform.rotation, lookRotation, 5.0f * Time.deltaTime);
+			} 
+		}
+		//**************************************************************************************
+
+		//OLD CODE - Testing how to prevent enemies from stopping everytime a new wall is built
+		//======================================================================================
+
+        /*if (navAgent.pathStatus == NavMeshPathStatus.PathInvalid)
         {
             Debug.LogWarning("Agent has an incomplete path? " + gameObject);
-            agent.SetDestination(target.position);
+            navAgent.SetDestination(target.position);
         }
-        if (agent.pathStatus == NavMeshPathStatus.PathPartial)
+        if (navAgent.pathStatus == NavMeshPathStatus.PathPartial)
         {
             Debug.LogWarning("Agent has no valid path " + gameObject);
-            agent.SetDestination(target.position);
+            navAgent.SetDestination(target.position);
         }
 
-        if (agent.hasPath == false && path != null)
+        if (navAgent.hasPath == false && path != null)
         {
-            agent.path = path;
-            agent.Resume();
+            navAgent.path = path;
+            navAgent.Resume();
 
-            ableToFind = agent.CalculatePath(target.position, calcPath);
+            ableToFind = navAgent.CalculatePath(target.position, calcPath);
             calculating = true;
             Debug.Log("CALCULATING NEW PATH, SETTING TEMPORARY");
         }
-        else if (path != agent.path)
+        else if (path != navAgent.path)
         {
-            path = agent.path;
+            path = navAgent.path;
         }
-        if (calculating == true && agent.pathPending == false && ableToFind == true)
+        if (calculating == true && navAgent.pathPending == false && ableToFind == true)
         {
             calculating = false;
-            agent.path = calcPath;
+            navAgent.path = calcPath;
 
             Debug.Log("**NEW PATH SET!");
         }
+        */
     }
-*/
+
 }

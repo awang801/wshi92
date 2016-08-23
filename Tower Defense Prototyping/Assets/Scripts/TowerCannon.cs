@@ -37,7 +37,7 @@ public class TowerCannon : MonoBehaviour
     {
         attackDamage = 1f;
 
-        attackDelay = 1f;
+        attackDelay = 2f;
 
         rotationSpeed = 10f;
 

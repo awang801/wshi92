@@ -31,12 +31,13 @@ public class CameraWASD : MonoBehaviour {
 
 		move = new Vector3 (xMovement, yMovement * Mathf.Sin(20), mouseWheel + yMovement * Mathf.Cos(20)).normalized;
 
+		this.gameObject.transform.Translate (move * moveSpeed * Time.deltaTime);
 
 	}
 
 	void FixedUpdate()
 	{
-		this.gameObject.transform.Translate (move * moveSpeed * Time.deltaTime);
+		
 
 	}
 }

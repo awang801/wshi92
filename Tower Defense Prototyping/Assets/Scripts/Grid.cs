@@ -133,18 +133,26 @@ public class Grid : MonoBehaviour {
 
 		if (isEdge [0] == false) {
 			neighbors [0] = grid [x, y + 1];
+		} else {
+			neighbors [0] = null;
 		}
 
 		if (isEdge [1] == false) {
 			neighbors [1] = grid [x + 1, y];
+		} else {
+			neighbors [1] = null;
 		}
 
 		if (isEdge [2] == false) {
 			neighbors [2] = grid [x, y - 1];
+		} else {
+			neighbors [2] = null;
 		}
 
 		if (isEdge [3] == false) {
 			neighbors [3] = grid [x - 1, y];
+		} else {
+			neighbors [3] = null;
 		}
 			
 		return neighbors;

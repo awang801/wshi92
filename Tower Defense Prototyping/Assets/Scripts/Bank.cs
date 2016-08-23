@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class Bank:MonoBehaviour{
     private int money = 100;
-	private int income = 0;
+	private int income = 10;
 
 	public Text bankText;
 	public Text incomeText;

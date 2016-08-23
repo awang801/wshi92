@@ -18,7 +18,7 @@ public class WallButtonPress : MonoBehaviour {
 		if (kf.mode == 1) { 
 			if (kf.SelectedTowerToBuild == false)
 			{
-				mf.SelHighlight = ((GameObject)(Instantiate(Resources.Load("SelectionHighlight")))); //Creates green selection box
+				mf.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
 			}
 			Debug.Log ("BUILDING Z TOWER");
 			kf.towerToBuild = "Wall";
