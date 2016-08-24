@@ -229,7 +229,7 @@ public class KeyboardFunctions : MonoBehaviour
 			if (mode == 1) {
 				BuildTower ();
 			} else if (mode == 2) {
-				//Future different unit to send here
+				SendUnit("Cloud");
 			}
 		}
         else if (Input.GetButtonDown("T"))

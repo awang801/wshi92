@@ -18,6 +18,7 @@ public class Unit : MonoBehaviour {
 	int angleHash;
 	int speedHash;
 	int deathHash;
+	int finishHash;
 
 	float smoothAngle = 0f;
 	public bool MixedMode = false;
@@ -49,7 +50,7 @@ public class Unit : MonoBehaviour {
 		angleHash = Animator.StringToHash ("Angle");
 		speedHash = Animator.StringToHash ("Speed");
 		deathHash = Animator.StringToHash ("Dead");
-
+		finishHash = Animator.StringToHash ("Finish");
 		navAgent.updateRotation = false;
 	}
 
@@ -87,8 +88,9 @@ public class Unit : MonoBehaviour {
     public void Finish()
     {
 		isDying = true;
-        Instantiate(Resources.Load("Enemies/EnemyDeath"), transform.position, transform.rotation); //Play some sort of teleport animation here
-        Destroy(gameObject);
+		animator.SetTrigger (finishHash);
+        //Instantiate(Resources.Load("Enemies/EnemyDeath"), transform.position, transform.rotation); //Play some sort of teleport animation here
+		Destroy(gameObject, animator.GetCurrentAnimatorClipInfo(0).Length);
     }
 
 	void OnAnimatorMove() //Access to Root Motion 

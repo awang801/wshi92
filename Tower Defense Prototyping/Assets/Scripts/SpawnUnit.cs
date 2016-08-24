@@ -17,6 +17,7 @@ public class SpawnUnit : MonoBehaviour
 
 	GameObject enemyType1;
 	GameObject potato;
+	GameObject cloud;
 
 	public bool playTestAutoSend;
 	public float spawnDelay;
@@ -26,6 +27,7 @@ public class SpawnUnit : MonoBehaviour
 	{
 		enemyType1 = (GameObject)Resources.Load ("Enemies/EnemyType1");
 		potato = (GameObject)Resources.Load ("Enemies/Potato");
+		cloud = (GameObject)Resources.Load ("Enemies/Cloud");
 		bank = sendPlayer.GetComponent<Bank> ();
 	}
 
@@ -62,6 +64,12 @@ public class SpawnUnit : MonoBehaviour
 			incomeGain = 1;
 			spawnUnit = potato;
 			Debug.Log ("Send potato!");
+			break;
+		case "Cloud":
+			unitCost = 30;
+			incomeGain = 8;
+			spawnUnit = cloud;
+			Debug.Log ("Send cloud!");
 			break;
 		default:
 			Debug.Log ("Send DEFAULT");

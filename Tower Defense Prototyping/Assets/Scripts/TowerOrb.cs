@@ -20,37 +20,38 @@ public class TowerOrb : MonoBehaviour
 
     bool recentNewTarget;
 
-    GameObject currentTarget;
+	Animator animator;
+	int shootingHash;
 
+    GameObject currentTarget;
     GameObject rotatePart;
     Transform rotatePartTransform;
 
     Unit currentTargetUnit;
     Transform currentTargetT;
 
-	List<GameObject> unitsInRange;
+	public List<GameObject> unitsInRange;
 
 
     void Awake()
     {
+		animator = gameObject.GetComponent<Animator> ();
+		shootingHash = Animator.StringToHash ("Shooting");
         attackRange = this.gameObject.GetComponent<SphereCollider>().radius;
-    }
+		attackDamage = 1f;
 
-    void Start()
-    {
-        attackDamage = 1f;
+		attackDelay = 1.5f;
 
-        attackDelay = 1f;
+		rotationSpeed = 10f;
 
-        rotationSpeed = 10f;
+		shootSFX = (AudioClip)(Resources.Load("Sounds/shoot", typeof(AudioClip)));
+		sourceSFX = this.gameObject.GetComponent<AudioSource>();
 
-        shootSFX = (AudioClip)(Resources.Load("Sounds/shoot", typeof(AudioClip)));
-        sourceSFX = this.gameObject.GetComponent<AudioSource>();
-
-        rotatePartTransform = gameObject.transform.GetChild(0);
+		rotatePartTransform = gameObject.transform.GetChild(0);
 
 		unitsInRange = new List<GameObject>();
     }
+
 
     // Update is called once per frame
     void Update()
@@ -61,18 +62,26 @@ public class TowerOrb : MonoBehaviour
 		if (currentTarget != null) {
 			if (targetIsDead () == false) {
 				if (recentNewTarget) {
-					SlowRotate ();
+					SlowRotateZ();
 				} else {
-					rotatePartTransform.LookAt (currentTarget.transform);
+					Vector3 targetNoYAxis = currentTargetT.position;
+					targetNoYAxis.y = rotatePartTransform.position.y;
+					rotatePartTransform.LookAt(targetNoYAxis, Vector3.up);
 
 					if (timeSinceAttack >= attackDelay) {
 						Attack ();
+						animator.SetBool (shootingHash, true);
+					} else {
+						if (!animator.GetCurrentAnimatorStateInfo (0).IsName ("Base_Layer.Shooting")) {
+							animator.SetBool (shootingHash, false);
+						}
 					}
+
 				}
 			} else {
 				findNewTarget ();
 			}
-		} else if (unitsInRange.Count > 0){
+		} else {
 			findNewTarget ();
 		}
 
@@ -99,7 +108,6 @@ public class TowerOrb : MonoBehaviour
 				//Debug.Log ("Current Target changed to : " + currentTarget);
 			}*/
 		}
-
 	}
 
     void OnTriggerExit(Collider other)
@@ -107,23 +115,35 @@ public class TowerOrb : MonoBehaviour
 		GameObject newTarget = other.gameObject;
 
 		if (newTarget.CompareTag ("Enemy")) {
-			if (!unitsInRange.Contains (newTarget)) {
+			
+			if (unitsInRange.Contains (newTarget)) {
 				unitsInRange.Remove (newTarget);
 			}
+			if (currentTarget == newTarget) {
+				currentTarget = null;
+				findNewTarget ();
+			}
+
 		}
     }
 
 	void findNewTarget()
 	{
-		//Target priority will be
-
-		foreach (var unit in unitsInRange) {
-			currentTargetUnit = unit.GetComponent<Unit>();
-			if (currentTargetUnit.isDying == false) {
-				currentTarget = unit;
-				currentTargetT = currentTarget.transform;
+		if (unitsInRange.Count > 0) {
+			foreach (var unit in unitsInRange) {
+				if (unit == null) {
+					unitsInRange.Remove (unit);
+				} else {
+					currentTargetUnit = unit.GetComponent<Unit> ();
+					currentTarget = unit;
+					currentTargetT = currentTarget.transform;
+					break;
+				}
 			}
+		} else {
+			animator.SetBool (shootingHash, false); //No Target
 		}
+
 	}
 
 	bool targetIsDead()
@@ -162,4 +182,20 @@ public class TowerOrb : MonoBehaviour
         }
 
     }
+
+	void SlowRotateZ()
+	{
+		Vector3 relativePos = currentTargetT.position - rotatePartTransform.position;
+		relativePos.y = rotatePartTransform.position.y;
+		Quaternion toRotation = Quaternion.LookRotation(relativePos);
+		rotatePartTransform.rotation = Quaternion.Lerp(rotatePartTransform.rotation, toRotation, 0.2f);
+
+		float angle = Quaternion.Angle(rotatePartTransform.rotation, toRotation);
+
+		if (angle < 5f)
+		{
+			recentNewTarget = false;
+		}
+
+	}
 }
