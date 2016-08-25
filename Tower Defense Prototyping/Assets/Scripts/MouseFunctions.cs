@@ -27,6 +27,7 @@ public class MouseFunctions : MonoBehaviour
 	string buildWallModeXY;
 	GameObject wallGhost;
 	float wallsToBuild;
+    bool building;
 
 	string buildStructure;
 	Vector3 positionToBuildStart;
@@ -252,6 +253,7 @@ public class MouseFunctions : MonoBehaviour
             {
                 HandleBuildTower();
             }
+            building = true;
         }
         if (Input.GetButton("Fire1"))
         {
@@ -281,7 +283,7 @@ public class MouseFunctions : MonoBehaviour
             }
         }
 
-        if (Input.GetButtonUp("Fire1"))
+        if (Input.GetButtonUp("Fire1") && building == true)
         {
 
 			List<Node> alreadyChecked = new List<Node> ();
@@ -381,6 +383,14 @@ public class MouseFunctions : MonoBehaviour
             Destroy(wallGhost);
 
 
+        }
+        if (Input.GetButtonDown("Cancel") || Input.GetButtonDown("Fire2"))
+        {
+            for (int i = 0; i <= Mathf.Abs(wallsToBuild); i++)
+            {
+                Destroy(wallGhost);
+            }
+            building = false;
         }
 
     }
