@@ -23,7 +23,7 @@ public class WallButtonPress : MonoBehaviour {
 			Debug.Log ("BUILDING Z TOWER");
 			kf.towerToBuild = "Wall";
 			kf.SelectedTowerToBuild = true;
-			mf.Selecting = true;
+			mf.BuildSelecting = true;
 
 		}
 	}

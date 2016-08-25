@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 85ef89a11f8be6c409ccb12d3e24462e
-timeCreated: 1470547579
+timeCreated: 1472021133
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -8,15 +8,22 @@ ModelImporter:
     100000: Cannon
     100002: //RootNode
     100004: Platform
+    100006: RotateCannon
     400000: Cannon
     400002: //RootNode
     400004: Platform
+    400006: RotateCannon
     2300000: Cannon
     2300002: Platform
+    2300004: RotateCannon
     3300000: Cannon
     3300002: Platform
-    4300000: Cannon
-    4300002: Platform
+    3300004: RotateCannon
+    4300000: RotateCannon
+    4300002: Cannon
+    4300004: Platform
+    7400000: CannonShoot
+    9500000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
@@ -24,7 +31,7 @@ ModelImporter:
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
-    resampleRotations: 1
+    resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
     animationImportErrors: 
@@ -37,7 +44,43 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: CannonShoot
+      takeName: Cannon|CannonAction
+      firstFrame: 0
+      lastFrame: 50
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Platform
+        weight: 1
+      - path: RotateCannon
+        weight: 1
+      - path: RotateCannon/Cannon
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
@@ -58,7 +101,7 @@ ModelImporter:
     useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
-    normalImportMode: 0
+    normalImportMode: 1
     tangentImportMode: 3
   importAnimation: 1
   copyAvatar: 0
@@ -75,7 +118,7 @@ ModelImporter:
     rootMotionBoneName: 
     hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 

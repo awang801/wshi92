@@ -24,6 +24,11 @@ public class Unit : MonoBehaviour {
 	public bool MixedMode = false;
 
 	//**************************************************************
+
+	AudioSource myAudioSource;
+	AudioClip deathSound;
+
+	float maxHealth;
 	float health;
 
 	public Transform target;
@@ -32,6 +37,11 @@ public class Unit : MonoBehaviour {
 
 	public GameObject attackPlayer;
 	public GameObject sendPlayer;
+
+	Transform HPBarCanvas;
+	Transform HPBar;
+	public Quaternion HPBarRotation;
+
 
 	public bool isDying;
 
@@ -51,23 +61,36 @@ public class Unit : MonoBehaviour {
 		speedHash = Animator.StringToHash ("Speed");
 		deathHash = Animator.StringToHash ("Dead");
 		finishHash = Animator.StringToHash ("Finish");
+
+		HPBarCanvas = transform.GetChild (2);
+		HPBar = transform.GetChild (2).GetChild (2);
+		HPBarCanvas.Rotate (0, 180, 0);
+		HPBarRotation = HPBarCanvas.rotation;
 		navAgent.updateRotation = false;
+
+		myAudioSource = GetComponent<AudioSource> ();
+		deathSound = (AudioClip)Resources.Load ("Sounds/enemydeath");
 	}
 
 	// Use this for initialization
 	void Start () {
-		
+		maxHealth = 5;
 		health = 5;
 		bank = attackPlayer.GetComponent<Bank>();
 
 	}
 
 	public void Damage(float dmg)
-	{
+	{		
 		health -= dmg;
-		if (health <= 0) {
+
+		if (health <= 0 && !isDying) {
+			HPBar.localScale = new Vector3 (0, 1, 1);
 			Death ();
+		} else {
+			HPBar.localScale = new Vector3 (Mathf.Clamp(health / maxHealth, 0f, 1f), 1, 1);
 		}
+
 	}
 
 	public void setTarget(Transform _target)
@@ -80,17 +103,25 @@ public class Unit : MonoBehaviour {
 	{
 		isDying = true;
 		animator.SetTrigger (deathHash);
+		myAudioSource.PlayOneShot (deathSound);
 		//Instantiate (Resources.Load ("Enemies/EnemyDeath"), transform.position, transform.rotation);
-		Destroy (gameObject, animator.GetCurrentAnimatorClipInfo(0).Length + 1);
+		//Destroy (gameObject, animator.GetCurrentAnimatorClipInfo(0).Length + 1);
+		Invoke("temporaryWorkAround", animator.GetCurrentAnimatorClipInfo(0).Length + 1);
         bank.addMoney(15);
     }
+
+	void temporaryWorkAround()
+	{
+		gameObject.SetActive (false);
+	}
 
     public void Finish()
     {
 		isDying = true;
 		animator.SetTrigger (finishHash);
+		Invoke("temporaryWorkAround", animator.GetCurrentAnimatorClipInfo(0).Length + 1);
         //Instantiate(Resources.Load("Enemies/EnemyDeath"), transform.position, transform.rotation); //Play some sort of teleport animation here
-		Destroy(gameObject, animator.GetCurrentAnimatorClipInfo(0).Length);
+		//Destroy(gameObject, animator.GetCurrentAnimatorClipInfo(0).Length);
     }
 
 	void OnAnimatorMove() //Access to Root Motion 
@@ -127,6 +158,12 @@ public class Unit : MonoBehaviour {
 				transform.rotation = Quaternion.Slerp (transform.rotation, lookRotation, 5.0f * Time.deltaTime);
 			} 
 		}
+
+		if (PathStatus == NavMeshPathStatus.PathInvalid && !PathPending) {
+			navAgent.SetDestination (target.position);
+		}
+
+
 		//**************************************************************************************
 
 		//OLD CODE - Testing how to prevent enemies from stopping everytime a new wall is built
@@ -165,5 +202,10 @@ public class Unit : MonoBehaviour {
         }
         */
     }
+
+	void LateUpdate()
+	{
+		HPBarCanvas.rotation = HPBarRotation;
+	}
 
 }

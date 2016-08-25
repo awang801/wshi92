@@ -48,7 +48,7 @@ GameObject:
   - 82: {fileID: 82000010351359614}
   m_Layer: 0
   m_Name: BasicOrbTower
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -73,7 +73,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 129796}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 13.510904, y: 0, z: 20.757904}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -93,6 +93,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 4000011588397944}
+  - {fileID: 4000010734754544}
   m_Father: {fileID: 430118}
   m_RootOrder: 0
 --- !u!23 &2304308
@@ -195,6 +196,34 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1000013857126292
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 4000010734754544}
+  m_Layer: 0
+  m_Name: BulletPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4000010734754544
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013857126292}
+  m_LocalRotation: {x: 0.00000003774895, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.00006995961, z: 0.037581578}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 446676}
+  m_RootOrder: 1
 --- !u!4 &4000011588397944
 Transform:
   m_ObjectHideFlags: 1
@@ -253,7 +282,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 38d57b9d41fed9d40a45006994ea7f6d, type: 3}
+  m_audioClip: {fileID: 8300000, guid: eecbe93b4f62b60418e1576de03f13d1, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.7
   m_Pitch: 1
@@ -346,7 +375,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30e1b38a2d4cd6d4eabc677c830b664a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullet: {fileID: 157076, guid: ad5ed48bdbe931d4baba4a9d97cd1fb7, type: 2}
+  bullet: {fileID: 1000013148181562, guid: 503531b9d259e94479a1820ebd211042, type: 2}
   unitsInRange: []
 --- !u!135 &135000013874950424
 SphereCollider:

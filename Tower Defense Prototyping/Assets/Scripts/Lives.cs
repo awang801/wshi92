@@ -42,7 +42,7 @@ public class Lives:MonoBehaviour{
 	void updateText()
 	{
 		if (livesText != null) {
-			livesText.text = "Lives: " + lives;
+			livesText.text = lives.ToString();
 		}
 	}
 }

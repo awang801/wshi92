@@ -5,32 +5,40 @@ using System.Collections.Generic;
 public class TowerOrb : MonoBehaviour
 {
 
+	//Inspector Set Variables ============================================
+	public GameObject bullet;
+
+	//FUNCTIONALITY =======================================================
+
+	//Attack Variables
+	float attackRange; //References the Radius of the sphere collider attached to tower
+	float attackDamage; //Attack DMG
+	float attackDelay; //Attack Delay in Seconds
+	float timeSinceAttack; //Tracker used in conjunction with attackDelay
+
+	float rotationSpeed; //How fast the tower rotates to a new target (will track the target afterwards)
+	bool recentNewTarget;
+
+	Unit currentTargetUnit;
+	Transform currentTargetT;
+	public List<GameObject> unitsInRange;
+
+	//AUDIO =================================================================
     AudioClip shootSFX;
     AudioSource sourceSFX;
-    float attackRange; //References the Radius of the sphere collider attached to tower
-
-    float attackDamage; //Attack DMG
-    float attackDelay; //Attack Delay in Seconds
-
-    float rotationSpeed; //How fast the tower rotates to a new target (will track the target afterwards)
-
-    float timeSinceAttack; //Tracker used in conjunction with attackDelay
-
-    public GameObject bullet;
-
-    bool recentNewTarget;
-
+    
+	//ANIMATION ==============================================================
 	Animator animator;
 	int shootingHash;
+	GameObject currentTarget;
+	GameObject rotatePart;
+	Transform bulletPointTransform;
+	Transform rotatePartTransform;
 
-    GameObject currentTarget;
-    GameObject rotatePart;
-    Transform rotatePartTransform;
+	 
 
-    Unit currentTargetUnit;
-    Transform currentTargetT;
 
-	public List<GameObject> unitsInRange;
+    
 
 
     void Awake()
@@ -44,10 +52,11 @@ public class TowerOrb : MonoBehaviour
 
 		rotationSpeed = 10f;
 
-		shootSFX = (AudioClip)(Resources.Load("Sounds/shoot", typeof(AudioClip)));
+		shootSFX = (AudioClip)(Resources.Load("Sounds/OrbFire", typeof(AudioClip)));
 		sourceSFX = this.gameObject.GetComponent<AudioSource>();
 
 		rotatePartTransform = gameObject.transform.GetChild(0);
+		bulletPointTransform = rotatePartTransform.GetChild(1);
 
 		unitsInRange = new List<GameObject>();
     }
@@ -62,7 +71,7 @@ public class TowerOrb : MonoBehaviour
 		if (currentTarget != null) {
 			if (targetIsDead () == false) {
 				if (recentNewTarget) {
-					SlowRotateZ();
+					SlowRotate();
 				} else {
 					Vector3 targetNoYAxis = currentTargetT.position;
 					targetNoYAxis.y = rotatePartTransform.position.y;
@@ -137,6 +146,7 @@ public class TowerOrb : MonoBehaviour
 					currentTargetUnit = unit.GetComponent<Unit> ();
 					currentTarget = unit;
 					currentTargetT = currentTarget.transform;
+					recentNewTarget = true;
 					break;
 				}
 			}
@@ -159,7 +169,7 @@ public class TowerOrb : MonoBehaviour
 
     void Attack()
     {
-        Bullet newBullet = ((GameObject)(Instantiate(bullet, rotatePartTransform.position, Quaternion.identity))).GetComponent<Bullet>();
+		Bullet newBullet = ((GameObject)(Instantiate(bullet, bulletPointTransform.position, Quaternion.identity))).GetComponent<Bullet>();
 
         newBullet.setup(currentTargetUnit, attackDamage, 25f);
 
@@ -172,7 +182,7 @@ public class TowerOrb : MonoBehaviour
     {
         Vector3 relativePos = currentTargetT.position - rotatePartTransform.position;
         Quaternion toRotation = Quaternion.LookRotation(relativePos);
-        rotatePartTransform.rotation = Quaternion.Lerp(rotatePartTransform.rotation, toRotation, 0.2f);
+        rotatePartTransform.rotation = Quaternion.Lerp(rotatePartTransform.rotation, toRotation, 0.5f);
 
         float angle = Quaternion.Angle(rotatePartTransform.rotation, toRotation);
 
@@ -188,7 +198,7 @@ public class TowerOrb : MonoBehaviour
 		Vector3 relativePos = currentTargetT.position - rotatePartTransform.position;
 		relativePos.y = rotatePartTransform.position.y;
 		Quaternion toRotation = Quaternion.LookRotation(relativePos);
-		rotatePartTransform.rotation = Quaternion.Lerp(rotatePartTransform.rotation, toRotation, 0.2f);
+		rotatePartTransform.rotation = Quaternion.Lerp (rotatePartTransform.rotation, toRotation, 0.2f);
 
 		float angle = Quaternion.Angle(rotatePartTransform.rotation, toRotation);
 

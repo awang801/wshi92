@@ -24,8 +24,8 @@ public class Bullet : MonoBehaviour
         }
         else
         {
-            Vector3 direction = (targetT.transform.position - transform.position).normalized;
-            transform.Translate(direction * velocity * Time.deltaTime);
+			transform.LookAt (targetT.position);
+			transform.Translate(Vector3.forward * velocity * Time.deltaTime);
 
             if (Vector3.Distance(targetT.transform.position, transform.position) < 1f)
             {

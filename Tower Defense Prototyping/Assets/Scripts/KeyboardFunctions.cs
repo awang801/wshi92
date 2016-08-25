@@ -7,7 +7,7 @@ using System.Collections;
 public class KeyboardFunctions : MonoBehaviour
 {
 
-    AudioClip UIBuildFX;
+    AudioClip UIClickFX;
     AudioSource sourceSFX;
 
     MouseFunctions mFunc; //Reference to Mouse functions
@@ -18,6 +18,13 @@ public class KeyboardFunctions : MonoBehaviour
 
 	public GameObject player;
 	public GameObject spawnObject;
+
+	public Texture2D normalCursor;
+	public Texture2D buildCursor;
+	public Texture2D attackCursor;
+	public CursorMode cursorMode = CursorMode.Auto;
+	public Vector2 hotSpot = Vector2.zero;
+
 	SpawnUnit spawner;
 
 	public int mode = 0; 
@@ -32,10 +39,15 @@ public class KeyboardFunctions : MonoBehaviour
         mFunc = this.gameObject.GetComponent<MouseFunctions>();
         buildButton = GameObject.Find("BuildButtonText").GetComponent<BuildButtonPress>();
 
-        UIBuildFX = (AudioClip)(Resources.Load("Sounds/UIButtonclick", typeof(AudioClip)));
+        UIClickFX = (AudioClip)(Resources.Load("Sounds/UIButtonclick", typeof(AudioClip)));
         sourceSFX = this.gameObject.GetComponent<AudioSource>();
 
 		spawner = spawnObject.GetComponent<SpawnUnit> ();
+
+		normalCursor = (Texture2D)Resources.Load ("Sprites/Arrow");
+		buildCursor = (Texture2D)Resources.Load ("Sprites/BuildCursor");
+		attackCursor = (Texture2D)Resources.Load ("Sprites/AttackCursor");
+
     }
 
 
@@ -55,9 +67,9 @@ public class KeyboardFunctions : MonoBehaviour
 
             Debug.Log("CANCEL SELECTED TOWER");
             selectedTowerToBuild = false;
-            mFunc.Selecting = false; //Shows mouse cursor
+            mFunc.BuildSelecting = false; //Shows mouse cursor
             Destroy(mFunc.SelHighlight); //Destroys the green highlight selection box
-            sourceSFX.PlayOneShot(UIBuildFX);
+            sourceSFX.PlayOneShot(UIClickFX);
 
         }
         else if (mode == 1 && selectedTowerToBuild == false)
@@ -66,13 +78,16 @@ public class KeyboardFunctions : MonoBehaviour
             buildButton.BuildToggle();
             Debug.Log("CANCEL BUILDING");
             mode = 0;
-            sourceSFX.PlayOneShot(UIBuildFX);
+            sourceSFX.PlayOneShot(UIClickFX);
+			Cursor.SetCursor(normalCursor, hotSpot, cursorMode);
         }
 		else if (mode == 2)
 		{
 			//Cancels sending mode
+			sourceSFX.PlayOneShot(UIClickFX);
 			Debug.Log("CANCEL SENDING");
 			mode = 0;
+			Cursor.SetCursor(normalCursor, hotSpot, cursorMode);
 		}
     }
 
@@ -84,10 +99,10 @@ public class KeyboardFunctions : MonoBehaviour
     {
         if (mode == 0)
         {
-
+			Cursor.SetCursor(buildCursor, hotSpot, cursorMode);
             mode = 1;
             Debug.Log("BUILDING START");
-            sourceSFX.PlayOneShot(UIBuildFX);
+            sourceSFX.PlayOneShot(UIClickFX);
 
         }
     }
@@ -97,15 +112,16 @@ public class KeyboardFunctions : MonoBehaviour
         if (selectedTowerToBuild == true)
         {
             selectedTowerToBuild = false;
-            mFunc.Selecting = false;
+            mFunc.BuildSelecting = false;
             Destroy(mFunc.SelHighlight);
-            sourceSFX.PlayOneShot(UIBuildFX);
+            sourceSFX.PlayOneShot(UIClickFX);
         }
 
         if (mode == 1)
         {
+			Cursor.SetCursor(normalCursor, hotSpot, cursorMode);
             mode = 0;
-            sourceSFX.PlayOneShot(UIBuildFX);
+            sourceSFX.PlayOneShot(UIClickFX);
         }
     }
 
@@ -117,15 +133,15 @@ public class KeyboardFunctions : MonoBehaviour
             {
                 mFunc.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
             }
-            sourceSFX.PlayOneShot(UIBuildFX);
+            sourceSFX.PlayOneShot(UIClickFX);
             Debug.Log("BUILDING Z TOWER");
             towerToBuild = "Wall";
             SelectedTowerToBuild = true;
-            mFunc.Selecting = true;
+            mFunc.BuildSelecting = true;
         }
     }
 
-    public void BuildTower()
+    public void BuildOrbTower()
     {
         if (mode == 1)
         {
@@ -133,14 +149,31 @@ public class KeyboardFunctions : MonoBehaviour
             {
                 mFunc.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
             }
-            sourceSFX.PlayOneShot(UIBuildFX);
+            sourceSFX.PlayOneShot(UIClickFX);
             Debug.Log("BUILDING X TOWER");
-            towerToBuild = "Tower";
+            towerToBuild = "OrbTower";
             SelectedTowerToBuild = true;
-            mFunc.Selecting = true;
+			mFunc.BuildSelecting = true;
 
         }
     }
+
+	public void BuildCannonTower()
+	{
+		if (mode == 1)
+		{
+			if (SelectedTowerToBuild == false)
+			{
+				mFunc.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
+			}
+			sourceSFX.PlayOneShot(UIClickFX);
+			Debug.Log("BUILDING C TOWER");
+			towerToBuild = "CannonTower";
+			SelectedTowerToBuild = true;
+			mFunc.BuildSelecting = true;
+
+		}
+	}
 
 	public bool SelectedTowerToBuild
 	{
@@ -176,9 +209,13 @@ public class KeyboardFunctions : MonoBehaviour
 		if (mode == 0) {
 			mode = 2;
 			Debug.Log ("SENDING START");
+			Cursor.SetCursor(attackCursor, hotSpot, cursorMode);
+			sourceSFX.PlayOneShot(UIClickFX);
 		} else if (mode == 2) {
 			mode = 0;
 			Debug.Log ("SENDING STOP");
+			Cursor.SetCursor(normalCursor, hotSpot, cursorMode);
+			sourceSFX.PlayOneShot(UIClickFX);
 		}
 	}
 
@@ -227,9 +264,16 @@ public class KeyboardFunctions : MonoBehaviour
 		else if (Input.GetButtonDown("X"))
 		{
 			if (mode == 1) {
-				BuildTower ();
+				BuildOrbTower ();
 			} else if (mode == 2) {
 				SendUnit("Cloud");
+			}
+		}
+		else if (Input.GetButtonDown("C"))
+		{
+			if (mode == 1) {
+				BuildCannonTower ();
+			} else if (mode == 2) {
 			}
 		}
         else if (Input.GetButtonDown("T"))

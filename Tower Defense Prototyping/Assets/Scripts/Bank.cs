@@ -79,14 +79,14 @@ public class Bank:MonoBehaviour{
 	void updateMoneyText()
 	{
 		if (bankText != null) {
-			bankText.text = "Money: " + money;
+			bankText.text = money.ToString();
 		}
 	}
 
 	void updateIncomeText()
 	{
 		if (incomeText != null) {
-			incomeText.text = "Income: " + income;
+			incomeText.text = income.ToString();
 		}
 	}
 }

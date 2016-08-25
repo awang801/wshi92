@@ -6,41 +6,41 @@ using System.Collections.Generic;
 public class MouseFunctions : MonoBehaviour
 {
 
+	//References
+	//=============================================
+	public GameObject player;
+	KeyboardFunctions kFunc;
+	Bank bank;
+
+	//Selection
+	//=============================================
+	float camRayLength = 200f;
+	Grid grid;
+	bool buildSelecting;
+	Node currentMouseNode;
+
+	//Building
+	//==============================================
+	bool buildWallMode;
+	Node startWallModeNode;
+	Node endWallModeNode;
+	string buildWallModeXY;
+	GameObject wallGhost;
+	float wallsToBuild;
+
+	string buildStructure;
+	Vector3 positionToBuildStart;
+	Vector3 positionToBuildEnd;
+
+	//Audio
+	//==============================================
     AudioClip BuildFX;
     AudioSource sourceSFX;
     public GameObject newStructure;
 
-    Grid grid;
 
-	public GameObject player;
-    Bank bank;
-
-    KeyboardFunctions kFunc;
-
-    float camRayLength = 200f;
-
-    GameObject selHighlight;
-    bool selecting;
-
-    NavMeshPath path;
-
-    Node currentMouseNode;
-
-    Transform target; //Target of the enemies (need to change this in the future)
-
-    int floorMask;
-
-    bool buildWallMode;
-    Node startWallModeNode;
-    Node endWallModeNode;
-    string buildWallModeXY;
-    GameObject wallGhost;
-    float wallsToBuild;
-
-    string buildStructure;
-    Vector3 positionToBuildStart;
-    Vector3 positionToBuildEnd;
-
+	//Preloaded Objects
+	//===============================================
 	GameObject wall2Way;
 	GameObject wall3Way;
 	GameObject wall4Way;
@@ -50,7 +50,27 @@ public class MouseFunctions : MonoBehaviour
 
 	GameObject wallGhostLoaded;
 
+	GameObject selHighlight;
+
 	GameObject orbTower;
+	GameObject cannonTower;
+
+    NavMeshPath path;
+
+	//Cursor
+	//===============================================
+	public Texture2D cursorTexture;
+	public CursorMode cursorMode = CursorMode.Auto;
+	public Vector2 hotSpot = Vector2.zero;
+
+	//Other..?
+	//===============================================
+    Transform target; //Target of the enemies (need to change this in the future)
+    int floorMask;
+
+
+
+
 
     void Awake()
     {
@@ -71,6 +91,7 @@ public class MouseFunctions : MonoBehaviour
 		wallGhostLoaded = (GameObject)(Resources.Load ("Walls/WallGhost"));
 
 		orbTower = (GameObject)(Resources.Load ("Towers/BasicOrbTower"));
+		cannonTower = (GameObject)(Resources.Load ("Towers/CannonTower"));
 
         BuildFX = (AudioClip)(Resources.Load("Sounds/BuildingPlacement", typeof(AudioClip)));
         sourceSFX = this.gameObject.GetComponent<AudioSource>();
@@ -82,6 +103,8 @@ public class MouseFunctions : MonoBehaviour
     {
         floorMask = LayerMask.GetMask("Terrain");
         path = new NavMeshPath();
+		Cursor.SetCursor(cursorTexture, hotSpot, cursorMode);
+
     }
 
     // Update is called once per frame
@@ -90,10 +113,10 @@ public class MouseFunctions : MonoBehaviour
 
         UpdateMouseNode();
 
-        if (Selecting == true)
+        if (buildSelecting == true)
         {
-            MoveSelection();
-            CheckClick();
+			MoveBuildSelection();
+            CheckBuildClick();
         }
 
         if (buildWallMode)
@@ -141,7 +164,7 @@ public class MouseFunctions : MonoBehaviour
     void HandleBuildTower()
     {
 
-        if (buildStructure == "Tower")
+        if (buildStructure == "OrbTower")
         {
             if (currentMouseNode.Wall != null)
             {
@@ -169,6 +192,34 @@ public class MouseFunctions : MonoBehaviour
                 Debug.Log("CANNOT BUILD TOWER WITHOUT WALL");
             }
         }
+		else if (buildStructure == "CannonTower")
+		{
+			if (currentMouseNode.Wall != null)
+			{
+				if (currentMouseNode.Tower != null)
+				{
+
+					Debug.Log("CANNOT BUILD TOWER, TOWER ALREADY EXISTS");
+
+				}
+				else if (bank.getMoney() - 40 < 0)
+				{
+					Debug.Log("Not enough Money");
+				}
+				else
+				{
+					bank.addMoney(-40);
+					sourceSFX.PlayOneShot(BuildFX);
+					positionToBuildStart = currentMouseNode.worldPosition + (Vector3.up * 1f);
+					currentMouseNode.Tower = ((GameObject)(Instantiate(cannonTower, positionToBuildStart, Quaternion.identity)));
+				}
+
+			}
+			else
+			{
+				Debug.Log("CANNOT BUILD TOWER WITHOUT WALL");
+			}
+		}
     }
 
     /*
@@ -183,9 +234,8 @@ public class MouseFunctions : MonoBehaviour
 
 		} else 
 	  */
-    void CheckClick()
+    void CheckBuildClick()
     {
-
 
         if (Input.GetButtonDown("Fire1"))
         {
@@ -444,16 +494,7 @@ public class MouseFunctions : MonoBehaviour
 
 	}
 
-	void HandleWallBuild()
-	{
-
-
-
-
-
-	}
-
-    void MoveSelection()
+    void MoveBuildSelection()
     {
         if (SelHighlight != null && currentMouseNode.worldPosition != null)
         {
@@ -502,11 +543,11 @@ public class MouseFunctions : MonoBehaviour
         }
     }
 
-    public bool Selecting
+    public bool BuildSelecting
     {
         get
         {
-            return selecting;
+            return buildSelecting;
         }
         set
         {
@@ -518,7 +559,7 @@ public class MouseFunctions : MonoBehaviour
             {
                 ShowMouse();
             }
-            selecting = value;
+            buildSelecting = value;
         }
     }
 

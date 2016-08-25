@@ -96,9 +96,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 248a1f019b680a741beb6fd11fe86e9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HasPath: 0
+  PathPending: 0
+  PathStale: 0
+  PathStatus: 2
+  MixedMode: 0
   target: {fileID: 0}
   attackPlayer: {fileID: 0}
   sendPlayer: {fileID: 0}
+  HPBar: {fileID: 0}
+  isDying: 0
 --- !u!135 &13505804
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -130,7 +137,7 @@ NavMeshAgent:
   m_Height: 1
   m_BaseOffset: 0
   m_WalkableMask: 1
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
