@@ -27,7 +27,7 @@ public class MouseFunctions : MonoBehaviour
 	string buildWallModeXY;
 	GameObject wallGhost;
 	float wallsToBuild;
-    bool building;
+    public bool building;
 
 	string buildStructure;
 	Vector3 positionToBuildStart;
@@ -237,6 +237,10 @@ public class MouseFunctions : MonoBehaviour
 	  */
     void CheckBuildClick()
     {
+        if(building == false)
+        {
+            kFunc.building = false;
+        }
 
         if (Input.GetButtonDown("Fire1"))
         {
@@ -248,12 +252,14 @@ public class MouseFunctions : MonoBehaviour
                 startWallModeNode = currentMouseNode; 
                 buildWallMode = true;
 				wallGhost = ((GameObject)(Instantiate(wallGhostLoaded)));
+                kFunc.building = true;
+                building = true;
             }
             else
             {
                 HandleBuildTower();
             }
-            building = true;
+
         }
         if (Input.GetButton("Fire1"))
         {
@@ -288,7 +294,7 @@ public class MouseFunctions : MonoBehaviour
 
 			List<Node> alreadyChecked = new List<Node> ();
 			List<Node> toCheck = new List<Node> ();
-
+            kFunc.building = false;
             buildWallMode = false;
 			if (bank.getMoney() >= ((Mathf.Abs(wallsToBuild) + 1) * 5 ))
             {
@@ -572,6 +578,7 @@ public class MouseFunctions : MonoBehaviour
             buildSelecting = value;
         }
     }
+
 
 
 }

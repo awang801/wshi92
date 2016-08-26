@@ -16,6 +16,10 @@ public class KeyboardFunctions : MonoBehaviour
 
     public bool selectedTowerToBuild; //Boolean if tower has been selected
 
+    public bool building = false; //mfunc reconciles the right click before it even moves 
+                                  //to the update for keybardfunc so i have to have its own variable 
+                                  //that decides when to reconcile the change forits value;
+
 	public GameObject player;
 	public GameObject spawnObject;
 
@@ -228,8 +232,7 @@ public class KeyboardFunctions : MonoBehaviour
 
     void CheckButtons()
     {
-
-        if (Input.GetButtonDown("Cancel"))
+        if (Input.GetButtonDown("Cancel") || Input.GetButtonDown("Fire2"))
         { //If ESC is pressed
 
             //Cancels out of the layers of selection
@@ -239,10 +242,11 @@ public class KeyboardFunctions : MonoBehaviour
             // 2) Tower
             // 2) Wall
 
-            //Cancels from deeper layers first, one layer per press
-
-            Cancel();
-
+            //Cancels from deeper layers first, one layer per press'
+            if (building == false)
+            {
+                Cancel();
+            }
         }
         else if (Input.GetButtonDown("Build"))
         { //If B is pressed, Enter Build mode
