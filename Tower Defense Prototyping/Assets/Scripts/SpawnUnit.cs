@@ -10,9 +10,6 @@ public class SpawnUnit : MonoBehaviour
 	public GameObject attackPlayer;
 	public GameObject sendPlayer;
 
-    
-  
-
 	Bank bank;
 
 	GameObject enemyType1;
@@ -28,6 +25,8 @@ public class SpawnUnit : MonoBehaviour
 		enemyType1 = (GameObject)Resources.Load ("Enemies/EnemyType1");
 		potato = (GameObject)Resources.Load ("Enemies/Potato");
 		cloud = (GameObject)Resources.Load ("Enemies/Cloud");
+
+
 		bank = sendPlayer.GetComponent<Bank> ();
 	}
 

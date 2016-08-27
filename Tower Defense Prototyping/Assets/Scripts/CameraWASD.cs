@@ -10,7 +10,7 @@ public class CameraWASD : MonoBehaviour {
 
 	Vector3 move;
 
-	float moveSpeed = 40f;
+	float moveSpeed = 30f;
 	// Use this for initialization
 	void Awake() {
 
@@ -29,15 +29,13 @@ public class CameraWASD : MonoBehaviour {
 		mouseWheel = Input.GetAxis ("Mouse ScrollWheel");
 
 
-		move = new Vector3 (xMovement, yMovement * Mathf.Sin(20), mouseWheel + yMovement * Mathf.Cos(20)).normalized;
-
-		this.gameObject.transform.Translate (move * moveSpeed * Time.deltaTime);
-
 	}
 
 	void FixedUpdate()
 	{
-		
+		move = new Vector3 (xMovement, yMovement * Mathf.Sin(20), mouseWheel + yMovement * Mathf.Cos(20)).normalized;
+
+		this.gameObject.transform.Translate (move * moveSpeed * Time.fixedDeltaTime);
 
 	}
 }

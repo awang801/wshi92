@@ -22,9 +22,10 @@ GameObject:
   - 33: {fileID: 33000010876990400}
   - 23: {fileID: 23000012961243932}
   - 208: {fileID: 208000012843703122}
-  m_Layer: 0
+  - 65: {fileID: 65000010278228870}
+  m_Layer: 10
   m_Name: WallEnd
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -36,7 +37,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011417818450}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16, y: 0, z: 16}
+  m_LocalPosition: {x: 13.341983, y: 0, z: 15.575064}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -79,6 +80,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011417818450}
   m_Mesh: {fileID: 4300000, guid: cfff854af3d102b44b6f935850be7e6c, type: 3}
+--- !u!65 &65000010278228870
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011417818450}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: -0.00000008940697, y: 0.6, z: 0.000000029802322}
 --- !u!208 &208000012843703122
 NavMeshObstacle:
   m_ObjectHideFlags: 1

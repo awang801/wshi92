@@ -15,7 +15,8 @@ public class TowerCannon : MonoBehaviour
 	float attackDamage; //Attack DMG
 	float attackDelay; //Attack Delay in Seconds
 	float timeSinceAttack; //Tracker used in conjunction with attackDelay
-
+	float cost;
+	float upgradeCost;
 	float rotationSpeed; //How fast the tower rotates to a new target (will track the target afterwards)
 	bool recentNewTarget;
 
@@ -70,9 +71,9 @@ public class TowerCannon : MonoBehaviour
 
 		if (currentTarget != null) {
 			if (targetIsDead () == false) {
-				if (recentNewTarget) {
+				/*if (recentNewTarget) {
 					SlowRotateZ();
-				} else {
+				} else {*/
 					Vector3 targetNoYAxis = currentTargetT.position;
 					targetNoYAxis.y = rotatePartTransform.position.y;
 					rotatePartTransform.LookAt(targetNoYAxis, Vector3.up);
@@ -86,7 +87,7 @@ public class TowerCannon : MonoBehaviour
 						}
 					}
 
-				}
+				//}
 			} else {
 				findNewTarget ();
 			}
@@ -196,7 +197,8 @@ public class TowerCannon : MonoBehaviour
 	void SlowRotateZ()
 	{
 		Vector3 relativePos = currentTargetT.position - rotatePartTransform.position;
-		relativePos.y = rotatePartTransform.position.y;
+		relativePos.y = gameObject.transform.position.y - 0.3f;
+		Debug.Log (rotatePartTransform.position.y);
 		Quaternion toRotation = Quaternion.LookRotation(relativePos);
 		rotatePartTransform.rotation = Quaternion.Lerp(rotatePartTransform.rotation, toRotation, 0.2f);
 
@@ -208,4 +210,21 @@ public class TowerCannon : MonoBehaviour
 		}
 
 	}
+
+	public string[] Stats
+	{
+		get
+		{
+			string[] stats = new string[7];
+			stats [0] = "Cannon";
+			stats [1] = attackDamage.ToString();
+			stats [2] = attackRange.ToString();
+			stats [3] = (1/attackDelay).ToString();
+			stats [4] = cost.ToString();
+			stats [5] = (cost/2).ToString();
+			stats [6] = upgradeCost.ToString();
+			return stats;
+		}
+	}
+
 }

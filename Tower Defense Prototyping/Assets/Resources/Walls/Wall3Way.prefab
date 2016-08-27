@@ -22,9 +22,10 @@ GameObject:
   - 33: {fileID: 33000012272795056}
   - 23: {fileID: 23000011583128986}
   - 208: {fileID: 208000011778767950}
-  m_Layer: 0
+  - 65: {fileID: 65000013939444176}
+  m_Layer: 10
   m_Name: Wall3Way
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -79,6 +80,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010524145560}
   m_Mesh: {fileID: 4300000, guid: d4413123a52d70846a3047784f16e20c, type: 3}
+--- !u!65 &65000013939444176
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010524145560}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1.0000001}
+  m_Center: {x: 0.049999982, y: 0.6, z: 0}
 --- !u!208 &208000011778767950
 NavMeshObstacle:
   m_ObjectHideFlags: 1

@@ -22,9 +22,10 @@ GameObject:
   - 33: {fileID: 33000013339342924}
   - 23: {fileID: 23000011053963600}
   - 208: {fileID: 208000013010275296}
-  m_Layer: 0
+  - 65: {fileID: 65000014276715702}
+  m_Layer: 10
   m_Name: Wall2Way
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -79,6 +80,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010226234374}
   m_Mesh: {fileID: 4300000, guid: 9c64b665fe42a564ba71d734d36b6c32, type: 3}
+--- !u!65 &65000014276715702
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010226234374}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1.0000001}
+  m_Center: {x: 0, y: 0.6, z: 0}
 --- !u!208 &208000013010275296
 NavMeshObstacle:
   m_ObjectHideFlags: 1

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 //This class manages mouse functions including selection on the grid, cursor hiding/showing
 public class MouseFunctions : MonoBehaviour
@@ -16,8 +17,20 @@ public class MouseFunctions : MonoBehaviour
 	//=============================================
 	float camRayLength = 200f;
 	Grid grid;
-	bool buildSelecting;
+	int mode;
 	Node currentMouseNode;
+	GameObject selectedObject;
+	Renderer[] selectedObjectRenderer;
+	Material[][] selectedObjectResetMaterial;
+	int numberOfRenderers;
+	int[] numberOfMaterials;
+	GameObject currentMouseObject;
+
+	string selectedObjectType;
+
+	string[] selectedValues;
+	public Text infoText;
+
 
 	//Building
 	//==============================================
@@ -36,6 +49,8 @@ public class MouseFunctions : MonoBehaviour
 	//Audio
 	//==============================================
     AudioClip BuildFX;
+	AudioClip needMoneySound;
+	AudioClip cannotBuildSound;
     AudioSource sourceSFX;
     public GameObject newStructure;
 
@@ -56,7 +71,13 @@ public class MouseFunctions : MonoBehaviour
 	GameObject orbTower;
 	GameObject cannonTower;
 
+	Sprite cannonIcon;
+	Sprite orbIcon;
+	Sprite wallIcon;
+
     NavMeshPath path;
+
+	Material highlightCastleMaterial;
 
 	//Cursor
 	//===============================================
@@ -67,7 +88,8 @@ public class MouseFunctions : MonoBehaviour
 	//Other..?
 	//===============================================
     Transform target; //Target of the enemies (need to change this in the future)
-    int floorMask;
+    int terrainFloorMask;
+	int objectFloorMask;
 
 
 
@@ -94,7 +116,15 @@ public class MouseFunctions : MonoBehaviour
 		orbTower = (GameObject)(Resources.Load ("Towers/BasicOrbTower"));
 		cannonTower = (GameObject)(Resources.Load ("Towers/CannonTower"));
 
+		/*orbIcon = (Sprite)(Resources.Load ("Sprites/OrbIcon"));
+		cannonIcon = (Sprite)(Resources.Load ("Sprites/CannonIcon"));
+		wallIcon = (Sprite)(Resources.Load ("Sprites/WallIcon"));*/
+
+		highlightCastleMaterial = (Material)(Resources.Load ("Materials/Outlined_Object"));
+
         BuildFX = (AudioClip)(Resources.Load("Sounds/BuildingPlacement", typeof(AudioClip)));
+		needMoneySound  = (AudioClip)(Resources.Load("Sounds/needMoney", typeof(AudioClip)));
+		cannotBuildSound  = (AudioClip)(Resources.Load("Sounds/CannotBuild", typeof(AudioClip)));
         sourceSFX = this.gameObject.GetComponent<AudioSource>();
 
     }
@@ -102,9 +132,19 @@ public class MouseFunctions : MonoBehaviour
 
     void Start()
     {
-        floorMask = LayerMask.GetMask("Terrain");
+		terrainFloorMask = LayerMask.GetMask("Terrain");
+		objectFloorMask = LayerMask.GetMask("Objects");
         path = new NavMeshPath();
 		Cursor.SetCursor(cursorTexture, hotSpot, cursorMode);
+
+		selectedObjectRenderer = new Renderer[3];
+		selectedObjectResetMaterial = new Material[3][];
+		selectedObjectResetMaterial [0] = new Material[10];
+		selectedObjectResetMaterial [1] = new Material[10];
+		selectedObjectResetMaterial [2] = new Material[10];
+		numberOfMaterials = new int[3];
+
+		selectedValues = new string[7];
 
     }
 
@@ -112,18 +152,24 @@ public class MouseFunctions : MonoBehaviour
     void Update()
     {
 
-        UpdateMouseNode();
+		if (mode == 0) {
+			UpdateMouseObjects ();
+			CheckSelectionClick ();
 
-        if (buildSelecting == true)
+		}
+		else if (mode == 1)
         {
+			UpdateMouseNode();
+
 			MoveBuildSelection();
             CheckBuildClick();
+			if (buildWallMode)
+			{
+				MoveWallGhost();
+			}
         }
 
-        if (buildWallMode)
-        {
-            MoveWallGhost();
-        }
+        
 
     }
 
@@ -156,87 +202,169 @@ public class MouseFunctions : MonoBehaviour
         RaycastHit nodeHit;
 
         //Debug.DrawRay (Camera.main.transform.position, Input.mousePosition);
-        if (Physics.Raycast(camRay, out nodeHit, camRayLength, floorMask))
+		if (Physics.Raycast(camRay, out nodeHit, camRayLength, terrainFloorMask))
         {
             currentMouseNode = grid.NodeFromWorldPoint(nodeHit.point);
         }
     }
 
-    void HandleBuildTower()
-    {
+	void UpdateMouseObjects()
+	/*
+	 * Updates the object (wall/tower/unit) that the mouse is currently over
+	 * 
+	 * Saves information in "currentMouseNode"
+	 */
+	{
+		Ray camRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit objHit;
 
-        if (buildStructure == "OrbTower")
-        {
-            if (currentMouseNode.Wall != null)
-            {
-                if (currentMouseNode.Tower != null)
-                {
-
-                    Debug.Log("CANNOT BUILD TOWER, TOWER ALREADY EXISTS");
-
-                }
-                else if (bank.getMoney() - 20 < 0)
-                {
-                    Debug.Log("Not enough Money");
-                }
-                else
-                {
-                    bank.addMoney(-20);
-                    sourceSFX.PlayOneShot(BuildFX);
-                    positionToBuildStart = currentMouseNode.worldPosition + (Vector3.up * 1f);
-                    currentMouseNode.Tower = ((GameObject)(Instantiate(orbTower, positionToBuildStart, Quaternion.identity)));
-                }
-
-            }
-            else
-            {
-                Debug.Log("CANNOT BUILD TOWER WITHOUT WALL");
-            }
-        }
-		else if (buildStructure == "CannonTower")
-		{
-			if (currentMouseNode.Wall != null)
-			{
-				if (currentMouseNode.Tower != null)
-				{
-
-					Debug.Log("CANNOT BUILD TOWER, TOWER ALREADY EXISTS");
-
-				}
-				else if (bank.getMoney() - 40 < 0)
-				{
-					Debug.Log("Not enough Money");
-				}
-				else
-				{
-					bank.addMoney(-40);
-					sourceSFX.PlayOneShot(BuildFX);
-					positionToBuildStart = currentMouseNode.worldPosition + (Vector3.up * 1f);
-					currentMouseNode.Tower = ((GameObject)(Instantiate(cannonTower, positionToBuildStart, Quaternion.identity)));
-				}
-
-			}
-			else
-			{
-				Debug.Log("CANNOT BUILD TOWER WITHOUT WALL");
-			}
+		//Debug.DrawRay (Camera.main.transform.position, Input.mousePosition);
+		if (Physics.Raycast (camRay, out objHit, camRayLength, objectFloorMask)) {
+			currentMouseObject = objHit.transform.gameObject;
+		} else {
+			currentMouseObject = null;
 		}
+	}
+
+
+
+    void HandleBuildTower() 
+	//Checks if it is possible to build a tower in current node
+	//If it IS possible, handle the correct type of tower
+    {
+		
+
+		if (currentMouseNode.Wall == null) {
+
+			//Play Cannot Build Sound
+			Debug.Log("CANNOT BUILD TOWER WITHOUT WALL");
+			sourceSFX.PlayOneShot(cannotBuildSound);
+		} 
+
+		else {
+
+			if (currentMouseNode.Tower != null) {
+
+				//Play Cannot Build Sound
+				Debug.Log("CANNOT BUILD TOWER, TOWER ALREADY EXISTS");
+				sourceSFX.PlayOneShot(cannotBuildSound);
+
+			} else {
+
+				switch (buildStructure) {
+
+				case "OrbTower":
+
+					if (bank.getMoney() - 20 < 0)
+					{
+						Debug.Log("Not enough Money");
+						sourceSFX.PlayOneShot(needMoneySound);
+					}
+					else
+					{
+						bank.addMoney(-20);
+						sourceSFX.PlayOneShot(BuildFX);
+						positionToBuildStart = currentMouseNode.worldPosition + (Vector3.up * 1f);
+						currentMouseNode.Tower = ((GameObject)(Instantiate(orbTower, positionToBuildStart, Quaternion.identity)));
+					}
+
+
+
+					break;
+
+				case "CannonTower":
+
+					if (bank.getMoney () - 40 < 0)
+					{
+						Debug.Log ("Not enough Money");
+						sourceSFX.PlayOneShot(needMoneySound);
+					}
+					else {
+						
+						bank.addMoney (-40);
+						sourceSFX.PlayOneShot (BuildFX);
+						positionToBuildStart = currentMouseNode.worldPosition + (Vector3.up * 1f);
+						currentMouseNode.Tower = ((GameObject)(Instantiate (cannonTower, positionToBuildStart, Quaternion.identity)));
+					}
+
+					break;
+
+				default:
+
+					break;
+				}
+
+			}
+
+		}
+
     }
 
-    /*
-	  if (buildStructure == "Wall") {
-			if (currentMouseNode.hasWall == false) {
-				positionToBuildStart = currentMouseNode.worldPosition + (Vector3.up * 0.5f);
-				newStructure = ((GameObject)(Instantiate (Resources.Load (buildStructure), positionToBuildStart, Quaternion.identity)));
-				currentMouseNode.hasWall = true;
-			} else {
-				Debug.Log ("CANNOT BUILD HERE, WALL ALREADY EXISTS");
-			}
+	void CheckSelectionClick()
+	//Checks how to handle clicks for selecting buildings and towers (maybe units too later on)
+	{
+			if (Input.GetButtonDown ("Fire1")) {
+			
+				Deselect ();
 
-		} else 
-	  */
-    void CheckBuildClick()
+				if (currentMouseObject != null) {
+					
+					if(currentMouseObject.CompareTag("TowerSelector") || currentMouseObject.CompareTag("Wall"))
+					{
+
+						selectedObject = currentMouseObject;
+						selectedObjectType = currentMouseObject.tag;
+
+						if (selectedObject.transform.parent != null) {
+							selectedObjectRenderer  = selectedObject.transform.parent.GetComponentsInChildren<Renderer> ();
+						} else {
+							selectedObjectRenderer  = selectedObject.GetComponents<Renderer> ();
+						}
+
+						numberOfRenderers = selectedObjectRenderer.Length;
+
+						for (int i = 0; i < numberOfRenderers; i++) {
+							selectedObjectResetMaterial[i] = selectedObjectRenderer[i].materials;
+							numberOfMaterials [i] = selectedObjectRenderer [i].materials.Length;
+							Material[] tempMaterials = new Material[numberOfMaterials[i]];
+							for (int j = 0; j < numberOfMaterials[i]; j++) {
+								tempMaterials[j] = highlightCastleMaterial;
+							}
+							selectedObjectRenderer[i].materials = tempMaterials;
+
+						}
+
+					}
+				}
+				
+			} 
+
+	}
+
+	void updateInfoText()
+	{
+		if (infoText != null) {
+			infoText.text = "Damage: ";
+		}
+	}
+
+	void Deselect()
+	{
+		if (selectedObject != null) {
+			for (int i = 0; i < numberOfRenderers; i++) {
+				for (int j = 0; j < numberOfMaterials[i]; j++) {
+					selectedObjectRenderer[i].materials = selectedObjectResetMaterial[i];
+				}
+			}
+		}
+
+		selectedObject = null;
+	}
+
+	void CheckBuildClick()
+	//Checks how to handle clicks for building walls and towers
     {
+		
         if(building == false)
         {
             kFunc.building = false;
@@ -247,6 +375,7 @@ public class MouseFunctions : MonoBehaviour
 
             buildStructure = kFunc.TowerToBuild;
             positionToBuildStart = currentMouseNode.worldPosition;
+
             if (buildStructure == "Wall")
             {
                 startWallModeNode = currentMouseNode; 
@@ -272,7 +401,6 @@ public class MouseFunctions : MonoBehaviour
                 {
 
                     endWallModeNode = grid.NodeFromCoordinates(currentMouseNode.gridX, startWallModeNode.gridY);
-                    //Debug.Log ("X ===" +endWallModeNode.worldPosition + "   Current Node = " + currentMouseNode.worldPosition + "     StartWall = " + startWallModeNode.worldPosition);
                     buildWallModeXY = "x";
                     wallsToBuild = difference.x;
 
@@ -283,13 +411,12 @@ public class MouseFunctions : MonoBehaviour
                     endWallModeNode = grid.NodeFromCoordinates(startWallModeNode.gridX, currentMouseNode.gridY);
                     buildWallModeXY = "y";
                     wallsToBuild = difference.y;
-                    //Debug.Log ("Y ===" +endWallModeNode.worldPosition + "   Current Node = " + currentMouseNode.worldPosition + "     StartWall = " + startWallModeNode.worldPosition);
 
                 }
             }
         }
 
-        if (Input.GetButtonUp("Fire1") && building == true)
+        if (Input.GetButtonUp("Fire1") && buildWallMode == true)
         {
 
 			List<Node> alreadyChecked = new List<Node> ();
@@ -379,11 +506,13 @@ public class MouseFunctions : MonoBehaviour
                 else
                 {
                     Debug.Log("CANNOT PLACE, WALL IN LINE");
+					sourceSFX.PlayOneShot(cannotBuildSound);
                 }
             }
             else
             {
                 Debug.Log("Not enough Money");
+				sourceSFX.PlayOneShot(needMoneySound);
             }
 
             Destroy(wallGhost);
@@ -401,25 +530,27 @@ public class MouseFunctions : MonoBehaviour
 
     }
 
+
 	GameObject wallType(Node n, Node[] neighbors)
 	{
-		//Returns the correct wall type, location, and rotation
+		//Returns the correct wall type, location, and rotation, for MODULAR WALL BUILDING
 		GameObject myWall;
 
-		int number = 0;
-		int sum = 0;
-		int nullIndex = 0;
+		int numberOfNeighbors = 0; //numberOfNeighbors of Neighbors
+		int sum = 0; //See below in the for loop
+		int nullIndex = 0; //Stores the location of the null neighbor (starts at 0) - - ONLY USED FOR 3 NEIGHBOR CASE
 
-		int[] nonNullIndexes = new int[4];
+		int[] nonNullIndexes = new int[4]; //Stores the indexes of the neighbors
 
-		neighbors = grid.GetNeighbors (n);
+		neighbors = grid.GetNeighbors (n); //Gets neighbors in an array
 
+		//Gets neighbor indexes, and other information for calculating the necessary wall
 		for (int i = 0; i < 4; i++) {
 			if (neighbors [i] != null) {
 				if (neighbors [i].Wall != null) {
-					nonNullIndexes[number] = i;
-					number++;
-					sum += (i + 1);
+					nonNullIndexes[numberOfNeighbors] = i;
+					numberOfNeighbors++;
+					sum += (i + 1); //A numbering system for neighbors (1 = North, 2 = East, 3 = South, 4 = West) - - ONLY USED FOR 2 NEIGHBOR CASE
 				} else {
 					nullIndex = i;
 				}
@@ -427,30 +558,30 @@ public class MouseFunctions : MonoBehaviour
 
 		}
 
-		switch (number) {
-		case 0:
+		switch (numberOfNeighbors) {
+		case 0: // No neighbors case
 
-			myWall = (GameObject)Instantiate(wallSolo);
+			myWall = (GameObject)Instantiate(wallSolo); //Use solo wall
 			break;
-		case 1:
+		case 1: //1 Neighbor case
 
-			myWall = (GameObject)Instantiate(wallEnd);
+			myWall = (GameObject)Instantiate(wallEnd); //Use end wall piece
 
-			myWall.transform.Rotate(0, 90f * (nonNullIndexes[0] - 1), 0);
+			myWall.transform.Rotate(0, 90f * (nonNullIndexes[0] - 1), 0); //Gives correct rotation relative to the one existing neighbor
 
 			break;
 
-		case 2:
-			if (sum % 2 == 0) { //Even means straight connector
+		case 2: //2 Neighbor case
+			if (sum % 2 == 0) { //Even means neighbors are across from each other, straight connector
 				
 				myWall = (GameObject)Instantiate(wall2Way);
 
-				//wall2Way is vertical by default
+				//wall2Way is vertical by default, so if our first neighbor (index 0 of nonNullIndexes) is 1 (East node), then rotate
 				if (nonNullIndexes [0] == 1) {
 					myWall.transform.Rotate(0, 90f, 0); //Rotate Horizontal
 				} 
 
-			} else { //Odd means corner
+			} else { //Odd means neighbors are next to each other, use corner piece
 
 				myWall = (GameObject)Instantiate(wallCorner);
 
@@ -475,10 +606,10 @@ public class MouseFunctions : MonoBehaviour
 			}
 			break;
 
-		case 3:
+		case 3: //3 Neighbor case
 
 			myWall = (GameObject)Instantiate(wall3Way);
-			switch (nullIndex) {
+			switch (nullIndex) { //If 3 neighbors, find the NULL neighbor, and rotate appropriately
 			case 0:
 				myWall.transform.Rotate(0, 270f, 0);
 				break;
@@ -494,7 +625,7 @@ public class MouseFunctions : MonoBehaviour
 			}
 			break;
 
-		case 4:
+		case 4://4 Neighbor case
 
 			myWall = (GameObject)Instantiate(wall4Way);
 			break;
@@ -504,7 +635,7 @@ public class MouseFunctions : MonoBehaviour
 			break;
 		}
 
-		myWall.transform.position = n.worldPosition;
+		myWall.transform.position = n.worldPosition; //Set correct position for new wall
 
 		return myWall;
 
@@ -512,6 +643,7 @@ public class MouseFunctions : MonoBehaviour
 
     void MoveBuildSelection()
     {
+		//Moves the green highlight box around with the mouse
         if (SelHighlight != null && currentMouseNode.worldPosition != null)
         {
             if (currentMouseNode.Wall != null)
@@ -559,25 +691,26 @@ public class MouseFunctions : MonoBehaviour
         }
     }
 
-    public bool BuildSelecting
-    {
-        get
-        {
-            return buildSelecting;
-        }
-        set
-        {
-            if (value == true)
-            {
-                HideMouse();
-            }
-            else
-            {
-                ShowMouse();
-            }
-            buildSelecting = value;
-        }
-    }
+	public int Mode
+	{
+		get
+		{
+			return mode;
+		}
+		set
+		{
+			if (value == 1)
+			{
+				HideMouse();
+				Deselect ();
+			}
+			else
+			{
+				ShowMouse();
+			}
+			mode = value;
+		}
+	}
 
 
 

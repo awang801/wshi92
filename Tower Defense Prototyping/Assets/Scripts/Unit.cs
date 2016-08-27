@@ -27,6 +27,8 @@ public class Unit : MonoBehaviour {
 
 	AudioSource myAudioSource;
 	AudioClip deathSound;
+	AudioClip goodSound;
+	AudioClip badSound;
 
 	float maxHealth;
 	float health;
@@ -37,6 +39,8 @@ public class Unit : MonoBehaviour {
 
 	public GameObject attackPlayer;
 	public GameObject sendPlayer;
+
+	//FadeObjectInOut myFader;
 
 	Transform HPBarCanvas;
 	Transform HPBar;
@@ -62,6 +66,9 @@ public class Unit : MonoBehaviour {
 		deathHash = Animator.StringToHash ("Dead");
 		finishHash = Animator.StringToHash ("Finish");
 
+		//myFader = gameObject.GetComponent<FadeObjectInOut> ();
+		//Debug.Log (myFader);
+
 		HPBarCanvas = transform.GetChild (2);
 		HPBar = transform.GetChild (2).GetChild (2);
 		HPBarCanvas.Rotate (0, 180, 0);
@@ -70,6 +77,8 @@ public class Unit : MonoBehaviour {
 
 		myAudioSource = GetComponent<AudioSource> ();
 		deathSound = (AudioClip)Resources.Load ("Sounds/enemydeath");
+		goodSound  = (AudioClip)Resources.Load ("Sounds/GoodBeep");
+		badSound  = (AudioClip)Resources.Load ("Sounds/BadBeep");
 	}
 
 	// Use this for initialization
@@ -106,6 +115,7 @@ public class Unit : MonoBehaviour {
 		myAudioSource.PlayOneShot (deathSound);
 		//Instantiate (Resources.Load ("Enemies/EnemyDeath"), transform.position, transform.rotation);
 		//Destroy (gameObject, animator.GetCurrentAnimatorClipInfo(0).Length + 1);
+		//myFader.FadeOut();
 		Invoke("temporaryWorkAround", animator.GetCurrentAnimatorClipInfo(0).Length + 1);
         bank.addMoney(15);
     }
@@ -119,6 +129,12 @@ public class Unit : MonoBehaviour {
     {
 		isDying = true;
 		animator.SetTrigger (finishHash);
+		if (attackPlayer.name == "Player 2") {
+			myAudioSource.PlayOneShot (goodSound);
+		} else {
+			myAudioSource.PlayOneShot (badSound);
+		}
+		//myFader.FadeOut();
 		Invoke("temporaryWorkAround", animator.GetCurrentAnimatorClipInfo(0).Length + 1);
         //Instantiate(Resources.Load("Enemies/EnemyDeath"), transform.position, transform.rotation); //Play some sort of teleport animation here
 		//Destroy(gameObject, animator.GetCurrentAnimatorClipInfo(0).Length);

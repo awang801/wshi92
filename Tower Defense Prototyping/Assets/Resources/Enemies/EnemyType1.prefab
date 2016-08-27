@@ -14,7 +14,7 @@ GameObject:
   - 54: {fileID: 5429976}
   - 114: {fileID: 11454648}
   - 195: {fileID: 19590622}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EnemyType1
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -104,7 +104,7 @@ MonoBehaviour:
   target: {fileID: 0}
   attackPlayer: {fileID: 0}
   sendPlayer: {fileID: 0}
-  HPBar: {fileID: 0}
+  HPBarRotation: {x: 0, y: 0, z: 0, w: 0}
   isDying: 0
 --- !u!135 &13505804
 SphereCollider:

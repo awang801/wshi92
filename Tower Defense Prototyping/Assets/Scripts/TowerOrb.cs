@@ -15,7 +15,8 @@ public class TowerOrb : MonoBehaviour
 	float attackDamage; //Attack DMG
 	float attackDelay; //Attack Delay in Seconds
 	float timeSinceAttack; //Tracker used in conjunction with attackDelay
-
+	float cost;
+	float upgradeCost;
 	float rotationSpeed; //How fast the tower rotates to a new target (will track the target afterwards)
 	bool recentNewTarget;
 
@@ -47,7 +48,8 @@ public class TowerOrb : MonoBehaviour
 		shootingHash = Animator.StringToHash ("Shooting");
         attackRange = this.gameObject.GetComponent<SphereCollider>().radius;
 		attackDamage = 1f;
-
+		cost = 20f;
+		upgradeCost = 30f;
 		attackDelay = 1.5f;
 
 		rotationSpeed = 10f;
@@ -196,7 +198,7 @@ public class TowerOrb : MonoBehaviour
 	void SlowRotateZ()
 	{
 		Vector3 relativePos = currentTargetT.position - rotatePartTransform.position;
-		relativePos.y = rotatePartTransform.position.y;
+		relativePos.y = rotatePartTransform.position.y + gameObject.transform.position.y;
 		Quaternion toRotation = Quaternion.LookRotation(relativePos);
 		rotatePartTransform.rotation = Quaternion.Lerp (rotatePartTransform.rotation, toRotation, 0.2f);
 
@@ -208,4 +210,21 @@ public class TowerOrb : MonoBehaviour
 		}
 
 	}
+
+	public string[] Stats
+	{
+		get
+		{
+			string[] stats = new string[7];
+			stats [0] = "Orb Tower";
+			stats [1] = attackDamage.ToString();
+			stats [2] = attackRange.ToString();
+			stats [3] = (1/attackDelay).ToString();
+			stats [4] = cost.ToString();
+			stats [5] = (cost/2).ToString();
+			stats [6] = upgradeCost.ToString();
+			return stats;
+		}
+	}
+
 }

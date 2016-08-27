@@ -10,6 +10,7 @@ public class KeyboardFunctions : MonoBehaviour
     AudioClip UIClickFX;
     AudioSource sourceSFX;
 
+
     MouseFunctions mFunc; //Reference to Mouse functions
 
     public string towerToBuild; //Contains name of Prefab to be instantiated
@@ -52,6 +53,7 @@ public class KeyboardFunctions : MonoBehaviour
 		buildCursor = (Texture2D)Resources.Load ("Sprites/BuildCursor");
 		attackCursor = (Texture2D)Resources.Load ("Sprites/AttackCursor");
 
+
     }
 
 
@@ -71,7 +73,7 @@ public class KeyboardFunctions : MonoBehaviour
 
             Debug.Log("CANCEL SELECTED TOWER");
             selectedTowerToBuild = false;
-            mFunc.BuildSelecting = false; //Shows mouse cursor
+            mFunc.Mode = 0; //Shows mouse cursor
             Destroy(mFunc.SelHighlight); //Destroys the green highlight selection box
             sourceSFX.PlayOneShot(UIClickFX);
 
@@ -116,7 +118,7 @@ public class KeyboardFunctions : MonoBehaviour
         if (selectedTowerToBuild == true)
         {
             selectedTowerToBuild = false;
-            mFunc.BuildSelecting = false;
+            mFunc.Mode = 0;
             Destroy(mFunc.SelHighlight);
             sourceSFX.PlayOneShot(UIClickFX);
         }
@@ -141,7 +143,7 @@ public class KeyboardFunctions : MonoBehaviour
             Debug.Log("BUILDING Z TOWER");
             towerToBuild = "Wall";
             SelectedTowerToBuild = true;
-            mFunc.BuildSelecting = true;
+            mFunc.Mode = 1;
         }
     }
 
@@ -157,7 +159,7 @@ public class KeyboardFunctions : MonoBehaviour
             Debug.Log("BUILDING X TOWER");
             towerToBuild = "OrbTower";
             SelectedTowerToBuild = true;
-			mFunc.BuildSelecting = true;
+			mFunc.Mode = 1;
 
         }
     }
@@ -174,7 +176,7 @@ public class KeyboardFunctions : MonoBehaviour
 			Debug.Log("BUILDING C TOWER");
 			towerToBuild = "CannonTower";
 			SelectedTowerToBuild = true;
-			mFunc.BuildSelecting = true;
+			mFunc.Mode = 1;
 
 		}
 	}

@@ -23,7 +23,7 @@ public class TowerButtonPress : MonoBehaviour {
 			Debug.Log ("BUILDING X TOWER");
 			kf.towerToBuild = "Tower";
 			kf.SelectedTowerToBuild = true;
-			mf.BuildSelecting = true;
+			mf.Mode = 1;
 
 		}
 	}
