@@ -30,6 +30,9 @@ public class MouseFunctions : MonoBehaviour
 
 	string[] selectedValues;
 	public Text infoText;
+	public Text nameText;
+	public Image selectionImage;
+	public GameObject selectionPanel;
 
 
 	//Building
@@ -103,7 +106,6 @@ public class MouseFunctions : MonoBehaviour
 
         bank = player.GetComponent<Bank>();
 
-
 		wall2Way = (GameObject)(Resources.Load ("Walls/Wall2Way"));
 		wall3Way = (GameObject)(Resources.Load ("Walls/Wall3Way"));
 		wall4Way = (GameObject)(Resources.Load ("Walls/Wall4Way"));
@@ -116,9 +118,9 @@ public class MouseFunctions : MonoBehaviour
 		orbTower = (GameObject)(Resources.Load ("Towers/BasicOrbTower"));
 		cannonTower = (GameObject)(Resources.Load ("Towers/CannonTower"));
 
-		/*orbIcon = (Sprite)(Resources.Load ("Sprites/OrbIcon"));
-		cannonIcon = (Sprite)(Resources.Load ("Sprites/CannonIcon"));
-		wallIcon = (Sprite)(Resources.Load ("Sprites/WallIcon"));*/
+		orbIcon = Resources.Load<Sprite> ("Sprites/OrbIcon");
+		cannonIcon = Resources.Load<Sprite> ("Sprites/CannonIcon");
+		wallIcon = Resources.Load<Sprite> ("Sprites/WallIcon");
 
 		highlightCastleMaterial = (Material)(Resources.Load ("Materials/Outlined_Object"));
 
@@ -132,6 +134,7 @@ public class MouseFunctions : MonoBehaviour
 
     void Start()
     {
+		
 		terrainFloorMask = LayerMask.GetMask("Terrain");
 		objectFloorMask = LayerMask.GetMask("Objects");
         path = new NavMeshPath();
@@ -314,6 +317,7 @@ public class MouseFunctions : MonoBehaviour
 
 						selectedObject = currentMouseObject;
 						selectedObjectType = currentMouseObject.tag;
+						Debug.Log (selectedObjectType);
 
 						if (selectedObject.transform.parent != null) {
 							selectedObjectRenderer  = selectedObject.transform.parent.GetComponentsInChildren<Renderer> ();
@@ -334,8 +338,12 @@ public class MouseFunctions : MonoBehaviour
 
 						}
 
+						
+
 					}
 				}
+
+				updateInfoText ();
 				
 			} 
 
@@ -343,9 +351,63 @@ public class MouseFunctions : MonoBehaviour
 
 	void updateInfoText()
 	{
-		if (infoText != null) {
-			infoText.text = "Damage: ";
+		if (selectedObjectType == "TowerSelector") {
+			if (infoText != null) {
+				string displayMe = "";
+				Tower tower = selectedObject.transform.parent.gameObject.GetComponent<Tower> ();
+				string[] stats = tower.Stats;
+
+				nameText.text = stats [0];
+				for (int i = 1; i < 7; i++) {
+					displayMe = displayMe + stats [i] + "\n\n";
+				}
+				if (stats [0] == "Orb Tower") {
+					selectionImage.sprite = orbIcon;
+					selectionImage.enabled = true;
+					StartCoroutine (animateSelectionPanel (1));
+				} else if (stats [0] == "Cannon") {
+					selectionImage.sprite = cannonIcon;
+					selectionImage.enabled = true;
+					StartCoroutine (animateSelectionPanel (1));
+				} 
+
+				infoText.text = displayMe;
+
+
+
+			}
+		} else {
+			selectionImage.enabled = false;
+			infoText.text = "";
+			nameText.text = "";
+			StartCoroutine (animateSelectionPanel (-1));
 		}
+	}
+
+	IEnumerator animateSelectionPanel(int direction)
+	{
+		
+		Vector3 targetPosition;
+		if (direction > 0) {
+			targetPosition = new Vector3(40f, 212.5f, 0f);
+			while (selectionPanel.transform.position.x < 40f) {
+				selectionPanel.transform.position = Vector3.Lerp (selectionPanel.transform.position, targetPosition, 30f * Time.deltaTime);
+
+				yield return null;
+			}
+
+		} else {
+			targetPosition = new Vector3(-160f, 212.5f, 0f);
+			while (selectionPanel.transform.position.x > -160f) {
+				selectionPanel.transform.position = Vector3.Lerp (selectionPanel.transform.position, targetPosition, 30f * Time.deltaTime);
+
+				yield return null;
+			}
+
+		}
+
+
+
 	}
 
 	void Deselect()
@@ -359,6 +421,7 @@ public class MouseFunctions : MonoBehaviour
 		}
 
 		selectedObject = null;
+		selectedObjectType = null;
 	}
 
 	void CheckBuildClick()

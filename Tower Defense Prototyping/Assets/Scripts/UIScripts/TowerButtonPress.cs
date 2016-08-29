@@ -21,7 +21,7 @@ public class TowerButtonPress : MonoBehaviour {
 				mf.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
 			}
 			Debug.Log ("BUILDING X TOWER");
-			kf.towerToBuild = "Tower";
+			kf.towerToBuild = "OrbTower";
 			kf.SelectedTowerToBuild = true;
 			mf.Mode = 1;
 

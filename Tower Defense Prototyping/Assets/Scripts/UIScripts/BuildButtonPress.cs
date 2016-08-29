@@ -9,8 +9,13 @@ public class BuildButtonPress : MonoBehaviour {
 	MouseFunctions mf;
 	GameObject panel;
 	RectTransform panelTransform;
-	GameObject towerButton;
-	GameObject wallButton;
+	GameObject cannonButtonObj;
+	GameObject towerButtonObj;
+	GameObject wallButtonObj;
+
+	Button towerButton;
+	Button cannonButton;
+	Button wallButton;
 
 	float panelMaxX;
 	float panelMinX;
@@ -25,10 +30,15 @@ public class BuildButtonPress : MonoBehaviour {
 		mf = gm.GetComponent<MouseFunctions> ();
 		panel = GameObject.Find ("ButtonPanel");
 		panelTransform = panel.GetComponent<RectTransform> ();
-		towerButton = GameObject.Find ("OrbTowerButton");
-		wallButton = GameObject.Find ("WallButton");
-		towerButton.SetActive (false);
-		wallButton.SetActive (false);
+		towerButtonObj = GameObject.Find ("OrbTowerButton");
+		cannonButtonObj = GameObject.Find ("CannonTowerButton");
+		wallButtonObj = GameObject.Find ("WallButton");
+		towerButton = towerButtonObj.GetComponent<Button> ();
+		cannonButton = cannonButtonObj.GetComponent<Button> ();
+		wallButton = wallButtonObj.GetComponent<Button> ();
+		towerButton.interactable = false;
+		cannonButton.interactable = false;
+		wallButton.interactable = false;
 		panelMaxX = 190;
 		panelMinX = 70;
 	}
@@ -41,19 +51,21 @@ public class BuildButtonPress : MonoBehaviour {
 	public void BuildToggle()
 	{
 		if (kf.mode == 1) {
+			towerButton.interactable = false;
+			cannonButton.interactable = false;
+			wallButton.interactable = false;
 			kf.CancelBuild ();
-			changeDirection = -1;
 		} else {
 			kf.Build ();
-			changeDirection = 1;
-			towerButton.SetActive (true);
-			wallButton.SetActive (true);
+			towerButton.interactable = true;
+			cannonButton.interactable = true;
+			wallButton.interactable = true;
 		}
 	}
 
 	void panelSize()
 	{
-		if (changeDirection > 0) {
+		/*if (changeDirection > 0) {
 			if (panelTransform.sizeDelta.x < panelMaxX) {
 				panelTransform.sizeDelta = new Vector2 (panelTransform.sizeDelta.x + 10f, panelTransform.sizeDelta.y);
 				panelTransform.position = new Vector3 (panelTransform.position.x + 5f, panelTransform.position.y, panelTransform.position.z);
@@ -73,7 +85,7 @@ public class BuildButtonPress : MonoBehaviour {
 				towerButton.SetActive (false);
 				wallButton.SetActive (false);
 			}
-		}
+		}*/
 	}
 
 

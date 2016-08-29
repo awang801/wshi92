@@ -1,123 +1,217 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public class Tower : MonoBehaviour
+public abstract class Tower : MonoBehaviour
 {
 
-    AudioClip shootSFX;
-    AudioSource sourceSFX;
-    float attackRange; //References the Radius of the sphere collider attached to tower
+	//Inspector Set Variables ============================================
+	public GameObject bullet;
 
-    float attackDamage; //Attack DMG
-    float attackDelay; //Attack Delay in Seconds
+	//FUNCTIONALITY =======================================================
 
-    float rotationSpeed; //How fast the tower rotates to a new target (will track the target afterwards)
-
-    float timeSinceAttack; //Tracker used in conjunction with attackDelay
-
-    public GameObject bullet;
-
-    bool recentNewTarget;
-
-    GameObject currentTarget;
-
-    Unit currentTargetUnit;
-    Transform currentTargetT;
-
-
-    void Awake()
-    {
-        attackRange = this.gameObject.GetComponent<SphereCollider>().radius;
-    }
-
-    void Start()
-    {
-        attackDamage = 1f;
-
-        attackDelay = 1f;
-
-        rotationSpeed = 10f;
-
-        shootSFX = (AudioClip)(Resources.Load("Sounds/shoot", typeof(AudioClip)));
-        sourceSFX = this.gameObject.GetComponent<AudioSource>();
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-        timeSinceAttack += Time.deltaTime;
-
-        if (currentTarget != null)
-        {
-
-            if (recentNewTarget)
-            {
-                SlowRotate();
-            }
-            else
-            {
-                transform.LookAt(currentTarget.transform);
-
-                if (timeSinceAttack >= attackDelay)
-                {
-                    Attack();
-                }
-            }
-
-        }
-
-    }
+	//Attack Variables
+	float attackRange; //References the Radius of the sphere collider attached to tower
+	float attackDamage; //Attack DMG
+	float attackDelay; //Attack Delay in Seconds
+	float timeSinceAttack; //Tracker used in conjunction with attackDelay
+	float cost;
+	float upgradeCost;
+	int sellValue;
 
 
 
+	float rotationSpeed; //How fast the tower rotates to a new target (will track the target afterwards)
+	bool recentNewTarget;
+
+	Unit currentTargetUnit;
+	Transform currentTargetT;
+	public List<GameObject> unitsInRange;
+
+	//AUDIO =================================================================
+	protected AudioClip shootSFX;
+	AudioSource sourceSFX;
+
+	//ANIMATION ==============================================================
+	Animator animator;
+	int shootHash;
+	GameObject currentTarget;
+	GameObject rotatePart;
+	Transform bulletPointTransform;
+	Transform rotatePartTransform;
+
+	//REFERENCES 
+	public Node myNode;
 
 
-    void OnTriggerStay(Collider other)
-    {
-        if (currentTarget == null && other.gameObject.CompareTag("Enemy"))
-        {
-            recentNewTarget = true;
-            currentTarget = other.gameObject;
-            currentTargetUnit = currentTarget.GetComponent<Unit>();
-            currentTargetT = currentTarget.transform;
-            //Debug.Log ("Current Target changed to : " + currentTarget);
-        }
-    }
+	protected void setStats(string _name, float _adamage, float _adelay, int _cost, int _sellvalue, int _upcost)
+	{
+		name = _name;
+		attackDamage =_adamage;
+		attackDelay = _adelay;
+		cost = _cost;
+		sellValue = _sellvalue;
+		upgradeCost = _upcost;
+	}
 
-    void OnTriggerExit(Collider other)
-    {
-        if (currentTarget == other.gameObject)
-        {
-            currentTarget = null;
-            //Debug.Log ("Current Target Left Range");
-        }
-    }
+	protected virtual void Awake()
+	{
+		animator = gameObject.GetComponent<Animator> ();
+		shootHash = Animator.StringToHash ("Shoot");
+		attackRange = this.gameObject.GetComponent<SphereCollider>().radius * this.transform.lossyScale.x * 100f;
 
-    void Attack()
-    {
-        Bullet newBullet = ((GameObject)(Instantiate(bullet, transform.position, Quaternion.identity))).GetComponent<Bullet>();
+		rotationSpeed = 10f;
 
-        newBullet.setup(currentTargetUnit, attackDamage, 25f);
+		sourceSFX = this.gameObject.GetComponent<AudioSource>();
 
-        timeSinceAttack = 0;
+		rotatePartTransform = gameObject.transform.GetChild(0);
+		bulletPointTransform = rotatePartTransform.GetChild(1);
 
-        sourceSFX.PlayOneShot(shootSFX);
-    }
+		unitsInRange = new List<GameObject>();
+	}
 
-    void SlowRotate()
-    {
-        Vector3 relativePos = currentTargetT.position - transform.position;
-        Quaternion toRotation = Quaternion.LookRotation(relativePos);
-        transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, 0.2f);
+	void Update()
+	{
 
-        float angle = Quaternion.Angle(transform.rotation, toRotation);
+		timeSinceAttack += Time.deltaTime;
 
-        if (angle < 5f)
-        {
-            recentNewTarget = false;
-        }
+		if (currentTarget != null) {
+			if (targetIsDead () == false) {
 
-    }
+				Vector3 targetNoYAxis = currentTargetT.position;
+				targetNoYAxis.y = rotatePartTransform.position.y;
+				rotatePartTransform.LookAt(targetNoYAxis, Vector3.up);
+
+				if (timeSinceAttack >= attackDelay && !animator.GetCurrentAnimatorStateInfo (0).IsName ("Base_Layer.Shooting")) {
+					Attack ();
+					animator.SetTrigger(shootHash);
+				} 
+
+
+			} else {
+				findNewTarget ();
+			}
+		} else {
+			findNewTarget ();
+		}
+
+	}
+
+	void OnTriggerEnter(Collider other)
+	{
+
+		GameObject newTarget = other.gameObject;
+
+		if (newTarget.CompareTag ("Enemy")) {
+			if (!unitsInRange.Contains (newTarget)) {
+				unitsInRange.Add (newTarget);
+			}
+
+		}
+	}
+
+	void OnTriggerExit(Collider other)
+	{
+		GameObject newTarget = other.gameObject;
+
+		if (newTarget.CompareTag ("Enemy")) {
+
+			if (unitsInRange.Contains (newTarget)) {
+				unitsInRange.Remove (newTarget);
+			}
+			if (currentTarget == newTarget) {
+				currentTarget = null;
+				findNewTarget ();
+			}
+
+		}
+	}
+
+	void findNewTarget()
+	{
+		if (unitsInRange.Count > 0) {
+			foreach (var unit in unitsInRange) {
+				if (unit == null) {
+					unitsInRange.Remove (unit);
+				} else {
+					currentTargetUnit = unit.GetComponent<Unit> ();
+					currentTarget = unit;
+					currentTargetT = currentTarget.transform;
+					recentNewTarget = true;
+					break;
+				}
+			}
+		} 
+	}
+
+	bool targetIsDead()
+	{
+		if (currentTargetUnit.isDying == true) {
+			unitsInRange.Remove (currentTarget);
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	protected virtual void Attack()
+	{
+		Bullet newBullet = ((GameObject)(Instantiate(bullet, bulletPointTransform.position, Quaternion.identity))).GetComponent<Bullet>();
+
+		newBullet.setup(currentTargetUnit, attackDamage, 25f);
+
+		timeSinceAttack = 0;
+
+		sourceSFX.PlayOneShot(shootSFX);
+	}
+	/*
+	void SlowRotate()
+	{
+		Vector3 relativePos = currentTargetT.position - rotatePartTransform.position;
+		Quaternion toRotation = Quaternion.LookRotation(relativePos);
+		rotatePartTransform.rotation = Quaternion.Lerp(rotatePartTransform.rotation, toRotation, 0.2f);
+
+		float angle = Quaternion.Angle(rotatePartTransform.rotation, toRotation);
+
+		if (angle < 5f)
+		{
+			recentNewTarget = false;
+		}
+
+	}
+
+	void SlowRotateZ()
+	{
+		Vector3 relativePos = currentTargetT.position - rotatePartTransform.position;
+		relativePos.y = gameObject.transform.position.y - 0.3f;
+		Debug.Log (rotatePartTransform.position.y);
+		Quaternion toRotation = Quaternion.LookRotation(relativePos);
+		rotatePartTransform.rotation = Quaternion.Lerp(rotatePartTransform.rotation, toRotation, 0.2f);
+
+		float angle = Quaternion.Angle(rotatePartTransform.rotation, toRotation);
+
+		if (angle < 5f)
+		{
+			recentNewTarget = false;
+		}
+
+	}*/
+
+	public string[] Stats
+	{
+		get
+		{
+			string[] stats = new string[7];
+			stats [0] = name;
+			stats [1] = attackDamage.ToString();
+			stats [2] = attackRange.ToString();
+			stats [3] = (1/attackDelay).ToString("F2");
+			stats [4] = cost.ToString();
+			stats [5] = sellValue.ToString();
+			stats [6] = upgradeCost.ToString();
+			return stats;
+		}
+	}
+
 }

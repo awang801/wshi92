@@ -3,8 +3,18 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class Lives:MonoBehaviour{
-    private int lives = 30;
+    private int lives;
 	public Text livesText;
+
+	public Lives()
+	{
+		lives = 30;
+	}
+
+	public Lives(int startAmount)
+	{
+		lives = startAmount;
+	}
 
 	void Start()
 	{
@@ -16,6 +26,7 @@ public class Lives:MonoBehaviour{
         lives = amount;
 		updateText ();
     }
+
     public void loseLife()
     {
         lives = lives - 1;

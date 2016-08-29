@@ -3,11 +3,23 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class Bank:MonoBehaviour{
-    private int money = 100;
-	private int income = 10;
+    private int money;
+	private int income;
 
 	public Text bankText;
 	public Text incomeText;
+
+	public Bank()
+	{
+		money = 100;
+		income = 10;
+	}
+
+	public Bank(int startMoney, int startIncome)
+	{
+		money = startMoney;
+		income = startIncome;
+	}
 
 	void Start()
 	{

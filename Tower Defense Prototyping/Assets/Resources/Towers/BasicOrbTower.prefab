@@ -119,7 +119,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010135462680}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16.347609, y: 0, z: 14.485993}
+  m_LocalPosition: {x: 12.970391, y: 0, z: 17.723412}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -417,7 +417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30e1b38a2d4cd6d4eabc677c830b664a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullet: {fileID: 157076, guid: ad5ed48bdbe931d4baba4a9d97cd1fb7, type: 2}
+  bullet: {fileID: 1000013148181562, guid: 503531b9d259e94479a1820ebd211042, type: 2}
   unitsInRange: []
 --- !u!135 &135000010902485430
 SphereCollider:

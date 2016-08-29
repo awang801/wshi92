@@ -25,7 +25,7 @@ GameObject:
   - 114: {fileID: 114000010015885984}
   m_Layer: 0
   m_Name: CannonTower
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
