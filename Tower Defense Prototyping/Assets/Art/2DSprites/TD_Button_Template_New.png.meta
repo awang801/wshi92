@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 8f2251df85f548a46b65b3de0b8123cd
-timeCreated: 1472447816
+guid: 171bd97100b59f748b16b05de58849ec
+timeCreated: 1472527287
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -10,9 +10,11 @@ TextureImporter:
     21300006: AttackButtonSprite
     21300008: DefendButtonSprite
     21300010: CannonButtonSprite
-    21300012: BuildButtonSprite
-    21300014: OrbTowerButtonSprite
-    21300016: WallButtonSprite
+    21300012: UpgradeButtonSprite
+    21300014: BuildButtonSprite
+    21300016: OrbButtonSprite
+    21300018: WallButtonSprite
+    21300020: SellButtonSprite
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -65,9 +67,9 @@ TextureImporter:
       name: PotatoButtonSprite
       rect:
         serializedVersion: 2
-        x: 6
+        x: 8
         y: 2900
-        width: 1284
+        width: 1286
         height: 1286
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -78,9 +80,9 @@ TextureImporter:
       name: CloudButtonSprite
       rect:
         serializedVersion: 2
-        x: 1493
+        x: 1483
         y: 2900
-        width: 1285
+        width: 1287
         height: 1286
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -91,12 +93,12 @@ TextureImporter:
       name: TD_Button_Template_New_2
       rect:
         serializedVersion: 2
-        x: 3010
+        x: 2996
         y: 2900
-        width: 1282
+        width: 1287
         height: 1286
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -104,10 +106,10 @@ TextureImporter:
       name: AttackButtonSprite
       rect:
         serializedVersion: 2
-        x: 6
-        y: 1445
-        width: 1284
-        height: 1287
+        x: 4
+        y: 1444
+        width: 1287
+        height: 1290
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -117,10 +119,10 @@ TextureImporter:
       name: DefendButtonSprite
       rect:
         serializedVersion: 2
-        x: 1493
-        y: 1445
-        width: 1285
-        height: 1287
+        x: 1492
+        y: 1444
+        width: 1287
+        height: 1290
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,10 +132,23 @@ TextureImporter:
       name: CannonButtonSprite
       rect:
         serializedVersion: 2
-        x: 3010
-        y: 1445
-        width: 1282
-        height: 1287
+        x: 2996
+        y: 1444
+        width: 1287
+        height: 1290
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: UpgradeButtonSprite
+      rect:
+        serializedVersion: 2
+        x: 4498
+        y: 1455
+        width: 1283
+        height: 1290
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -145,21 +160,21 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1282
-        height: 1284
+        width: 1283
+        height: 1286
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: OrbTowerButtonSprite
+      name: OrbButtonSprite
       rect:
         serializedVersion: 2
-        x: 1485
+        x: 1483
         y: 0
-        width: 1284
-        height: 1284
+        width: 1287
+        height: 1286
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -169,10 +184,23 @@ TextureImporter:
       name: WallButtonSprite
       rect:
         serializedVersion: 2
-        x: 3002
+        x: 2988
         y: 0
-        width: 1284
-        height: 1284
+        width: 1287
+        height: 1286
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SellButtonSprite
+      rect:
+        serializedVersion: 2
+        x: 4498
+        y: 0
+        width: 1283
+        height: 1286
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

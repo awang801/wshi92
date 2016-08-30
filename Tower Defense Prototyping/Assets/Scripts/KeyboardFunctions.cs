@@ -38,14 +38,17 @@ public class KeyboardFunctions : MonoBehaviour
 	// 2 = send mode
 
     BuildButtonPress buildButton;
+	SendButtonPress sendButton;
+
     void Awake()
     {
         //Set any references here
         mFunc = this.gameObject.GetComponent<MouseFunctions>();
         buildButton = GameObject.Find("BuildButtonText").GetComponent<BuildButtonPress>();
+		sendButton = GameObject.Find("SendButtonText").GetComponent<SendButtonPress>();
 
         UIClickFX = (AudioClip)(Resources.Load("Sounds/UIButtonclick", typeof(AudioClip)));
-        sourceSFX = this.gameObject.GetComponent<AudioSource>();
+		sourceSFX = Camera.main.GetComponent<AudioSource>();
 
 		spawner = spawnObject.GetComponent<SpawnUnit> ();
 
@@ -90,6 +93,7 @@ public class KeyboardFunctions : MonoBehaviour
 		else if (mode == 2)
 		{
 			//Cancels sending mode
+			sendButton.SendToggle();
 			sourceSFX.PlayOneShot(UIClickFX);
 			Debug.Log("CANCEL SENDING");
 			mode = 0;
@@ -103,7 +107,7 @@ public class KeyboardFunctions : MonoBehaviour
 	//========================================================================================
     public void Build()
     {
-        if (mode == 0)
+		if (mode == 0 || mode == 2)
         {
 			Cursor.SetCursor(buildCursor, hotSpot, cursorMode);
             mode = 1;
@@ -210,14 +214,19 @@ public class KeyboardFunctions : MonoBehaviour
 	// Sending Functions
 	//========================================================================================
 
-	void SendToggle()
+	public void Send()
 	{
-		if (mode == 0) {
+		if (mode == 0 || mode == 1) {
 			mode = 2;
 			Debug.Log ("SENDING START");
-			Cursor.SetCursor(attackCursor, hotSpot, cursorMode);
-			sourceSFX.PlayOneShot(UIClickFX);
-		} else if (mode == 2) {
+			Cursor.SetCursor (attackCursor, hotSpot, cursorMode);
+			sourceSFX.PlayOneShot (UIClickFX);
+		}
+	}
+
+	public void CancelSend()
+	{
+		if (mode == 2) {
 			mode = 0;
 			Debug.Log ("SENDING STOP");
 			Cursor.SetCursor(normalCursor, hotSpot, cursorMode);
@@ -225,7 +234,7 @@ public class KeyboardFunctions : MonoBehaviour
 		}
 	}
 
-	void SendUnit(string unitName)
+	public void SendUnit(string unitName)
 	{
 		if (mode == 2) {
 			spawner.Spawn (unitName);
@@ -250,12 +259,9 @@ public class KeyboardFunctions : MonoBehaviour
                 Cancel();
             }
         }
-        else if (Input.GetButtonDown("Build"))
+        else if (Input.GetButtonDown("B"))
         { //If B is pressed, Enter Build mode
-			if (mode != 2) {
-				buildButton.BuildToggle ();
-			}
-
+			buildButton.BuildToggle ();
         }
         else if (Input.GetButtonDown("Z"))
         { //If Z is pressed, and Building Mode is enabled, -- Build wall
@@ -284,7 +290,7 @@ public class KeyboardFunctions : MonoBehaviour
 		}
         else if (Input.GetButtonDown("T"))
         {
-			SendToggle ();
+			sendButton.SendToggle ();
         }
 
 

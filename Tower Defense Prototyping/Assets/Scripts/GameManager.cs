@@ -5,12 +5,21 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	float incomeTimer;
-	float incomeDelay = 5.00f; //Seconds
+	float incomeDelay = 10.00f; //Seconds
 	public Text timerText;
+
+	AudioSource mainAudioSource;
+	AudioClip moneySFX;
 
 	public GameObject[] player;
 	Bank[] bank = new Bank[2];
 	Lives[] lives = new Lives[2];
+
+	void Awake()
+	{
+		mainAudioSource = Camera.main.GetComponent<AudioSource> ();
+		moneySFX = Resources.Load<AudioClip> ("Sounds/money");
+	}
 
 
 	void Start()
@@ -31,6 +40,7 @@ public class GameManager : MonoBehaviour {
 			incomeTimer = incomeDelay;
 			for (int i = 0; i < 2; i++) { //NUMBER OF PLAYERS HERE
 				bank[i].giveIncome();
+				mainAudioSource.PlayOneShot (moneySFX);
 			}
 				
 		}

@@ -54,6 +54,7 @@ public class MouseFunctions : MonoBehaviour
     AudioClip BuildFX;
 	AudioClip needMoneySound;
 	AudioClip cannotBuildSound;
+	AudioClip selectSound;
     AudioSource sourceSFX;
     public GameObject newStructure;
 
@@ -127,7 +128,9 @@ public class MouseFunctions : MonoBehaviour
         BuildFX = (AudioClip)(Resources.Load("Sounds/BuildingPlacement", typeof(AudioClip)));
 		needMoneySound  = (AudioClip)(Resources.Load("Sounds/needMoney", typeof(AudioClip)));
 		cannotBuildSound  = (AudioClip)(Resources.Load("Sounds/CannotBuild", typeof(AudioClip)));
-        sourceSFX = this.gameObject.GetComponent<AudioSource>();
+
+		selectSound = Resources.Load<AudioClip> ("Sounds/CarDoorClose");
+		sourceSFX = Camera.main.GetComponent<AudioSource>();
 
     }
 
@@ -148,6 +151,8 @@ public class MouseFunctions : MonoBehaviour
 		numberOfMaterials = new int[3];
 
 		selectedValues = new string[7];
+
+		StartCoroutine (animateSelectionPanel (-1));
 
     }
 
@@ -314,7 +319,7 @@ public class MouseFunctions : MonoBehaviour
 					
 					if(currentMouseObject.CompareTag("TowerSelector") || currentMouseObject.CompareTag("Wall"))
 					{
-
+						sourceSFX.PlayOneShot (selectSound);
 						selectedObject = currentMouseObject;
 						selectedObjectType = currentMouseObject.tag;
 						Debug.Log (selectedObjectType);
