@@ -8,6 +8,8 @@ TagManager:
   - Tower
   - Wall
   - TowerSelector
+  - TerrainBlock
+  - UI
   layers:
   - Default
   - TransparentFX
@@ -17,8 +19,8 @@ TagManager:
   - UI
   - 
   - 
-  - TerrainBlocks
-  - Terrain
+  - DecorationTerrain
+  - BoardTerrain
   - Objects
   - Towers
   - 

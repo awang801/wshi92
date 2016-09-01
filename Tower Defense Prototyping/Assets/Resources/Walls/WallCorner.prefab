@@ -23,6 +23,7 @@ GameObject:
   - 23: {fileID: 23000010933533396}
   - 208: {fileID: 208000013307612018}
   - 65: {fileID: 65000011622264942}
+  - 114: {fileID: 114000011224722110}
   m_Layer: 10
   m_Name: WallCorner
   m_TagString: Wall
@@ -92,6 +93,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: -0.00000008940697, y: 0.6, z: 0.000000029802322}
+--- !u!114 &114000011224722110
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011716936748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b06aa6df1cab53045827804314a3ea86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!208 &208000013307612018
 NavMeshObstacle:
   m_ObjectHideFlags: 1

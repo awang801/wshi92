@@ -29,13 +29,13 @@ public class TowerButtonPress : MonoBehaviour {
 	public void TowerToggle()
 	{
 		if (kf.mode == 1) {
-			if (kf.SelectedTowerToBuild == false)
+			if (kf.SelectedObjectToBuild == false)
 			{
 				mf.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
 			}
 			Debug.Log ("BUILDING X TOWER");
-			kf.towerToBuild = "OrbTower";
-			kf.SelectedTowerToBuild = true;
+			kf.ObjectToBuild = "OrbTower";
+			kf.SelectedObjectToBuild = true;
 			mf.Mode = 1;
 
 		}

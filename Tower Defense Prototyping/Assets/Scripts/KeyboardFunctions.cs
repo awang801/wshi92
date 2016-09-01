@@ -12,10 +12,11 @@ public class KeyboardFunctions : MonoBehaviour
 
 
     MouseFunctions mFunc; //Reference to Mouse functions
+	BuildHandler bhandler;
 
-    public string towerToBuild; //Contains name of Prefab to be instantiated
+    string objectToBuild; //Contains name of Prefab to be instantiated
 
-    public bool selectedTowerToBuild; //Boolean if tower has been selected
+    bool selectedObjectToBuild; //Boolean if tower has been selected
 
     public bool building = false; //mfunc reconciles the right click before it even moves 
                                   //to the update for keybardfunc so i have to have its own variable 
@@ -42,8 +43,9 @@ public class KeyboardFunctions : MonoBehaviour
 
     void Awake()
     {
-        //Set any references here
-        mFunc = this.gameObject.GetComponent<MouseFunctions>();
+        mFunc = GetComponent<MouseFunctions>();
+		bhandler = GetComponent<BuildHandler> ();
+
         buildButton = GameObject.Find("BuildButtonText").GetComponent<BuildButtonPress>();
 		sendButton = GameObject.Find("SendButtonText").GetComponent<SendButtonPress>();
 
@@ -70,18 +72,18 @@ public class KeyboardFunctions : MonoBehaviour
 
     public void Cancel()
     {
-        if (selectedTowerToBuild == true)
+        if (selectedObjectToBuild == true)
         {
             //Cancels tower/wall location selection
 
             Debug.Log("CANCEL SELECTED TOWER");
-            selectedTowerToBuild = false;
+            selectedObjectToBuild = false;
             mFunc.Mode = 0; //Shows mouse cursor
             Destroy(mFunc.SelHighlight); //Destroys the green highlight selection box
             sourceSFX.PlayOneShot(UIClickFX);
 
         }
-        else if (mode == 1 && selectedTowerToBuild == false)
+        else if (mode == 1 && selectedObjectToBuild == false)
         {
             //Cancels building mode
             buildButton.BuildToggle();
@@ -119,9 +121,9 @@ public class KeyboardFunctions : MonoBehaviour
 
     public void CancelBuild()
     {
-        if (selectedTowerToBuild == true)
+        if (selectedObjectToBuild == true)
         {
-            selectedTowerToBuild = false;
+            selectedObjectToBuild = false;
             mFunc.Mode = 0;
             Destroy(mFunc.SelHighlight);
             sourceSFX.PlayOneShot(UIClickFX);
@@ -139,14 +141,14 @@ public class KeyboardFunctions : MonoBehaviour
     {
         if (mode == 1)
 		{
-            if (SelectedTowerToBuild == false)
+            if (SelectedObjectToBuild == false)
             {
                 mFunc.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
             }
             sourceSFX.PlayOneShot(UIClickFX);
             Debug.Log("BUILDING Z TOWER");
-            towerToBuild = "Wall";
-            SelectedTowerToBuild = true;
+            objectToBuild = "Wall";
+            SelectedObjectToBuild = true;
             mFunc.Mode = 1;
         }
     }
@@ -155,14 +157,14 @@ public class KeyboardFunctions : MonoBehaviour
     {
         if (mode == 1)
         {
-            if (SelectedTowerToBuild == false)
+            if (SelectedObjectToBuild == false)
             {
                 mFunc.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
             }
             sourceSFX.PlayOneShot(UIClickFX);
             Debug.Log("BUILDING X TOWER");
-            towerToBuild = "OrbTower";
-            SelectedTowerToBuild = true;
+            objectToBuild = "OrbTower";
+            SelectedObjectToBuild = true;
 			mFunc.Mode = 1;
 
         }
@@ -172,41 +174,41 @@ public class KeyboardFunctions : MonoBehaviour
 	{
 		if (mode == 1)
 		{
-			if (SelectedTowerToBuild == false)
+			if (SelectedObjectToBuild == false)
 			{
 				mFunc.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
 			}
 			sourceSFX.PlayOneShot(UIClickFX);
 			Debug.Log("BUILDING C TOWER");
-			towerToBuild = "CannonTower";
-			SelectedTowerToBuild = true;
+			objectToBuild = "CannonTower";
+			SelectedObjectToBuild = true;
 			mFunc.Mode = 1;
 
 		}
 	}
 
-	public bool SelectedTowerToBuild
+	public bool SelectedObjectToBuild
 	{
 		get
 		{
-			return selectedTowerToBuild;
+			return selectedObjectToBuild;
 		}
 		set
 		{
-			selectedTowerToBuild = value;
+			selectedObjectToBuild = value;
 		}
 	}
 
-	public string TowerToBuild
+	public string ObjectToBuild
 
 	{
 		get
 		{
-			return towerToBuild;
+			return objectToBuild;
 		}
 		set
 		{
-			towerToBuild = value;
+			objectToBuild = value;
 		}
 	}
 

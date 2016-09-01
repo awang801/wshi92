@@ -40,8 +40,11 @@ public abstract class Tower : MonoBehaviour
 	Transform bulletPointTransform;
 	Transform rotatePartTransform;
 
+	bool isBeingBuilt;
+	Vector3 buildAt;
+
 	//REFERENCES 
-	public Node myNode;
+	public Node node;
 
 
 	protected void setStats(string _name, float _adamage, float _adelay, int _cost, int _sellvalue, int _upcost)
@@ -56,6 +59,8 @@ public abstract class Tower : MonoBehaviour
 
 	protected virtual void Awake()
 	{
+		isBeingBuilt = true;
+
 		animator = gameObject.GetComponent<Animator> ();
 		shootHash = Animator.StringToHash ("Shoot");
 		attackRange = this.gameObject.GetComponent<SphereCollider>().radius * this.transform.lossyScale.x * 100f;
@@ -72,29 +77,53 @@ public abstract class Tower : MonoBehaviour
 
 	void Update()
 	{
+		if (!isBeingBuilt) {
+			timeSinceAttack += Time.deltaTime;
 
-		timeSinceAttack += Time.deltaTime;
+			if (currentTarget != null) {
+				if (targetIsDead () == false) {
 
-		if (currentTarget != null) {
-			if (targetIsDead () == false) {
+					Vector3 targetNoYAxis = currentTargetT.position;
+					targetNoYAxis.y = rotatePartTransform.position.y;
+					rotatePartTransform.LookAt (targetNoYAxis, Vector3.up);
 
-				Vector3 targetNoYAxis = currentTargetT.position;
-				targetNoYAxis.y = rotatePartTransform.position.y;
-				rotatePartTransform.LookAt(targetNoYAxis, Vector3.up);
-
-				if (timeSinceAttack >= attackDelay && !animator.GetCurrentAnimatorStateInfo (0).IsName ("Base_Layer.Shooting")) {
-					Attack ();
-					animator.SetTrigger(shootHash);
-				} 
+					if (timeSinceAttack >= attackDelay && !animator.GetCurrentAnimatorStateInfo (0).IsName ("Base_Layer.Shooting")) {
+						Attack ();
+						animator.SetTrigger (shootHash);
+					} 
 
 
+				} else {
+					findNewTarget ();
+				}
 			} else {
 				findNewTarget ();
 			}
 		} else {
-			findNewTarget ();
+
+		}
+	}
+
+	public void startTargetAnimationPoint(Vector3 moveTo)
+	{
+		buildAt = moveTo;
+
+		StartCoroutine (buildAnimation());
+	}
+
+	IEnumerator buildAnimation()
+	{
+		float iterateTime = 0.05f;
+
+		while (Vector3.Distance (transform.position, buildAt) > 0.05) {
+
+			transform.position = Vector3.Lerp (transform.position, buildAt, 2*iterateTime);
+
+			yield return new WaitForSeconds (iterateTime);
 		}
 
+		transform.position = buildAt;
+		isBeingBuilt = false;
 	}
 
 	void OnTriggerEnter(Collider other)
