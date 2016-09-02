@@ -13,6 +13,7 @@ public class KeyboardFunctions : MonoBehaviour
 
     MouseFunctions mFunc; //Reference to Mouse functions
 	BuildHandler bhandler;
+	Bank bank;
 
     string objectToBuild; //Contains name of Prefab to be instantiated
 
@@ -58,6 +59,7 @@ public class KeyboardFunctions : MonoBehaviour
 		buildCursor = (Texture2D)Resources.Load ("Sprites/BuildCursor");
 		attackCursor = (Texture2D)Resources.Load ("Sprites/AttackCursor");
 
+		bank = player.GetComponent<Bank>();
 
     }
 
@@ -294,6 +296,11 @@ public class KeyboardFunctions : MonoBehaviour
         {
 			sendButton.SendToggle ();
         }
+		else if (Input.GetButtonDown("Q"))
+		{
+			Debug.Log ("You hacker.... sombra confirmed, here have some money");
+			bank.addMoney (50);
+		}
 
 
     }

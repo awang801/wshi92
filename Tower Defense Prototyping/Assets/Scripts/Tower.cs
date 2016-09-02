@@ -7,14 +7,15 @@ public abstract class Tower : MonoBehaviour
 
 	//Inspector Set Variables ============================================
 	public GameObject bullet;
+	public GameObject shootParticle;
 
 	//FUNCTIONALITY =======================================================
 
 	//Attack Variables
-	float attackRange; //References the Radius of the sphere collider attached to tower
-	float attackDamage; //Attack DMG
-	float attackDelay; //Attack Delay in Seconds
-	float timeSinceAttack; //Tracker used in conjunction with attackDelay
+	protected float attackRange; //References the Radius of the sphere collider attached to tower
+	protected float attackDamage; //Attack DMG
+	protected float attackDelay; //Attack Delay in Seconds
+	protected float timeUntilAttack; //Tracker used in conjunction with attackDelay
 	float cost;
 	float upgradeCost;
 	int sellValue;
@@ -24,21 +25,23 @@ public abstract class Tower : MonoBehaviour
 	float rotationSpeed; //How fast the tower rotates to a new target (will track the target afterwards)
 	bool recentNewTarget;
 
-	Unit currentTargetUnit;
-	Transform currentTargetT;
+	protected Unit currentTargetUnit;
+	protected Transform currentTargetT;
 	public List<GameObject> unitsInRange;
 
 	//AUDIO =================================================================
 	protected AudioClip shootSFX;
-	AudioSource sourceSFX;
+	protected AudioClip buildSFX;
+	protected AudioSource sourceSFX;
+
 
 	//ANIMATION ==============================================================
 	Animator animator;
 	int shootHash;
-	GameObject currentTarget;
-	GameObject rotatePart;
-	Transform bulletPointTransform;
-	Transform rotatePartTransform;
+	protected GameObject currentTarget;
+	protected GameObject rotatePart;
+	protected Transform bulletPointTransform;
+	protected Transform rotatePartTransform;
 
 	bool isBeingBuilt;
 	Vector3 buildAt;
@@ -69,16 +72,20 @@ public abstract class Tower : MonoBehaviour
 
 		sourceSFX = this.gameObject.GetComponent<AudioSource>();
 
+		buildSFX = (AudioClip)(Resources.Load("Sounds/siegemode", typeof(AudioClip)));
+
 		rotatePartTransform = gameObject.transform.GetChild(0);
 		bulletPointTransform = rotatePartTransform.GetChild(1);
 
 		unitsInRange = new List<GameObject>();
+
+		sourceSFX.PlayOneShot (buildSFX);
 	}
 
 	void Update()
 	{
 		if (!isBeingBuilt) {
-			timeSinceAttack += Time.deltaTime;
+			timeUntilAttack -= Time.deltaTime;
 
 			if (currentTarget != null) {
 				if (targetIsDead () == false) {
@@ -87,7 +94,7 @@ public abstract class Tower : MonoBehaviour
 					targetNoYAxis.y = rotatePartTransform.position.y;
 					rotatePartTransform.LookAt (targetNoYAxis, Vector3.up);
 
-					if (timeSinceAttack >= attackDelay && !animator.GetCurrentAnimatorStateInfo (0).IsName ("Base_Layer.Shooting")) {
+					if (timeUntilAttack <= 0 && !animator.GetCurrentAnimatorStateInfo (0).IsName ("Base_Layer.Shooting")) {
 						Attack ();
 						animator.SetTrigger (shootHash);
 					} 
@@ -113,13 +120,11 @@ public abstract class Tower : MonoBehaviour
 
 	IEnumerator buildAnimation()
 	{
-		float iterateTime = 0.05f;
-
 		while (Vector3.Distance (transform.position, buildAt) > 0.05) {
 
-			transform.position = Vector3.Lerp (transform.position, buildAt, 2*iterateTime);
+			transform.position = Vector3.Lerp (transform.position, buildAt, 4*Time.deltaTime);
 
-			yield return new WaitForSeconds (iterateTime);
+			yield return new WaitForSeconds (Time.deltaTime);
 		}
 
 		transform.position = buildAt;
@@ -187,13 +192,14 @@ public abstract class Tower : MonoBehaviour
 	protected virtual void Attack()
 	{
 		Bullet newBullet = ((GameObject)(Instantiate(bullet, bulletPointTransform.position, Quaternion.identity))).GetComponent<Bullet>();
+		Instantiate (shootParticle, bulletPointTransform.position, bulletPointTransform.rotation);
+		newBullet.Setup(currentTargetUnit, attackDamage, 25f);
 
-		newBullet.setup(currentTargetUnit, attackDamage, 25f);
-
-		timeSinceAttack = 0;
+		timeUntilAttack = attackDelay;
 
 		sourceSFX.PlayOneShot(shootSFX);
 	}
+
 	/*
 	void SlowRotate()
 	{
@@ -209,12 +215,12 @@ public abstract class Tower : MonoBehaviour
 		}
 
 	}
-
+*/
 	void SlowRotateZ()
 	{
 		Vector3 relativePos = currentTargetT.position - rotatePartTransform.position;
-		relativePos.y = gameObject.transform.position.y - 0.3f;
-		Debug.Log (rotatePartTransform.position.y);
+		relativePos.y = rotatePartTransform.position.y;
+		//Debug.Log (rotatePartTransform.position.y);
 		Quaternion toRotation = Quaternion.LookRotation(relativePos);
 		rotatePartTransform.rotation = Quaternion.Lerp(rotatePartTransform.rotation, toRotation, 0.2f);
 
@@ -225,7 +231,8 @@ public abstract class Tower : MonoBehaviour
 			recentNewTarget = false;
 		}
 
-	}*/
+	}
+		
 
 	public string[] Stats
 	{

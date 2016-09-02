@@ -30,7 +30,7 @@ public class BuildHandler : MonoBehaviour {
 
 	//Audio
 	AudioSource sourceSFX;
-	AudioClip BuildFX;
+	AudioClip TowerBuildFX;
 	AudioClip needMoneySound;
 	AudioClip cannotBuildSound;
 	AudioClip selectSound;
@@ -77,7 +77,7 @@ public class BuildHandler : MonoBehaviour {
 		//Audio References
 		sourceSFX = GetComponent<AudioSource> ();
 
-		BuildFX = (AudioClip)(Resources.Load("Sounds/BuildingPlacement", typeof(AudioClip)));
+		TowerBuildFX = (AudioClip)(Resources.Load("Sounds/siegemode", typeof(AudioClip)));
 		needMoneySound  = (AudioClip)(Resources.Load("Sounds/needMoney", typeof(AudioClip)));
 		cannotBuildSound  = (AudioClip)(Resources.Load("Sounds/CannotBuild", typeof(AudioClip)));
 		selectSound = Resources.Load<AudioClip> ("Sounds/CarDoorClose");
@@ -156,11 +156,11 @@ public class BuildHandler : MonoBehaviour {
 					else
 					{
 						bank.addMoney(-20);
-						sourceSFX.PlayOneShot(BuildFX);
+						//sourceSFX.PlayOneShot(TowerBuildFX);
 						positionToBuildStart = buildNode.worldPosition + (Vector3.up * 1f);
 
 
-						StartCoroutine(BuildAfterTime (0.5f, orbTower, buildNode));
+						StartCoroutine(BuildAfterTime (1.5f, orbTower, buildNode, positionToBuildStart));
 						CreateWallFloorAnimation (true);
 
 
@@ -180,10 +180,10 @@ public class BuildHandler : MonoBehaviour {
 					else {
 
 						bank.addMoney (-40);
-						sourceSFX.PlayOneShot (BuildFX);
+						//sourceSFX.PlayOneShot (TowerBuildFX);
 						positionToBuildStart = buildNode.worldPosition + (Vector3.up * 1f);
 
-						StartCoroutine(BuildAfterTime (0.5f, cannonTower, buildNode));
+						StartCoroutine(BuildAfterTime (1.5f, cannonTower, buildNode, positionToBuildStart));
 						CreateWallFloorAnimation (true);
 
 					}
@@ -321,19 +321,17 @@ public class BuildHandler : MonoBehaviour {
 		}
 	}
 
-	IEnumerator BuildAfterTime(float time, GameObject towerToBuild, Node nodeToBuildOn)
+	IEnumerator BuildAfterTime(float time, GameObject towerToBuild, Node nodeToBuildOn, Vector3 positionToBuild)
 	{		
-		
-		yield return new WaitForSeconds (time);
-
-		nodeToBuildOn.Tower = ((GameObject)(Instantiate(towerToBuild, positionToBuildStart - Vector3.up, Quaternion.identity)));
+		nodeToBuildOn.Tower = ((GameObject)(Instantiate(towerToBuild, positionToBuild - Vector3.up*2f, Quaternion.identity)));
 
 		Tower tempTower = nodeToBuildOn.Tower.GetComponent<Tower> ();
 
-		tempTower.startTargetAnimationPoint (positionToBuildStart);
 		tempTower.node = nodeToBuildOn;
 
+		yield return new WaitForSeconds (time);
 
+		tempTower.startTargetAnimationPoint (positionToBuild);
 	}
 
 }

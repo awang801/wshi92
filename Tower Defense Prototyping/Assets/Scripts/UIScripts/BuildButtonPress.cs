@@ -22,6 +22,7 @@ public class BuildButtonPress : MonoBehaviour {
 	AudioClip highlightSFX;
 
 	public Text tooltipText;
+	FadeObjectInOut tooltipFader;
 	string tooltipMessage;
 
 	SendButtonPress sendButton;
@@ -54,6 +55,8 @@ public class BuildButtonPress : MonoBehaviour {
 		sendButton = GameObject.Find("SendButtonText").GetComponent<SendButtonPress>();
 		highlightSFX = Resources.Load<AudioClip> ("Sounds/UI/UIMouseOverSound");
 
+		tooltipFader = tooltipText.GetComponentInParent<FadeObjectInOut> ();
+
 		tooltipMessage = "B - Toggle Build Mode\n\nBuild walls and towers for defense!\n(Towers must be placed on walls)";
 	}
 
@@ -67,6 +70,20 @@ public class BuildButtonPress : MonoBehaviour {
 		PlayHighlightSound ();
 
 		tooltipText.text = tooltipMessage;
+
+		if (tooltipFader.visible == false) {
+			tooltipFader.FadeIn (1f);
+		}
+
+	}
+
+	public void HideToolTip()
+	{
+		tooltipText.text = "";
+
+		if (tooltipFader.visible == true) {
+			tooltipFader.FadeOut (1f);
+		}
 	}
 
 	public void BuildToggle()

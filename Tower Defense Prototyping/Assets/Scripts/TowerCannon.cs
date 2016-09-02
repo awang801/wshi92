@@ -9,8 +9,18 @@ public class TowerCannon : Tower
 	{
 		base.Awake ();
 		shootSFX = (AudioClip)(Resources.Load("Sounds/CannonFireSFX", typeof(AudioClip)));
-		setStats ("Cannon", 2f, 2f, 40, 25, 60);
+		setStats ("Cannon", 2f, 3f, 40, 25, 60);
 	}
 
+	protected override void Attack()
+	{
+		Bullet newBullet = ((GameObject)(Instantiate(bullet, bulletPointTransform.position, Quaternion.identity))).GetComponent<Bullet>();
+		Instantiate (shootParticle, bulletPointTransform.position, bulletPointTransform.rotation);
+		newBullet.Setup(currentTargetUnit, attackDamage, 25f);
+
+		timeUntilAttack = attackDelay;
+
+		sourceSFX.PlayOneShot(shootSFX);
+	}
 
 }

@@ -133,10 +133,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013627488026}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.0379, z: 0.0195}
+  m_LocalRotation: {x: -0.13341054, y: 2.9623078e-17, z: 2.9623115e-17, w: 0.9910609}
+  m_LocalPosition: {x: 1.35891365e-17, y: 0.0388, z: 0.022400025}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -15.281001, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 4000012055676678}
   m_RootOrder: 1
@@ -173,7 +173,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010132935788}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.679988, y: 0, z: 15.4498005}
+  m_LocalPosition: {x: 14.52295, y: 0, z: 16.00917}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -336,28 +336,33 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 20
-  MaxDistance: 500
+  MaxDistance: 50
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
   rolloffCustomCurve:
     serializedVersion: 2
     m_Curve:
-    - time: 0
+    - time: 0.4
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: -2.5009959
+      outSlope: -2.5009959
+      tangentMode: 0
+    - time: 0.7705882
+      value: 0.326601
+      inSlope: -0.62524897
+      outSlope: -0.62524897
       tangentMode: 0
     - time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
+      value: 0.21034485
+      inSlope: -0.4001595
+      outSlope: -0.4001595
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   panLevelCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -420,6 +425,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bullet: {fileID: 1000013743580444, guid: 89b36f0ea28acbd4bbb13ba67aef6b08, type: 2}
+  shootParticle: {fileID: 100010, guid: 111612a1fb00afb4ca57ca7d13ab895b, type: 2}
   unitsInRange: []
 --- !u!135 &135000010386444672
 SphereCollider:

@@ -23,6 +23,7 @@ public class FadeObjectInOut : MonoBehaviour
 	public bool fadeOutOnStart = false;
 	private bool logInitialFadeSequence = false; 
 
+	public bool visible;
 
 
 
@@ -136,23 +137,27 @@ public class FadeObjectInOut : MonoBehaviour
 	public void FadeIn ()
 	{
 		FadeIn (fadeTime); 
+		visible = true;
 	}
 
 	public void FadeOut ()
 	{
-		FadeOut (fadeTime); 		
+		FadeOut (fadeTime); 
+		visible = false;
 	}
 
 	public void FadeIn (float newFadeTime)
 	{
 		StopAllCoroutines(); 
 		StartCoroutine("FadeSequence", newFadeTime); 
+		visible = true;
 	}
 
 	public void FadeOut (float newFadeTime)
 	{
 		StopAllCoroutines(); 
 		StartCoroutine("FadeSequence", -newFadeTime); 
+		visible = false;
 	}
 
 

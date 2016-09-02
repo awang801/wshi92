@@ -167,7 +167,7 @@ public class TowerOrbOld : MonoBehaviour
     {
 		Bullet newBullet = ((GameObject)(Instantiate(bullet, bulletPointTransform.position, Quaternion.identity))).GetComponent<Bullet>();
 
-        newBullet.setup(currentTargetUnit, attackDamage, 25f);
+        newBullet.Setup(currentTargetUnit, attackDamage, 25f);
 
         timeSinceAttack = 0;
 

@@ -6,17 +6,12 @@ public class Bullet : MonoBehaviour
 
     //Script attached to any bullet projectiles
     public Unit target;
-    Transform targetT;
+	protected Transform targetT;
+	protected Vector3 targetPosition;
+    protected float damage = 1f;
+	protected float velocity = 1f;
 
-    float damage = 1f;
-    float velocity = 1f;
-
-    void Start()
-    {
-
-    }
-
-    void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         if (targetT == null)
         {
@@ -25,7 +20,7 @@ public class Bullet : MonoBehaviour
         else
         {
 			transform.LookAt (targetT.position);
-			transform.Translate(Vector3.forward * velocity * Time.deltaTime);
+			transform.Translate(Vector3.forward * velocity * Time.fixedDeltaTime);
 
             if (Vector3.Distance(targetT.transform.position, transform.position) < 1f)
             {
@@ -35,12 +30,12 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    public void setup(Unit tar, float dam, float vel)
+    public virtual void Setup(Unit tar, float dam, float vel)
     {
         target = tar;
         damage = dam;
         velocity = vel;
         targetT = target.transform;
+		targetPosition = targetT.position;
     }
-
 }
