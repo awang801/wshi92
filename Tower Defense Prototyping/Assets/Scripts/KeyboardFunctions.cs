@@ -189,6 +189,23 @@ public class KeyboardFunctions : MonoBehaviour
 		}
 	}
 
+	public void BuildLaserTower()
+	{
+		if (mode == 1)
+		{
+			if (SelectedObjectToBuild == false)
+			{
+				mFunc.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
+			}
+			sourceSFX.PlayOneShot(UIClickFX);
+			Debug.Log("BUILDING V TOWER");
+			objectToBuild = "LaserTower";
+			SelectedObjectToBuild = true;
+			mFunc.Mode = 1;
+
+		}
+	}
+
 	public bool SelectedObjectToBuild
 	{
 		get
@@ -300,6 +317,13 @@ public class KeyboardFunctions : MonoBehaviour
 		{
 			Debug.Log ("You hacker.... sombra confirmed, here have some money");
 			bank.addMoney (50);
+		}
+		else if (Input.GetButtonDown("V"))
+		{
+			if (mode == 1) {
+				BuildLaserTower ();
+			} else if (mode == 2) {
+			}
 		}
 
 

@@ -26,7 +26,7 @@ public class BuildHandler : MonoBehaviour {
 	//Towers
 	GameObject orbTower;
 	GameObject cannonTower;
-
+	GameObject laserTower;
 
 	//Audio
 	AudioSource sourceSFX;
@@ -59,7 +59,7 @@ public class BuildHandler : MonoBehaviour {
 
 		//Pre-load Objects
 		//============================================================
-		//Towers
+		//Walls
 		wall2Way = (GameObject)(Resources.Load ("Walls/Wall2Way"));
 		wall3Way = (GameObject)(Resources.Load ("Walls/Wall3Way"));
 		wall4Way = (GameObject)(Resources.Load ("Walls/Wall4Way"));
@@ -70,9 +70,10 @@ public class BuildHandler : MonoBehaviour {
 		wallFloorOpen = (GameObject)(Resources.Load ("Walls/WallDoorOpen"));
 		wallFloorClose = (GameObject)(Resources.Load ("Walls/WallDoorClose"));
 
-		//Walls
+		//Towers
 		orbTower = (GameObject)(Resources.Load ("Towers/BasicOrbTower"));
 		cannonTower = (GameObject)(Resources.Load ("Towers/CannonTower"));
+		laserTower = (GameObject)(Resources.Load ("Towers/LaserTower"));
 
 		//Audio References
 		sourceSFX = GetComponent<AudioSource> ();
@@ -166,8 +167,6 @@ public class BuildHandler : MonoBehaviour {
 
 					}
 
-
-
 					break;
 
 				case "CannonTower":
@@ -184,6 +183,26 @@ public class BuildHandler : MonoBehaviour {
 						positionToBuildStart = buildNode.worldPosition + (Vector3.up * 1f);
 
 						StartCoroutine(BuildAfterTime (1.5f, cannonTower, buildNode, positionToBuildStart));
+						CreateWallFloorAnimation (true);
+
+					}
+
+					break;
+
+				case "LaserTower":
+
+					if (bank.getMoney () - 50 < 0)
+					{
+						Debug.Log ("Not enough Money");
+						sourceSFX.PlayOneShot(needMoneySound);
+					}
+					else {
+
+						bank.addMoney (-50);
+						//sourceSFX.PlayOneShot (TowerBuildFX);
+						positionToBuildStart = buildNode.worldPosition + (Vector3.up * 1f);
+
+						StartCoroutine(BuildAfterTime (1.5f, laserTower, buildNode, positionToBuildStart));
 						CreateWallFloorAnimation (true);
 
 					}
