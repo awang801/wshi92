@@ -38,6 +38,10 @@ public abstract class Tower : MonoBehaviour
 	//ANIMATION ==============================================================
 	Animator animator;
 	int shootHash;
+
+	protected Transform modelParts;
+	protected Transform scriptParts;
+
 	protected GameObject currentTarget;
 	protected GameObject rotatePart;
 	protected Transform bulletPointTransform;
@@ -77,8 +81,11 @@ public abstract class Tower : MonoBehaviour
 
 		buildSFX = (AudioClip)(Resources.Load("Sounds/siegemode", typeof(AudioClip)));
 
-		rotatePartTransform = gameObject.transform.GetChild(0);
-		bulletPointTransform = rotatePartTransform.GetChild (1);
+		modelParts = gameObject.transform.GetChild (0);
+		scriptParts = gameObject.transform.GetChild (1);
+
+		rotatePartTransform = modelParts.GetChild(0);
+		bulletPointTransform = rotatePartTransform.GetChild (0);
 
 		unitsInRange = new List<GameObject>();
 
@@ -185,15 +192,18 @@ public abstract class Tower : MonoBehaviour
 		} 
 	}
 
-	bool targetIsDead()
+	protected bool targetIsDead()
 	{
-		if (currentTargetUnit.isDying == true) {
-			unitsInRange.Remove (currentTarget);
-			return true;
+		if (currentTarget != null) {
+			if (currentTargetUnit.isDying == true) {
+				unitsInRange.Remove (currentTarget);
+				return true;
+			} else {
+				return false;
+			}
 		} else {
-			return false;
+			return true;
 		}
-
 	}
 
 	protected virtual void Attack()

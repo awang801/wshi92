@@ -147,7 +147,7 @@ public class BuildHandler : MonoBehaviour {
 
 				switch (kf.ObjectToBuild) {
 
-				case "OrbTower":
+				case "Orb":
 
 					if (bank.getMoney() - 20 < 0)
 					{
@@ -169,7 +169,7 @@ public class BuildHandler : MonoBehaviour {
 
 					break;
 
-				case "CannonTower":
+				case "Cannon":
 
 					if (bank.getMoney () - 40 < 0)
 					{
@@ -189,7 +189,7 @@ public class BuildHandler : MonoBehaviour {
 
 					break;
 
-				case "LaserTower":
+				case "Laser":
 
 					if (bank.getMoney () - 50 < 0)
 					{

@@ -12,11 +12,14 @@ public class TowerLaser : Tower
 	float maxAttackTime;
 	float chargeTime;
 	int enemyLayerMask;
+	AudioClip whileShootingSFX;
 
 	protected override void Awake()
 	{
 		base.Awake ();
-		shootSFX = (AudioClip)(Resources.Load("Sounds/LaserFireSFX", typeof(AudioClip)));
+		shootSFX = (AudioClip)(Resources.Load("Sounds/LaserChargeSFX", typeof(AudioClip)));
+		whileShootingSFX = (AudioClip)(Resources.Load("Sounds/LaserFiringSFX", typeof(AudioClip)));
+
 		//setStats(string _name, float _adamage, float _adelay, int _cost, int _sellvalue, int _upcost)
 		setStats ("Laser", 4f, 3f, 40, 25, 60);
 
@@ -24,6 +27,7 @@ public class TowerLaser : Tower
 		chargeTime = 0.4f;
 		laser = bulletPointTransform.GetComponent<LineRenderer> ();
 		laser.enabled = false;
+
 
 		enemyLayerMask = LayerMask.GetMask ("Enemies");
 
@@ -34,7 +38,7 @@ public class TowerLaser : Tower
 		
 		if (isAttacking == false) {
 			sourceSFX.PlayOneShot(shootSFX);
-			Instantiate (shootParticle, bulletPointTransform.position, shootParticle.transform.rotation);
+			((GameObject)Instantiate (shootParticle, bulletPointTransform.position, shootParticle.transform.rotation)).transform.SetParent (bulletPointTransform);
 			isAttacking = true;
 			StartCoroutine ("FireLaser");
 
@@ -51,15 +55,21 @@ public class TowerLaser : Tower
 
 			attackTime += Time.fixedDeltaTime;
 
-			if (attackTime >= maxAttackTime) {
+			if (attackTime >= maxAttackTime && sourceSFX.isPlaying == false) {
 				laser.enabled = false;
 				isAttacking = false;
 				timeUntilAttack = attackDelay;
 
 			} else if (attackTime >= chargeTime) {
-				if (!laser.enabled)	laser.enabled = true;
+				if (!laser.enabled) {
+					laser.enabled = true;
+					sourceSFX.PlayOneShot (whileShootingSFX);
+				}
+
+				if (sourceSFX.isPlaying == false) sourceSFX.PlayOneShot (whileShootingSFX);
 
 				laser.material.mainTextureOffset = new Vector2 (-Time.time, 0);
+
 
 				Vector3 shootDirection = currentTargetT.position + Vector3.up * 0.5f - bulletPointTransform.position;
 
@@ -67,7 +77,12 @@ public class TowerLaser : Tower
 				RaycastHit[] hit;
 
 				laser.SetPosition (0, ray.origin);
-				laser.SetPosition (1, ray.GetPoint (100f));
+
+				if (!targetIsDead()) {
+					laser.SetPosition (1, ray.GetPoint (100f));
+				} else {
+					laser.SetPosition (1, ray.GetPoint (2f));
+				}
 
 
 				hit = Physics.SphereCastAll (bulletPointTransform.position, 0.5f, shootDirection, 100f, enemyLayerMask);

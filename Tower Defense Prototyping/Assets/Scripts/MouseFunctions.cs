@@ -69,11 +69,10 @@ public class MouseFunctions : MonoBehaviour
 
 	GameObject selHighlight;
 
-
-
-	Sprite cannonIcon;
-	Sprite orbIcon;
 	Sprite wallIcon;
+	Sprite orbIcon;
+	Sprite cannonIcon;
+	Sprite laserIcon;
 
     NavMeshPath path;
 
@@ -106,10 +105,11 @@ public class MouseFunctions : MonoBehaviour
 		wallGhostLoaded = (GameObject)(Resources.Load ("Walls/WallGhost"));
 
 
-
+		wallIcon = Resources.Load<Sprite> ("Sprites/WallIcon");
 		orbIcon = Resources.Load<Sprite> ("Sprites/OrbIcon");
 		cannonIcon = Resources.Load<Sprite> ("Sprites/CannonIcon");
-		wallIcon = Resources.Load<Sprite> ("Sprites/WallIcon");
+		laserIcon = Resources.Load<Sprite> ("Sprites/LaserIcon");
+
 
 		highlightCastleMaterial = (Material)(Resources.Load ("Materials/Outlined_Object"));
 
@@ -129,12 +129,12 @@ public class MouseFunctions : MonoBehaviour
         path = new NavMeshPath();
 		Cursor.SetCursor(cursorTexture, hotSpot, cursorMode);
 
-		selectedObjectRenderer = new Renderer[3];
-		selectedObjectResetMaterial = new Material[3][];
+		selectedObjectRenderer = new Renderer[5];
+		selectedObjectResetMaterial = new Material[5][];
 		selectedObjectResetMaterial [0] = new Material[10];
 		selectedObjectResetMaterial [1] = new Material[10];
 		selectedObjectResetMaterial [2] = new Material[10];
-		numberOfMaterials = new int[3];
+		numberOfMaterials = new int[5];
 
 		selectedValues = new string[7];
 
@@ -261,7 +261,6 @@ public class MouseFunctions : MonoBehaviour
 
 				}
 
-
 			}
 
 			updateInfoText ();
@@ -275,7 +274,7 @@ public class MouseFunctions : MonoBehaviour
 		if (selectedObjectType == "TowerSelector") {
 			if (infoText != null) {
 				string displayMe = "";
-				Tower tower = selectedObject.transform.parent.gameObject.GetComponent<Tower> ();
+				Tower tower = selectedObject.transform.parent.GetComponentInParent<Tower> ();
 				string[] stats = tower.Stats;
 
 				nameText.text = stats [0];
@@ -283,11 +282,12 @@ public class MouseFunctions : MonoBehaviour
 					displayMe = displayMe + stats [i] + "\n\n";
 				}
 
-				if (stats [0] == "Orb Tower") {
+				if (stats [0] == "Orb") {
 					selectionImage.sprite = orbIcon;
 				} else if (stats [0] == "Cannon") {
 					selectionImage.sprite = cannonIcon;
-
+				} else if (stats [0] == "Laser") {
+					selectionImage.sprite = laserIcon;
 				} 
 
 				selectionImage.enabled = true;

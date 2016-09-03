@@ -165,7 +165,7 @@ public class KeyboardFunctions : MonoBehaviour
             }
             sourceSFX.PlayOneShot(UIClickFX);
             Debug.Log("BUILDING X TOWER");
-            objectToBuild = "OrbTower";
+            objectToBuild = "Orb";
             SelectedObjectToBuild = true;
 			mFunc.Mode = 1;
 
@@ -182,7 +182,7 @@ public class KeyboardFunctions : MonoBehaviour
 			}
 			sourceSFX.PlayOneShot(UIClickFX);
 			Debug.Log("BUILDING C TOWER");
-			objectToBuild = "CannonTower";
+			objectToBuild = "Cannon";
 			SelectedObjectToBuild = true;
 			mFunc.Mode = 1;
 
@@ -199,7 +199,7 @@ public class KeyboardFunctions : MonoBehaviour
 			}
 			sourceSFX.PlayOneShot(UIClickFX);
 			Debug.Log("BUILDING V TOWER");
-			objectToBuild = "LaserTower";
+			objectToBuild = "Laser";
 			SelectedObjectToBuild = true;
 			mFunc.Mode = 1;
 
