@@ -13,6 +13,7 @@ public class MouseFunctions : MonoBehaviour
 	KeyboardFunctions kf;
 	BuildHandler bhandler;
 	Bank bank;
+	PathFind pathfind;
 
 	//Selection
 	//=============================================
@@ -50,6 +51,9 @@ public class MouseFunctions : MonoBehaviour
 	string buildStructure;
 	Vector3 positionToBuildStart;
 	Vector3 positionToBuildEnd;
+	
+	Node startNode;
+	Node endNode;
 
 	//Audio
 	//==============================================
@@ -100,6 +104,9 @@ public class MouseFunctions : MonoBehaviour
         grid = GetComponent<Grid>();
 		bhandler = GetComponent<BuildHandler> ();
         bank = player.GetComponent<Bank>();
+		pathfind = GetComponent<PathFind>();
+		startNode = new Node(new Vector3(12, 0, 30), 12, 30);
+		endNode = new Node(new Vector3(12,0,5),12,5);
 
 
 		wallGhostLoaded = (GameObject)(Resources.Load ("Walls/WallGhost"));
@@ -426,7 +433,7 @@ public class MouseFunctions : MonoBehaviour
             }
         }
 
-        if (Input.GetButtonUp("Fire1") && buildWallMode == true)
+        if (Input.GetButtonUp("Fire1") && buildWallMode == true && building == true)
         {
 
 			List<Node> alreadyChecked = new List<Node> ();
@@ -502,16 +509,47 @@ public class MouseFunctions : MonoBehaviour
 						currentNode = nextNode;
 
                     } // END FOR
-
-					foreach (var node in toCheck) {
-						neighbors = grid.GetNeighbors (node);
-						Destroy (node.Wall);
-						newWall = bhandler.wallType (node, neighbors);
-						node.Wall = newWall;
-						newWall.GetComponent<Wall> ().node = node;
+					currentNode = startWallModeNode;
+					if(pathfind.pathFound(startNode,endNode))
+					{
+						foreach (var node in toCheck) {
+							neighbors = grid.GetNeighbors (node);
+							Destroy (node.Wall);
+							newWall = bhandler.wallType (node, neighbors);
+							node.Wall = newWall;
+							newWall.GetComponent<Wall> ().node = node;
+						}
 					}
 
-                    Debug.Log(bank.getMoney());
+					else
+					{
+						for(int i = 0; i <= Mathf.Abs(wallsToBuild); i++) 
+						{
+							if (i != Mathf.Abs (wallsToBuild)) {								
+								if (buildWallModeXY == "x") {
+									
+									if (wallsToBuild > 0) {
+										nextNode = grid.NodeFromCoordinates (currentNode.gridX + 1, currentNode.gridY);
+									} else {
+										nextNode = grid.NodeFromCoordinates (currentNode.gridX - 1, currentNode.gridY);
+									}
+
+								} else {
+									
+									if (wallsToBuild > 0) {
+										nextNode = grid.NodeFromCoordinates (currentNode.gridX, currentNode.gridY + 1);
+									} else {
+										nextNode = grid.NodeFromCoordinates (currentNode.gridX, currentNode.gridY - 1);
+									}
+
+								}
+							}
+							Destroy(currentNode.Wall);
+							currentNode = nextNode;
+
+						} 
+					sourceSFX.PlayOneShot(cannotBuildSound);
+					}
 					Destroy (dummyWall);
 
                 }

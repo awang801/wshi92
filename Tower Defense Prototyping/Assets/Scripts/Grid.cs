@@ -119,13 +119,13 @@ public class Grid : MonoBehaviour {
 		int x = n.gridX;
 		int y = n.gridY;
 
-		if (x == 0) {
+		if (x == 1) {
 			isEdge [3] = true;
 		} else if (x == gridSizeX - 1) {
 			isEdge [1] = true;
 		}
 
-		if (y == 0) {
+		if (y == 1) {
 			isEdge [2] = true;
 		} else if (y == gridSizeY - 1) {
 			isEdge [0] = true;

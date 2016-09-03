@@ -11,7 +11,7 @@ public class Bank:MonoBehaviour{
 
 	public Bank()
 	{
-		money = 100;
+		money = 10000;
 		income = 10;
 	}
 

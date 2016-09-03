@@ -1664,7 +1664,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
       propertyPath: m_TagString
@@ -4284,6 +4284,7 @@ GameObject:
   - 114: {fileID: 1347273618}
   - 82: {fileID: 1347273617}
   - 114: {fileID: 1347273619}
+  - 114: {fileID: 1347273620}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -4469,6 +4470,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 945754160}
   building: 0
+--- !u!114 &1347273620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1347273612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72b8cf355b289bc4b8ac316b8dcf8fe0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridWorldSize: {x: 0, y: 0}
 --- !u!1 &1382940106
 GameObject:
   m_ObjectHideFlags: 0
