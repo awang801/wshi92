@@ -21,7 +21,6 @@ GameObject:
   - 4: {fileID: 4000012469972458}
   - 199: {fileID: 199000012010557658}
   - 198: {fileID: 198000014232175264}
-  - 114: {fileID: 114000012641099202}
   m_Layer: 0
   m_Name: Glow
   m_TagString: Untagged
@@ -75,17 +74,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4000010637594592}
   m_RootOrder: 0
---- !u!114 &114000012641099202
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000011554843184}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114000014129815314
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2056,7 +2044,7 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 0
     startSize:
-      scalar: 6
+      scalar: 4
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -2067,18 +2055,18 @@ ParticleSystem:
           tangentMode: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
-        m_RotationOrder: 4
+        m_RotationOrder: 0
       minCurve:
         serializedVersion: 2
         m_Curve:
         - time: 0
-          value: 0.6666667
+          value: 0.5
           inSlope: 0
           outSlope: 0
           tangentMode: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
-        m_RotationOrder: 4
+        m_RotationOrder: 0
       minMaxState: 3
     startSizeY:
       scalar: 1

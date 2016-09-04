@@ -240,6 +240,23 @@ public class KeyboardFunctions : MonoBehaviour
 		}
 	}
 
+	public void BuildMagicTower()
+	{
+		if (mode == 1)
+		{
+			if (SelectedObjectToBuild == false)
+			{
+				mFunc.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
+			}
+			sourceSFX.PlayOneShot(UIClickFX);
+			Debug.Log("BUILDING H TOWER");
+			objectToBuild = "Magic";
+			SelectedObjectToBuild = true;
+			mFunc.Mode = 1;
+
+		}
+	}
+
 	public bool SelectedObjectToBuild
 	{
 		get
@@ -370,6 +387,13 @@ public class KeyboardFunctions : MonoBehaviour
 		{
 			if (mode == 1) {
 				BuildLightTower ();
+			} else if (mode == 2) {
+			}
+		}
+		else if (Input.GetButtonDown("H"))
+		{
+			if (mode == 1) {
+				BuildMagicTower ();
 			} else if (mode == 2) {
 			}
 		}

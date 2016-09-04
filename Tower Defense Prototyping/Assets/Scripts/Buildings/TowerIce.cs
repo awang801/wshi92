@@ -16,7 +16,7 @@ public class TowerIce : Tower
 		shootSFX = (AudioClip)(Resources.Load("Sounds/IceSFX", typeof(AudioClip)));
 
 		//setStats(string _name, float _adamage, float _adelay, int _cost, int _sellvalue, int _upcost)
-		setStats ("Ice", 0.005f, 0.0333f, 40, 25, 60);
+		setStats ("Ice", 0.001f, 0.0333f, 40, 25, 60);
 
 		ice = shootParticle.GetComponent<IceBullet> ();
 

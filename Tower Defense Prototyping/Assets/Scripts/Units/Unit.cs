@@ -33,10 +33,13 @@ public class Unit : MonoBehaviour {
 	float maxHealth;
 	float health;
 
+	float damageAmplifier = 1f;
+
 	float baseTemperature = 98.6f;
 	float temperature;
 	float homeostasisTendency = 0.4f;
 	float minTemp = 32f;
+	float maxTemp = 150f;
 
 	public bool isDying;
 
@@ -62,7 +65,6 @@ public class Unit : MonoBehaviour {
 	public GameObject sendPlayer;
 
 	Bank bank;
-
 	MouseFunctions mFunc;
 
 	//==============================================================
@@ -76,40 +78,49 @@ public class Unit : MonoBehaviour {
 
 	void Awake()
 	{
+		//Reference Initialization
 		mFunc = GameObject.Find("GameManager").GetComponent<MouseFunctions>();
+
+		//Navigation Initialization
 		navAgent = GetComponent<NavMeshAgent> ();
+
+		//Animator Initialization
 		animator = GetComponent<Animator> ();
 		angleHash = Animator.StringToHash ("Angle");
 		speedHash = Animator.StringToHash ("Speed");
 		deathHash = Animator.StringToHash ("Dead");
 		finishHash = Animator.StringToHash ("Finish");
 
+		//Visual Initialization
 		HPBarCanvas = transform.GetChild (2);
 		HPBar = transform.GetChild (2).GetChild (2);
 		HPBarCanvas.Rotate (0, 180, 0);
 		HPBarRotation = HPBarCanvas.rotation;
 		navAgent.updateRotation = false;
 
-
-
+		//Audio Initialization
 		myAudioSource = GetComponent<AudioSource> ();
 		deathSound = (AudioClip)Resources.Load ("Sounds/enemydeath");
 		goodSound  = (AudioClip)Resources.Load ("Sounds/GoodBeep");
 		badSound  = (AudioClip)Resources.Load ("Sounds/BadBeep");
 	}
 
-	// Use this for initialization
 	void Start () {
-		maxHealth = 5;
-		health = 5;
+
+		//Stats Initialization
+		maxHealth = 10;
+		health = 10;
 		temperature = baseTemperature;
+
+		//Bank Initialization
 		bank = attackPlayer.GetComponent<Bank>();
 
 	}
 
+	//Apply damage to unit
 	public void Damage(float dmg)
 	{		
-		health -= dmg;
+		health -= damageAmplifier * dmg;
 
 		if (health <= 0 && !isDying) {
 			HPBar.localScale = new Vector3 (0, 1, 1);
@@ -120,12 +131,14 @@ public class Unit : MonoBehaviour {
 
 	}
 
+	//Set destination target
 	public void setTarget(Transform _target)
 	{
 		target = _target;
 		navAgent.SetDestination (target.position);
 	}
 
+	//Unit died before reaching target
 	void Death()
 	{
 		isDying = true;
@@ -143,6 +156,7 @@ public class Unit : MonoBehaviour {
 		gameObject.SetActive (false);
 	}
 
+	//Unit reached target
     public void Finish()
     {
 		isDying = true;
@@ -167,17 +181,30 @@ public class Unit : MonoBehaviour {
 		navAgent.velocity = animator.deltaPosition / Time.deltaTime;
 	}
 
+
+	//==================================================================================
+	//TEMPERATURE MECHANIC
+	//==================================================================================
+
 	public void addTemperature(float amount)
 	{
-		if (!(amount < 0 && temperature <= minTemp)) {
+		if (!(amount < 0 && temperature <= minTemp) && !(amount > 0 && temperature >= maxTemp)) {
 			temperature += amount;
-		}
+		} 
 
 	}
 
-	void syncTemperatureAnimation()
+	public void setTemperature(float amount)
 	{
-		//Also add blue-ing effect on materials
+		
+		temperature = amount;
+
+	}
+
+	void syncTemperature()
+	{
+		//NEED TO - Also add blue-ing effect on materials
+
 		float percent = temperature / baseTemperature;
 
 		animator.speed = percent;
@@ -193,11 +220,33 @@ public class Unit : MonoBehaviour {
 		}
 	}
 
-	//FROM OLD ENEMY SCRIPT, MIGHT NOT NEED
+
+	//==================================================================================
+	//DAMAGE AMPLIFIER
+	//==================================================================================
+
+	public void addDamageAmplifier(float amount)
+	{
+
+		damageAmplifier += amount;
+
+	}
+
+	public void setDamageAmplifier(float amount)
+	{
+
+		damageAmplifier = amount;
+
+	}
+
+	//==================================================================================
+
+	//==================================================================================
 	void Update()
     {
+		//Temperature Mechanic
 		Homeostasis ();
-		syncTemperatureAnimation ();
+		syncTemperature ();
 
 		//FROM DEAD EARTH TUTORIAL
 		//**************************************************************************************
@@ -215,8 +264,6 @@ public class Unit : MonoBehaviour {
 		animator.SetFloat (angleHash, smoothAngle);
 		animator.SetFloat (speedHash, speed, 0.1f, Time.deltaTime);
 
-
-
 		if (navAgent.desiredVelocity.sqrMagnitude > Mathf.Epsilon) {
 			if (!MixedMode || (MixedMode && Mathf.Abs(angle) < 80f && animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Locomotion") )) {
 				Quaternion lookRotation = Quaternion.LookRotation (navAgent.desiredVelocity, Vector3.up);
@@ -224,7 +271,7 @@ public class Unit : MonoBehaviour {
 			} 
 		}
 
-		if (PathStatus == NavMeshPathStatus.PathInvalid && !PathPending) {
+		if (PathStatus == NavMeshPathStatus.PathInvalid && !PathPending || PathStatus == NavMeshPathStatus.PathPartial && !PathPending) {
 			navAgent.SetDestination (target.position);
 		}
 
@@ -268,6 +315,7 @@ public class Unit : MonoBehaviour {
         */
     }
 
+	//Update HP bar rotations
 	void LateUpdate()
 	{
 		HPBarCanvas.rotation = HPBarRotation;

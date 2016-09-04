@@ -29,10 +29,10 @@ public class BuildHandler : MonoBehaviour {
 	GameObject laserTower;
 	GameObject iceTower;
 	GameObject lightTower;
+	GameObject magicTower;
 
 	//Audio
 	AudioSource sourceSFX;
-	AudioClip TowerBuildFX;
 	AudioClip needMoneySound;
 	AudioClip cannotBuildSound;
 	AudioClip selectSound;
@@ -77,12 +77,12 @@ public class BuildHandler : MonoBehaviour {
 		cannonTower = (GameObject)(Resources.Load ("Towers/CannonTower"));
 		laserTower = (GameObject)(Resources.Load ("Towers/LaserTower"));
 		iceTower = (GameObject)(Resources.Load ("Towers/IceTower"));
-		lightTower = (GameObject)(Resources.Load ("Towers/lightTower"));
+		lightTower = (GameObject)(Resources.Load ("Towers/LightTower"));
+		magicTower = (GameObject)(Resources.Load ("Towers/MagicTower"));
 
 		//Audio References
 		sourceSFX = GetComponent<AudioSource> ();
 
-		TowerBuildFX = (AudioClip)(Resources.Load("Sounds/siegemode", typeof(AudioClip)));
 		needMoneySound  = (AudioClip)(Resources.Load("Sounds/needMoney", typeof(AudioClip)));
 		cannotBuildSound  = (AudioClip)(Resources.Load("Sounds/CannotBuild", typeof(AudioClip)));
 		selectSound = Resources.Load<AudioClip> ("Sounds/CarDoorClose");
@@ -161,7 +161,6 @@ public class BuildHandler : MonoBehaviour {
 					else
 					{
 						bank.addMoney(-20);
-						//sourceSFX.PlayOneShot(TowerBuildFX);
 						positionToBuildStart = buildNode.worldPosition + (Vector3.up * 1f);
 
 
@@ -183,7 +182,6 @@ public class BuildHandler : MonoBehaviour {
 					else {
 
 						bank.addMoney (-40);
-						//sourceSFX.PlayOneShot (TowerBuildFX);
 						positionToBuildStart = buildNode.worldPosition + (Vector3.up * 1f);
 
 						StartCoroutine(BuildAfterTime (1.5f, cannonTower, buildNode, positionToBuildStart));
@@ -203,7 +201,6 @@ public class BuildHandler : MonoBehaviour {
 					else {
 
 						bank.addMoney (-50);
-						//sourceSFX.PlayOneShot (TowerBuildFX);
 						positionToBuildStart = buildNode.worldPosition + (Vector3.up * 1f);
 
 						StartCoroutine(BuildAfterTime (1.5f, laserTower, buildNode, positionToBuildStart));
@@ -223,7 +220,6 @@ public class BuildHandler : MonoBehaviour {
 					else {
 
 						bank.addMoney (-50);
-						//sourceSFX.PlayOneShot (TowerBuildFX);
 						positionToBuildStart = buildNode.worldPosition + (Vector3.up * 1f);
 
 						StartCoroutine(BuildAfterTime (1.5f, iceTower, buildNode, positionToBuildStart));
@@ -243,10 +239,28 @@ public class BuildHandler : MonoBehaviour {
 					else {
 
 						bank.addMoney (-80);
-						//sourceSFX.PlayOneShot (TowerBuildFX);
 						positionToBuildStart = buildNode.worldPosition + (Vector3.up * 1f);
 
 						StartCoroutine(BuildAfterTime (1.5f, lightTower, buildNode, positionToBuildStart));
+						CreateWallFloorAnimation (true);
+
+					}
+
+					break;
+
+				case "Magic":
+
+					if (bank.getMoney () - 50 < 0)
+					{
+						Debug.Log ("Not enough Money");
+						sourceSFX.PlayOneShot(needMoneySound);
+					}
+					else {
+
+						bank.addMoney (-50);
+						positionToBuildStart = buildNode.worldPosition + (Vector3.up * 1f);
+
+						StartCoroutine(BuildAfterTime (1.5f, magicTower, buildNode, positionToBuildStart));
 						CreateWallFloorAnimation (true);
 
 					}

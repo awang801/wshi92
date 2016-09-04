@@ -7,7 +7,7 @@ public class BuildButtonPress : MonoBehaviour {
 
 	GameObject gm;
 	KeyboardFunctions kf;
-	MouseFunctions mf;
+	//MouseFunctions mf;
 	GameObject panel;
 	RectTransform panelTransform;
 	GameObject cannonButtonObj;
@@ -35,7 +35,7 @@ public class BuildButtonPress : MonoBehaviour {
 		gmAudioSource = gm.GetComponent<AudioSource> ();
 
 		kf = gm.GetComponent<KeyboardFunctions> ();
-		mf = gm.GetComponent<MouseFunctions> ();
+		//mf = gm.GetComponent<MouseFunctions> ();
 
 		panel = GameObject.Find ("ButtonPanel");
 		panelTransform = panel.GetComponent<RectTransform> ();
