@@ -3,16 +3,20 @@ using System.Collections;
 
 public class Unit : MonoBehaviour {
 
-	//From Dead Earth Tutorial
-	//**************************************************************
-	//Inspector Assigned Variables
+	//==============================================================
+	//Navmesh Variables
 	public bool HasPath = false;
 	public bool PathPending = false;
 	public bool PathStale = false;
 	public NavMeshPathStatus PathStatus = NavMeshPathStatus.PathInvalid;
 
-	//Private Variables
+	public Transform target;
+	NavMeshPath path;
+	NavMeshPath calcPath;
+
 	NavMeshAgent navAgent = null;
+	//==============================================================
+	//Animation
 	Animator animator = null;
 
 	int angleHash;
@@ -23,38 +27,52 @@ public class Unit : MonoBehaviour {
 	float smoothAngle = 0f;
 	public bool MixedMode = false;
 
-	//**************************************************************
+	//==============================================================
+	//Stats
+
+	float maxHealth;
+	float health;
+
+	float baseTemperature = 98.6f;
+	float temperature;
+	float homeostasisTendency = 0.4f;
+	float minTemp = 32f;
+
+	public bool isDying;
+
+	//==============================================================
+	//Audio
 
 	AudioSource myAudioSource;
 	AudioClip deathSound;
 	AudioClip goodSound;
 	AudioClip badSound;
 
-	float maxHealth;
-	float health;
 
-	public Transform target;
-	NavMeshPath path;
-	NavMeshPath calcPath;
-
-	public GameObject attackPlayer;
-	public GameObject sendPlayer;
-
-	//FadeObjectInOut myFader;
-
+	//===============================================================
+	//Visuals
 	Transform HPBarCanvas;
 	Transform HPBar;
 	public Quaternion HPBarRotation;
 
+	//===============================================================
+	//Owner and References
 
-	public bool isDying;
-
-	bool ableToFind;
-	bool calculating;
+	public GameObject attackPlayer;
+	public GameObject sendPlayer;
 
 	Bank bank;
 
 	MouseFunctions mFunc;
+
+	//==============================================================
+
+
+
+	//bool ableToFind;
+	//bool calculating;
+
+
 
 	void Awake()
 	{
@@ -66,14 +84,13 @@ public class Unit : MonoBehaviour {
 		deathHash = Animator.StringToHash ("Dead");
 		finishHash = Animator.StringToHash ("Finish");
 
-		//myFader = gameObject.GetComponent<FadeObjectInOut> ();
-		//Debug.Log (myFader);
-
 		HPBarCanvas = transform.GetChild (2);
 		HPBar = transform.GetChild (2).GetChild (2);
 		HPBarCanvas.Rotate (0, 180, 0);
 		HPBarRotation = HPBarCanvas.rotation;
 		navAgent.updateRotation = false;
+
+
 
 		myAudioSource = GetComponent<AudioSource> ();
 		deathSound = (AudioClip)Resources.Load ("Sounds/enemydeath");
@@ -85,6 +102,7 @@ public class Unit : MonoBehaviour {
 	void Start () {
 		maxHealth = 5;
 		health = 5;
+		temperature = baseTemperature;
 		bank = attackPlayer.GetComponent<Bank>();
 
 	}
@@ -149,9 +167,38 @@ public class Unit : MonoBehaviour {
 		navAgent.velocity = animator.deltaPosition / Time.deltaTime;
 	}
 
+	public void addTemperature(float amount)
+	{
+		if (!(amount < 0 && temperature <= minTemp)) {
+			temperature += amount;
+		}
+
+	}
+
+	void syncTemperatureAnimation()
+	{
+		//Also add blue-ing effect on materials
+		float percent = temperature / baseTemperature;
+
+		animator.speed = percent;
+
+	}
+
+	void Homeostasis()
+	{
+		if (temperature > baseTemperature) {
+			temperature -= homeostasisTendency;
+		} else if (temperature < baseTemperature) {
+			temperature += homeostasisTendency;
+		}
+	}
+
 	//FROM OLD ENEMY SCRIPT, MIGHT NOT NEED
 	void Update()
     {
+		Homeostasis ();
+		syncTemperatureAnimation ();
+
 		//FROM DEAD EARTH TUTORIAL
 		//**************************************************************************************
 		HasPath = navAgent.hasPath;
@@ -167,6 +214,8 @@ public class Unit : MonoBehaviour {
 
 		animator.SetFloat (angleHash, smoothAngle);
 		animator.SetFloat (speedHash, speed, 0.1f, Time.deltaTime);
+
+
 
 		if (navAgent.desiredVelocity.sqrMagnitude > Mathf.Epsilon) {
 			if (!MixedMode || (MixedMode && Mathf.Abs(angle) < 80f && animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Locomotion") )) {

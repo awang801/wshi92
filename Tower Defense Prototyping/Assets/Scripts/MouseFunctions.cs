@@ -105,6 +105,7 @@ public class MouseFunctions : MonoBehaviour
 		bhandler = GetComponent<BuildHandler> ();
         bank = player.GetComponent<Bank>();
 		pathfind = GetComponent<PathFind>();
+
 		startNode = new Node(new Vector3(12, 0, 30), 12, 30);
 		endNode = new Node(new Vector3(12,0,5),12,5);
 
@@ -136,12 +137,12 @@ public class MouseFunctions : MonoBehaviour
         path = new NavMeshPath();
 		Cursor.SetCursor(cursorTexture, hotSpot, cursorMode);
 
-		selectedObjectRenderer = new Renderer[5];
-		selectedObjectResetMaterial = new Material[5][];
-		selectedObjectResetMaterial [0] = new Material[10];
-		selectedObjectResetMaterial [1] = new Material[10];
-		selectedObjectResetMaterial [2] = new Material[10];
-		numberOfMaterials = new int[5];
+		selectedObjectRenderer = new Renderer[10];
+		selectedObjectResetMaterial = new Material[10][];
+		for (int i = 0; i < 10; i++) {
+			selectedObjectResetMaterial [i] = new Material[10];
+		}
+		numberOfMaterials = new int[10];
 
 		selectedValues = new string[7];
 
@@ -213,7 +214,7 @@ public class MouseFunctions : MonoBehaviour
 	/*
 	 * Updates the object (wall/tower/unit) that the mouse is currently over
 	 * 
-	 * Saves information in "currentMouseNode"
+	 * Saves information in "currentMouseObject"
 	 */
 	{
 		Ray camRay = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -236,42 +237,81 @@ public class MouseFunctions : MonoBehaviour
 	{
 		if (Input.GetButtonDown ("Fire1")) {
 			
-				
-
 			if (currentMouseObject != null) {
 					
+				if (currentMouseObject.CompareTag ("TowerSelector")) {
 
-				if (currentMouseObject.CompareTag ("TowerSelector") || currentMouseObject.CompareTag ("Wall")) {
-					Deselect ();
-					sourceSFX.PlayOneShot (selectSound);
-					selectedObject = currentMouseObject;
-					selectedObjectType = currentMouseObject.tag;
-					Debug.Log (selectedObjectType);
+					SelectTower ();
 
-					if (selectedObject.transform.parent != null) {
-						selectedObjectRenderer = selectedObject.transform.parent.GetComponentsInChildren<Renderer> ();
-					} else {
-						selectedObjectRenderer = selectedObject.GetComponents<Renderer> ();
-					}
+				} else if (currentMouseObject.CompareTag ("Wall")) {
 
-					numberOfRenderers = selectedObjectRenderer.Length;
-
-					for (int i = 0; i < numberOfRenderers; i++) {
-						selectedObjectResetMaterial [i] = selectedObjectRenderer [i].materials;
-						numberOfMaterials [i] = selectedObjectRenderer [i].materials.Length;
-						Material[] tempMaterials = new Material[numberOfMaterials [i]];
-						for (int j = 0; j < numberOfMaterials [i]; j++) {
-							tempMaterials [j] = highlightCastleMaterial;
-						}
-						selectedObjectRenderer [i].materials = tempMaterials;
-					}
+					SelectWall ();
 
 				}
 
 			}
-
 			updateInfoText ();
-				
+
+		} else if (Input.GetButtonDown ("Fire2")) {
+
+			Deselect ();
+			updateInfoText ();
+
+		}
+
+	}
+
+	void SelectTower()
+	{
+		Deselect ();
+
+		sourceSFX.PlayOneShot (selectSound);
+
+		selectedObject = currentMouseObject;
+		selectedObjectType = currentMouseObject.tag;
+
+		selectedObjectRenderer = selectedObject.transform.parent.parent.GetComponentsInChildren<Renderer> ();
+
+		numberOfRenderers = selectedObjectRenderer.Length;
+
+		for (int i = 0; i < numberOfRenderers; i++) {
+
+			if (!selectedObjectRenderer [i].CompareTag ("BulletPoint")) {
+				selectedObjectResetMaterial [i] = selectedObjectRenderer [i].materials;
+				numberOfMaterials [i] = selectedObjectRenderer [i].materials.Length;
+				Material[] tempMaterials = new Material[numberOfMaterials [i]];
+				for (int j = 0; j < numberOfMaterials [i]; j++) {
+					tempMaterials [j] = highlightCastleMaterial;
+				}
+				selectedObjectRenderer [i].materials = tempMaterials;
+			} 
+		}
+
+	}
+
+	void SelectWall()
+	{
+		
+		Deselect ();
+
+		sourceSFX.PlayOneShot (selectSound);
+
+		selectedObject = currentMouseObject;
+		selectedObjectType = currentMouseObject.tag;
+
+		selectedObjectRenderer = selectedObject.GetComponents<Renderer> ();
+
+		numberOfRenderers = selectedObjectRenderer.Length;
+
+		for (int i = 0; i < numberOfRenderers; i++) {
+
+			selectedObjectResetMaterial [i] = selectedObjectRenderer [i].materials;
+			numberOfMaterials [i] = selectedObjectRenderer [i].materials.Length;
+			Material[] tempMaterials = new Material[numberOfMaterials [i]];
+			for (int j = 0; j < numberOfMaterials [i]; j++) {
+				tempMaterials [j] = highlightCastleMaterial;
+			}
+			selectedObjectRenderer [i].materials = tempMaterials;
 		}
 
 	}
@@ -363,13 +403,14 @@ public class MouseFunctions : MonoBehaviour
 		}
 	}
 
-
 	public void Deselect()
 	{
 		if (selectedObject != null) {
 			for (int i = 0; i < numberOfRenderers; i++) {
 				for (int j = 0; j < numberOfMaterials[i]; j++) {
-					selectedObjectRenderer[i].materials = selectedObjectResetMaterial[i];
+					if (!selectedObjectRenderer [i].CompareTag ("BulletPoint")) {
+						selectedObjectRenderer[i].materials = selectedObjectResetMaterial[i];
+					}
 				}
 			}
 		}
@@ -387,6 +428,7 @@ public class MouseFunctions : MonoBehaviour
             kf.building = false;
         }
 
+		//On mouse DOWN
         if (Input.GetButtonDown("Fire1"))
         {
 
@@ -407,11 +449,15 @@ public class MouseFunctions : MonoBehaviour
             }
 
         }
+
+
+
         if (Input.GetButton("Fire1"))
         {
             if (buildWallMode == true)
             {
 
+				//Updates the wall ghost as you drag the mouse along the X or Y axis
                 Vector2 difference = grid.NodeDifference(startWallModeNode, currentMouseNode);
 
                 if (Mathf.Abs(difference.x) >= Mathf.Abs(difference.y))
@@ -433,6 +479,8 @@ public class MouseFunctions : MonoBehaviour
             }
         }
 
+
+
         if (Input.GetButtonUp("Fire1") && buildWallMode == true && building == true)
         {
 
@@ -440,27 +488,23 @@ public class MouseFunctions : MonoBehaviour
 			List<Node> toCheck = new List<Node> ();
             kf.building = false;
             buildWallMode = false;
-			if (bank.getMoney() >= ((Mathf.Abs(wallsToBuild) + 1) * 5 ))
+
+			if (bank.getMoney() >= ((Mathf.Abs(wallsToBuild) + 1) * 5 )) //Check if we have enough money
             {
-                if (grid.NodeLineContainsWall(startWallModeNode, endWallModeNode, buildWallModeXY) == false)
+                if (grid.NodeLineContainsWall(startWallModeNode, endWallModeNode, buildWallModeXY) == false) // Check for existing walls along this line
                 {
-					
-                    Debug.Log("buildWallModeXY = " + buildWallModeXY);
 
 					Node currentNode = startWallModeNode;
 					Node nextNode = currentNode;
 					Node[] neighbors;
 					GameObject dummyWall = new GameObject();
-
 					GameObject newWall;
-
                    
                     sourceSFX.PlayOneShot(BuildFX);
 
                     for (int i = 0; i <= Mathf.Abs(wallsToBuild); i++)
                     {
 						neighbors = grid.GetNeighbors (currentNode);
-
 
 						if (i != Mathf.Abs (wallsToBuild)) { //If statement so we don't try to go OVER the grid boundaries on last iteration
 
@@ -509,7 +553,9 @@ public class MouseFunctions : MonoBehaviour
 						currentNode = nextNode;
 
                     } // END FOR
+
 					currentNode = startWallModeNode;
+
 					if(pathfind.pathFound(startNode,endNode))
 					{
 						foreach (var node in toCheck) {
@@ -548,7 +594,7 @@ public class MouseFunctions : MonoBehaviour
 							currentNode = nextNode;
 
 						} 
-					sourceSFX.PlayOneShot(cannotBuildSound);
+						sourceSFX.PlayOneShot(cannotBuildSound);
 					}
 					Destroy (dummyWall);
 

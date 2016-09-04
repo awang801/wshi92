@@ -206,6 +206,40 @@ public class KeyboardFunctions : MonoBehaviour
 		}
 	}
 
+	public void BuildIceTower()
+	{
+		if (mode == 1)
+		{
+			if (SelectedObjectToBuild == false)
+			{
+				mFunc.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
+			}
+			sourceSFX.PlayOneShot(UIClickFX);
+			Debug.Log("BUILDING F TOWER");
+			objectToBuild = "Ice";
+			SelectedObjectToBuild = true;
+			mFunc.Mode = 1;
+
+		}
+	}
+
+	public void BuildLightTower()
+	{
+		if (mode == 1)
+		{
+			if (SelectedObjectToBuild == false)
+			{
+				mFunc.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
+			}
+			sourceSFX.PlayOneShot(UIClickFX);
+			Debug.Log("BUILDING G TOWER");
+			objectToBuild = "Light";
+			SelectedObjectToBuild = true;
+			mFunc.Mode = 1;
+
+		}
+	}
+
 	public bool SelectedObjectToBuild
 	{
 		get
@@ -322,6 +356,20 @@ public class KeyboardFunctions : MonoBehaviour
 		{
 			if (mode == 1) {
 				BuildLaserTower ();
+			} else if (mode == 2) {
+			}
+		}
+		else if (Input.GetButtonDown("F"))
+		{
+			if (mode == 1) {
+				BuildIceTower ();
+			} else if (mode == 2) {
+			}
+		}
+		else if (Input.GetButtonDown("G"))
+		{
+			if (mode == 1) {
+				BuildLightTower ();
 			} else if (mode == 2) {
 			}
 		}

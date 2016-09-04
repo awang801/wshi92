@@ -10,7 +10,7 @@ public class TowerOrb : Tower
 		base.Awake ();
 		shootSFX = (AudioClip)(Resources.Load("Sounds/OrbFireSFX", typeof(AudioClip)));
 		//setStats(string _name, float _adamage, float _adelay, int _cost, int _sellvalue, int _upcost)
-		setStats ("Orb Tower", 1f, 0.75f, 20, 15, 35);
+		setStats ("Orb", 1f, 0.75f, 20, 15, 35);
 	}
 
 

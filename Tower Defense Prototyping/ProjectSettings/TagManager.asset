@@ -11,6 +11,7 @@ TagManager:
   - TerrainBlock
   - UI
   - Fire
+  - BulletPoint
   layers:
   - Default
   - TransparentFX

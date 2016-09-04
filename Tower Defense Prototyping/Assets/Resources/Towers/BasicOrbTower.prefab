@@ -38,9 +38,9 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000012306479306}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: BulletPoint
-  m_TagString: Untagged
+  m_TagString: BulletPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -149,7 +149,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010135462680}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.467539, y: 1.4210855e-14, z: 19.721777}
+  m_LocalPosition: {x: 16.333302, y: 0, z: 19.692352}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:

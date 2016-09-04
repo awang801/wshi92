@@ -27,6 +27,8 @@ public class BuildHandler : MonoBehaviour {
 	GameObject orbTower;
 	GameObject cannonTower;
 	GameObject laserTower;
+	GameObject iceTower;
+	GameObject lightTower;
 
 	//Audio
 	AudioSource sourceSFX;
@@ -74,6 +76,8 @@ public class BuildHandler : MonoBehaviour {
 		orbTower = (GameObject)(Resources.Load ("Towers/BasicOrbTower"));
 		cannonTower = (GameObject)(Resources.Load ("Towers/CannonTower"));
 		laserTower = (GameObject)(Resources.Load ("Towers/LaserTower"));
+		iceTower = (GameObject)(Resources.Load ("Towers/IceTower"));
+		lightTower = (GameObject)(Resources.Load ("Towers/lightTower"));
 
 		//Audio References
 		sourceSFX = GetComponent<AudioSource> ();
@@ -94,10 +98,10 @@ public class BuildHandler : MonoBehaviour {
 
 			if (mf.CurrentObject.CompareTag ("TowerSelector")) {
 				
-				Tower tempTower = mf.CurrentObject.transform.parent.GetComponent<Tower> ();
+				Tower tempTower = mf.CurrentObject.transform.parent.parent.GetComponent<Tower> ();
 				sellValue = int.Parse (tempTower.Stats [5]);
 				bank.addMoney (sellValue);
-				Destroy (mf.CurrentObject.transform.parent.gameObject);
+				Destroy (mf.CurrentObject.transform.parent.parent.gameObject);
 				mf.HidePanel();
 
 			} else if (mf.CurrentObject.CompareTag ("Wall")) {
@@ -203,6 +207,46 @@ public class BuildHandler : MonoBehaviour {
 						positionToBuildStart = buildNode.worldPosition + (Vector3.up * 1f);
 
 						StartCoroutine(BuildAfterTime (1.5f, laserTower, buildNode, positionToBuildStart));
+						CreateWallFloorAnimation (true);
+
+					}
+
+					break;
+
+				case "Ice":
+
+					if (bank.getMoney () - 50 < 0)
+					{
+						Debug.Log ("Not enough Money");
+						sourceSFX.PlayOneShot(needMoneySound);
+					}
+					else {
+
+						bank.addMoney (-50);
+						//sourceSFX.PlayOneShot (TowerBuildFX);
+						positionToBuildStart = buildNode.worldPosition + (Vector3.up * 1f);
+
+						StartCoroutine(BuildAfterTime (1.5f, iceTower, buildNode, positionToBuildStart));
+						CreateWallFloorAnimation (true);
+
+					}
+
+					break;
+
+				case "Light":
+
+					if (bank.getMoney () - 80 < 0)
+					{
+						Debug.Log ("Not enough Money");
+						sourceSFX.PlayOneShot(needMoneySound);
+					}
+					else {
+
+						bank.addMoney (-80);
+						//sourceSFX.PlayOneShot (TowerBuildFX);
+						positionToBuildStart = buildNode.worldPosition + (Vector3.up * 1f);
+
+						StartCoroutine(BuildAfterTime (1.5f, lightTower, buildNode, positionToBuildStart));
 						CreateWallFloorAnimation (true);
 
 					}

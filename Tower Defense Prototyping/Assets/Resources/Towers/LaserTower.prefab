@@ -23,7 +23,7 @@ GameObject:
   - 23: {fileID: 23000010224730496}
   m_Layer: 11
   m_Name: Tower
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -56,7 +56,7 @@ GameObject:
   - 4: {fileID: 4000012147248884}
   m_Layer: 11
   m_Name: Model Parts
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -86,9 +86,9 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000011682358570}
   - 120: {fileID: 120000013830054964}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: BulletPoint
-  m_TagString: Untagged
+  m_TagString: BulletPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -120,7 +120,7 @@ GameObject:
   - 23: {fileID: 23000011013037842}
   m_Layer: 11
   m_Name: RotateBaseStandingPlates
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -137,7 +137,7 @@ GameObject:
   - 23: {fileID: 23000010217527192}
   m_Layer: 11
   m_Name: TowerBase
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -154,7 +154,7 @@ GameObject:
   - 23: {fileID: 23000013141736426}
   m_Layer: 11
   m_Name: RotateBase
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -179,7 +179,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010814757616}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.802427, y: 0, z: 21.6818}
+  m_LocalPosition: {x: 22.38065, y: 0, z: 18.90891}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:

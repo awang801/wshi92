@@ -13,15 +13,16 @@ public class TowerLaser : Tower
 	float chargeTime;
 	int enemyLayerMask;
 	AudioClip whileShootingSFX;
-
+	AudioClip onShootSFX;
 	protected override void Awake()
 	{
 		base.Awake ();
 		shootSFX = (AudioClip)(Resources.Load("Sounds/LaserChargeSFX", typeof(AudioClip)));
+		onShootSFX = (AudioClip)(Resources.Load("Sounds/LaserOnShootSFX", typeof(AudioClip)));
 		whileShootingSFX = (AudioClip)(Resources.Load("Sounds/LaserFiringSFX", typeof(AudioClip)));
 
 		//setStats(string _name, float _adamage, float _adelay, int _cost, int _sellvalue, int _upcost)
-		setStats ("Laser", 4f, 3f, 40, 25, 60);
+		setStats ("Laser", 4f, 2f, 40, 25, 60);
 
 		maxAttackTime = 2.7f;
 		chargeTime = 0.4f;
@@ -62,6 +63,7 @@ public class TowerLaser : Tower
 
 			} else if (attackTime >= chargeTime) {
 				if (!laser.enabled) {
+					sourceSFX.PlayOneShot(onShootSFX);
 					laser.enabled = true;
 					sourceSFX.PlayOneShot (whileShootingSFX);
 				}

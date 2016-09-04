@@ -56,22 +56,18 @@ public class SpawnUnit : MonoBehaviour
 			unitCost = 5;
 			incomeGain = 1;
 			spawnUnit = enemyType1;
-			Debug.Log ("Send Enemy1!");
 			break;
 		case "Potato":
 			unitCost = 5;
 			incomeGain = 1;
 			spawnUnit = potato;
-			Debug.Log ("Send potato!");
 			break;
 		case "Cloud":
 			unitCost = 30;
 			incomeGain = 8;
 			spawnUnit = cloud;
-			Debug.Log ("Send cloud!");
 			break;
 		default:
-			Debug.Log ("Send DEFAULT");
 			break;
 
 		}
