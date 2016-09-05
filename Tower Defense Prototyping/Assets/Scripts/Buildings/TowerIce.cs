@@ -48,6 +48,8 @@ public class TowerIce : Tower
 			} else {
 				
 				if (sourceSFX.isPlaying == false) sourceSFX.Play();
+				ice.ToggleOn ();
+				isAttacking = true;
 
 			}
 

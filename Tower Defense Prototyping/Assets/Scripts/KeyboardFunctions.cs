@@ -32,6 +32,13 @@ public class KeyboardFunctions : MonoBehaviour
 	public CursorMode cursorMode = CursorMode.Auto;
 	public Vector2 hotSpot = Vector2.zero;
 
+	GameObject orbGhost;
+	GameObject cannonGhost;
+	GameObject laserGhost;
+	GameObject lightGhost;
+	GameObject magicGhost;
+	GameObject iceGhost;
+
 	SpawnUnit spawner;
 
 	public int mode = 0; 
@@ -58,6 +65,13 @@ public class KeyboardFunctions : MonoBehaviour
 		normalCursor = (Texture2D)Resources.Load ("Sprites/Arrow");
 		buildCursor = (Texture2D)Resources.Load ("Sprites/BuildCursor");
 		attackCursor = (Texture2D)Resources.Load ("Sprites/AttackCursor");
+
+		orbGhost = (GameObject)(Resources.Load("Towers/TowerGhosts/OrbGhost"));
+		cannonGhost = (GameObject)(Resources.Load("Towers/TowerGhosts/CannonGhost"));
+		laserGhost = (GameObject)(Resources.Load("Towers/TowerGhosts/LaserGhost"));
+		lightGhost = (GameObject)(Resources.Load("Towers/TowerGhosts/LightGhost"));
+		magicGhost = (GameObject)(Resources.Load("Towers/TowerGhosts/MagicGhost"));
+		iceGhost = (GameObject)(Resources.Load("Towers/TowerGhosts/IceGhost"));
 
 		bank = player.GetComponent<Bank>();
 
@@ -143,10 +157,8 @@ public class KeyboardFunctions : MonoBehaviour
     {
         if (mode == 1)
 		{
-            if (SelectedObjectToBuild == false)
-            {
-                mFunc.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
-            }
+			Destroy(mFunc.SelHighlight);
+            mFunc.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
             sourceSFX.PlayOneShot(UIClickFX);
             Debug.Log("BUILDING Z TOWER");
             objectToBuild = "Wall";
@@ -159,10 +171,8 @@ public class KeyboardFunctions : MonoBehaviour
     {
         if (mode == 1)
         {
-            if (SelectedObjectToBuild == false)
-            {
-                mFunc.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
-            }
+			Destroy(mFunc.SelHighlight);
+			mFunc.SelHighlight = ((GameObject)(Instantiate(orbGhost))); //Creates green selection box
             sourceSFX.PlayOneShot(UIClickFX);
             Debug.Log("BUILDING X TOWER");
             objectToBuild = "Orb";
@@ -176,10 +186,8 @@ public class KeyboardFunctions : MonoBehaviour
 	{
 		if (mode == 1)
 		{
-			if (SelectedObjectToBuild == false)
-			{
-				mFunc.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
-			}
+			Destroy(mFunc.SelHighlight);
+			mFunc.SelHighlight = ((GameObject)(Instantiate(cannonGhost))); //Creates green selection box
 			sourceSFX.PlayOneShot(UIClickFX);
 			Debug.Log("BUILDING C TOWER");
 			objectToBuild = "Cannon";
@@ -193,10 +201,8 @@ public class KeyboardFunctions : MonoBehaviour
 	{
 		if (mode == 1)
 		{
-			if (SelectedObjectToBuild == false)
-			{
-				mFunc.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
-			}
+			Destroy(mFunc.SelHighlight);
+			mFunc.SelHighlight = ((GameObject)(Instantiate(laserGhost))); //Creates green selection box
 			sourceSFX.PlayOneShot(UIClickFX);
 			Debug.Log("BUILDING V TOWER");
 			objectToBuild = "Laser";
@@ -210,10 +216,8 @@ public class KeyboardFunctions : MonoBehaviour
 	{
 		if (mode == 1)
 		{
-			if (SelectedObjectToBuild == false)
-			{
-				mFunc.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
-			}
+			Destroy(mFunc.SelHighlight);
+			mFunc.SelHighlight = ((GameObject)(Instantiate(iceGhost))); //Creates green selection box
 			sourceSFX.PlayOneShot(UIClickFX);
 			Debug.Log("BUILDING F TOWER");
 			objectToBuild = "Ice";
@@ -227,10 +231,8 @@ public class KeyboardFunctions : MonoBehaviour
 	{
 		if (mode == 1)
 		{
-			if (SelectedObjectToBuild == false)
-			{
-				mFunc.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
-			}
+			Destroy(mFunc.SelHighlight);
+			mFunc.SelHighlight = ((GameObject)(Instantiate(lightGhost))); //Creates green selection box
 			sourceSFX.PlayOneShot(UIClickFX);
 			Debug.Log("BUILDING G TOWER");
 			objectToBuild = "Light";
@@ -244,10 +246,8 @@ public class KeyboardFunctions : MonoBehaviour
 	{
 		if (mode == 1)
 		{
-			if (SelectedObjectToBuild == false)
-			{
-				mFunc.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
-			}
+			Destroy(mFunc.SelHighlight);
+			mFunc.SelHighlight = ((GameObject)(Instantiate(magicGhost))); //Creates green selection box
 			sourceSFX.PlayOneShot(UIClickFX);
 			Debug.Log("BUILDING H TOWER");
 			objectToBuild = "Magic";

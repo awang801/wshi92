@@ -13,10 +13,19 @@ public class BuildButtonPress : MonoBehaviour {
 	GameObject cannonButtonObj;
 	GameObject towerButtonObj;
 	GameObject wallButtonObj;
+	GameObject laserButtonObj;
+	GameObject lightButtonObj;
+	GameObject magicButtonObj;
+	GameObject iceButtonObj;
 
 	Button towerButton;
 	Button cannonButton;
 	Button wallButton;
+	Button laserButton;
+	Button lightButton;
+	Button magicButton;
+	Button iceButton;
+
 
 	AudioSource gmAudioSource;
 	AudioClip highlightSFX;
@@ -43,14 +52,27 @@ public class BuildButtonPress : MonoBehaviour {
 		towerButtonObj = GameObject.Find ("OrbTowerButton");
 		cannonButtonObj = GameObject.Find ("CannonTowerButton");
 		wallButtonObj = GameObject.Find ("WallButton");
+		laserButtonObj = GameObject.Find ("LaserTowerButton");
+		lightButtonObj = GameObject.Find ("LightTowerButton");
+		magicButtonObj = GameObject.Find ("MagicTowerButton");
+		iceButtonObj = GameObject.Find ("IceTowerButton");
 
 		towerButton = towerButtonObj.GetComponent<Button> ();
 		cannonButton = cannonButtonObj.GetComponent<Button> ();
 		wallButton = wallButtonObj.GetComponent<Button> ();
+		iceButton = iceButtonObj.GetComponent<Button> ();
+		laserButton = laserButtonObj.GetComponent<Button> ();
+		lightButton = lightButtonObj.GetComponent<Button> ();
+		magicButton = magicButtonObj.GetComponent<Button> ();
 
 		towerButton.interactable = false;
 		cannonButton.interactable = false;
 		wallButton.interactable = false;
+		iceButton.interactable = false;
+		laserButton.interactable = false;
+		lightButton.interactable = false;
+		magicButton.interactable = false;
+
 
 		sendButton = GameObject.Find("SendButtonText").GetComponent<SendButtonPress>();
 		highlightSFX = Resources.Load<AudioClip> ("Sounds/UI/UIMouseOverSound");
@@ -93,18 +115,30 @@ public class BuildButtonPress : MonoBehaviour {
 			towerButton.interactable = true;
 			cannonButton.interactable = true;
 			wallButton.interactable = true;
+			iceButton.interactable = true;
+			laserButton.interactable = true;
+			lightButton.interactable = true;
+			magicButton.interactable = true;
 			kf.Build ();
 		}
 		else if (kf.mode == 1) {
 			towerButton.interactable = false;
 			cannonButton.interactable = false;
 			wallButton.interactable = false;
+			iceButton.interactable = false;
+			laserButton.interactable = false;
+			lightButton.interactable = false;
+			magicButton.interactable = false;
 			kf.CancelBuild ();
 		} else if (kf.mode == 0){
 			kf.Build ();
 			towerButton.interactable = true;
 			cannonButton.interactable = true;
 			wallButton.interactable = true;
+			iceButton.interactable = true;
+			laserButton.interactable = true;
+			lightButton.interactable = true;
+			magicButton.interactable = true;
 		}
 	}
 

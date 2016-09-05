@@ -1,24 +1,27 @@
 fileFormatVersion: 2
-guid: 171bd97100b59f748b16b05de58849ec
-timeCreated: 1472527287
+guid: b3f3c8ba890bd564abc614053ab79540
+timeCreated: 1473038813
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: PotatoButtonSprite
     21300002: CloudButtonSprite
-    21300004: TD_Button_Template_New_2
-    21300006: AttackButtonSprite
-    21300008: DefendButtonSprite
-    21300010: CannonButtonSprite
-    21300012: UpgradeButtonSprite
-    21300014: BuildButtonSprite
-    21300016: OrbButtonSprite
-    21300018: WallButtonSprite
-    21300020: SellButtonSprite
+    21300004: LightButtonSprite
+    21300006: LaserButtonSprite
+    21300008: IceButtonSprite
+    21300010: AttackButtonSprite
+    21300012: DefendButtonSprite
+    21300014: CannonButtonSprite
+    21300016: UpgradeButtonSprite
+    21300018: MagicButtonSprite
+    21300020: BuildButtonSprite
+    21300022: OrbButtonSprite
+    21300024: WallButtonSprite
+    21300026: SellButtonSprite
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     linearTexture: 0
     correctGamma: 0
     fadeOut: 0
@@ -40,8 +43,8 @@ TextureImporter:
   textureFormat: -1
   maxTextureSize: 2048
   textureSettings:
-    filterMode: -1
-    aniso: 16
+    filterMode: 0
+    aniso: -1
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
@@ -55,7 +58,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 20
+  spritePixelsToUnits: 10
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
   textureType: 8
@@ -67,9 +70,9 @@ TextureImporter:
       name: PotatoButtonSprite
       rect:
         serializedVersion: 2
-        x: 8
+        x: 9
         y: 2900
-        width: 1286
+        width: 1287
         height: 1286
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -80,9 +83,9 @@ TextureImporter:
       name: CloudButtonSprite
       rect:
         serializedVersion: 2
-        x: 1483
+        x: 1482
         y: 2900
-        width: 1287
+        width: 1290
         height: 1286
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -90,15 +93,41 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: TD_Button_Template_New_2
+      name: LightButtonSprite
       rect:
         serializedVersion: 2
-        x: 2996
+        x: 2997
         y: 2900
-        width: 1287
+        width: 1288
         height: 1286
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: LaserButtonSprite
+      rect:
+        serializedVersion: 2
+        x: 4498
+        y: 2900
+        width: 1288
+        height: 1286
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: IceButtonSprite
+      rect:
+        serializedVersion: 2
+        x: 6003
+        y: 2900
+        width: 1282
+        height: 1286
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -106,10 +135,10 @@ TextureImporter:
       name: AttackButtonSprite
       rect:
         serializedVersion: 2
-        x: 4
-        y: 1444
-        width: 1287
-        height: 1290
+        x: 5
+        y: 1442
+        width: 1288
+        height: 1291
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -120,9 +149,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1492
-        y: 1444
-        width: 1287
-        height: 1290
+        y: 1442
+        width: 1288
+        height: 1291
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,10 +161,10 @@ TextureImporter:
       name: CannonButtonSprite
       rect:
         serializedVersion: 2
-        x: 2996
-        y: 1444
-        width: 1287
-        height: 1290
+        x: 2997
+        y: 1442
+        width: 1288
+        height: 1291
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -146,9 +175,22 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 4498
-        y: 1455
-        width: 1283
-        height: 1290
+        y: 1442
+        width: 1288
+        height: 1291
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: MagicButtonSprite
+      rect:
+        serializedVersion: 2
+        x: 6003
+        y: 1442
+        width: 1282
+        height: 1291
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -160,7 +202,7 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1283
+        width: 1282
         height: 1286
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -171,9 +213,9 @@ TextureImporter:
       name: OrbButtonSprite
       rect:
         serializedVersion: 2
-        x: 1483
+        x: 1482
         y: 0
-        width: 1287
+        width: 1290
         height: 1286
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -184,9 +226,9 @@ TextureImporter:
       name: WallButtonSprite
       rect:
         serializedVersion: 2
-        x: 2988
+        x: 2986
         y: 0
-        width: 1287
+        width: 1288
         height: 1286
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -199,7 +241,7 @@ TextureImporter:
         serializedVersion: 2
         x: 4498
         y: 0
-        width: 1283
+        width: 1288
         height: 1286
       alignment: 0
       pivot: {x: 0.5, y: 0.5}

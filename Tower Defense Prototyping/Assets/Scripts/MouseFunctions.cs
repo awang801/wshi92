@@ -22,11 +22,15 @@ public class MouseFunctions : MonoBehaviour
 	int mode;
 	Node currentMouseNode;
 	GameObject selectedObject;
+	SphereCollider selectedObjectCollider;
 	Renderer[] selectedObjectRenderer;
 	Material[][] selectedObjectResetMaterial;
 	int numberOfRenderers;
 	int[] numberOfMaterials;
 	GameObject currentMouseObject;
+
+	GameObject rangeIndicator;
+	GameObject rangeIndicatorInstance;
 
 	string selectedObjectType;
 
@@ -77,6 +81,10 @@ public class MouseFunctions : MonoBehaviour
 	Sprite orbIcon;
 	Sprite cannonIcon;
 	Sprite laserIcon;
+	Sprite iceIcon;
+	Sprite lightIcon;
+	Sprite magicIcon;
+
 
     NavMeshPath path;
 
@@ -117,7 +125,11 @@ public class MouseFunctions : MonoBehaviour
 		orbIcon = Resources.Load<Sprite> ("Sprites/OrbIcon");
 		cannonIcon = Resources.Load<Sprite> ("Sprites/CannonIcon");
 		laserIcon = Resources.Load<Sprite> ("Sprites/LaserIcon");
+		iceIcon = Resources.Load<Sprite> ("Sprites/IceIcon");
+		lightIcon = Resources.Load<Sprite> ("Sprites/LightIcon");
+		magicIcon = Resources.Load<Sprite> ("Sprites/MagicIcon");
 
+		rangeIndicator = (GameObject)(Resources.Load ("UI/RangeIndicator"));
 
 		highlightCastleMaterial = (Material)(Resources.Load ("Materials/Outlined_Object"));
 
@@ -263,11 +275,13 @@ public class MouseFunctions : MonoBehaviour
 
 	void SelectTower()
 	{
+
 		Deselect ();
 
 		sourceSFX.PlayOneShot (selectSound);
 
 		selectedObject = currentMouseObject;
+		selectedObjectCollider = selectedObject.transform.parent.parent.GetComponent<SphereCollider> ();
 		selectedObjectType = currentMouseObject.tag;
 
 		selectedObjectRenderer = selectedObject.transform.parent.parent.GetComponentsInChildren<Renderer> ();
@@ -286,6 +300,8 @@ public class MouseFunctions : MonoBehaviour
 				selectedObjectRenderer [i].materials = tempMaterials;
 			} 
 		}
+
+		ShowRangeIndicator ();
 
 	}
 
@@ -335,6 +351,12 @@ public class MouseFunctions : MonoBehaviour
 					selectionImage.sprite = cannonIcon;
 				} else if (stats [0] == "Laser") {
 					selectionImage.sprite = laserIcon;
+				} else if (stats [0] == "Ice") {
+					selectionImage.sprite = iceIcon;
+				} else if (stats [0] == "Light") {
+					selectionImage.sprite = lightIcon;
+				} else if (stats [0] == "Magic") {
+					selectionImage.sprite = magicIcon;
 				} 
 
 				selectionImage.enabled = true;
@@ -358,6 +380,24 @@ public class MouseFunctions : MonoBehaviour
 
 			HidePanel ();
 		}
+	}
+
+	void ShowRangeIndicator()
+	{
+		rangeIndicatorInstance = (GameObject)Instantiate (rangeIndicator, selectedObject.transform.parent);
+
+		float correctScale = selectedObjectCollider.radius * 2f;
+
+		rangeIndicatorInstance.transform.localScale = new Vector3 (correctScale, 0.001f, correctScale);
+		rangeIndicatorInstance.transform.position = selectedObject.transform.parent.parent.position;
+	}
+
+	void DeleteRangeIndicator()
+	{
+		if (rangeIndicatorInstance != null) {
+			Destroy (rangeIndicatorInstance);
+		}
+
 	}
 
 	public void HidePanel()
@@ -405,6 +445,8 @@ public class MouseFunctions : MonoBehaviour
 
 	public void Deselect()
 	{
+		DeleteRangeIndicator ();
+
 		if (selectedObject != null) {
 			for (int i = 0; i < numberOfRenderers; i++) {
 				for (int j = 0; j < numberOfMaterials[i]; j++) {

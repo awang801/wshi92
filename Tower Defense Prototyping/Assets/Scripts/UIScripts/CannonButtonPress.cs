@@ -35,17 +35,7 @@ public class CannonButtonPress : MonoBehaviour {
 
 	public void TowerToggle()
 	{
-		if (kf.mode == 1) {
-			if (kf.SelectedObjectToBuild  == false)
-			{
-				mf.SelHighlight = ((GameObject)(Instantiate(Resources.Load("UI/SelectionHighlight")))); //Creates green selection box
-			}
-			Debug.Log ("BUILDING C TOWER");
-			kf.ObjectToBuild = "CannonTower";
-			kf.SelectedObjectToBuild = true;
-			mf.Mode = 1;
-
-		}
+		kf.BuildCannonTower ();
 	}
 
 	public void PlayHighlightSound()
