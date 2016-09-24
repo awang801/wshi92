@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class BuildHandler : MonoBehaviour {
+public class BuildHandler : NetworkBehaviour {
 
 	//References
 	//====================================================
-	public GameObject player;
 	MouseFunctions mf;
 	KeyboardFunctions kf;
 	Bank bank;
@@ -57,7 +57,7 @@ public class BuildHandler : MonoBehaviour {
 		//============================================================
 		kf = GetComponent<KeyboardFunctions> ();
 		mf = GetComponent<MouseFunctions> ();
-		bank = player.GetComponent<Bank>();
+		bank = GetComponent<Bank>();
 
 		//Pre-load Objects
 		//============================================================
@@ -132,6 +132,7 @@ public class BuildHandler : MonoBehaviour {
 	//If it IS possible, handle the correct type of tower
 	{
 
+
 		if (buildNode.Wall == null) {
 
 			//Play Cannot Build Sound
@@ -149,121 +150,43 @@ public class BuildHandler : MonoBehaviour {
 
 			} else {
 
+				int moneyCost = 0;
+
 				switch (kf.ObjectToBuild) {
 
 				case "Orb":
 
-					if (bank.getMoney() - 20 < 0)
-					{
-						Debug.Log("Not enough Money");
-						sourceSFX.PlayOneShot(needMoneySound);
-					}
-					else
-					{
-						bank.addMoney(-20);
-						positionToBuildStart = buildNode.worldPosition + (Vector3.up * 1f);
-
-
-						StartCoroutine(BuildAfterTime (1.5f, orbTower, buildNode, positionToBuildStart));
-						CreateWallFloorAnimation (true);
-
-
-					}
+					moneyCost = 20;
 
 					break;
 
 				case "Cannon":
 
-					if (bank.getMoney () - 40 < 0)
-					{
-						Debug.Log ("Not enough Money");
-						sourceSFX.PlayOneShot(needMoneySound);
-					}
-					else {
-
-						bank.addMoney (-40);
-						positionToBuildStart = buildNode.worldPosition + (Vector3.up * 1f);
-
-						StartCoroutine(BuildAfterTime (1.5f, cannonTower, buildNode, positionToBuildStart));
-						CreateWallFloorAnimation (true);
-
-					}
+					moneyCost = 40;
 
 					break;
 
 				case "Laser":
 
-					if (bank.getMoney () - 50 < 0)
-					{
-						Debug.Log ("Not enough Money");
-						sourceSFX.PlayOneShot(needMoneySound);
-					}
-					else {
-
-						bank.addMoney (-50);
-						positionToBuildStart = buildNode.worldPosition + (Vector3.up * 1f);
-
-						StartCoroutine(BuildAfterTime (1.5f, laserTower, buildNode, positionToBuildStart));
-						CreateWallFloorAnimation (true);
-
-					}
+					moneyCost = 50;
 
 					break;
 
 				case "Ice":
 
-					if (bank.getMoney () - 50 < 0)
-					{
-						Debug.Log ("Not enough Money");
-						sourceSFX.PlayOneShot(needMoneySound);
-					}
-					else {
-
-						bank.addMoney (-50);
-						positionToBuildStart = buildNode.worldPosition + (Vector3.up * 1f);
-
-						StartCoroutine(BuildAfterTime (1.5f, iceTower, buildNode, positionToBuildStart));
-						CreateWallFloorAnimation (true);
-
-					}
+					moneyCost = 50;
 
 					break;
 
 				case "Light":
 
-					if (bank.getMoney () - 80 < 0)
-					{
-						Debug.Log ("Not enough Money");
-						sourceSFX.PlayOneShot(needMoneySound);
-					}
-					else {
-
-						bank.addMoney (-80);
-						positionToBuildStart = buildNode.worldPosition + (Vector3.up * 1f);
-
-						StartCoroutine(BuildAfterTime (1.5f, lightTower, buildNode, positionToBuildStart));
-						CreateWallFloorAnimation (true);
-
-					}
+					moneyCost = 80;
 
 					break;
 
 				case "Magic":
 
-					if (bank.getMoney () - 50 < 0)
-					{
-						Debug.Log ("Not enough Money");
-						sourceSFX.PlayOneShot(needMoneySound);
-					}
-					else {
-
-						bank.addMoney (-50);
-						positionToBuildStart = buildNode.worldPosition + (Vector3.up * 1f);
-
-						StartCoroutine(BuildAfterTime (1.5f, magicTower, buildNode, positionToBuildStart));
-						CreateWallFloorAnimation (true);
-
-					}
+					moneyCost = 50;
 
 					break;
 
@@ -271,6 +194,22 @@ public class BuildHandler : MonoBehaviour {
 
 					break;
 				}
+
+				if (bank.getMoney () - moneyCost < 0)
+				{
+					Debug.Log ("Not enough Money");
+					sourceSFX.PlayOneShot(needMoneySound);
+				}
+				else {
+
+					bank.addMoney (-moneyCost);
+					positionToBuildStart = buildNode.worldPosition + (Vector3.up * 1f);
+
+					CmdBuildTower (1.5f, kf.ObjectToBuild, buildNode.gridX, buildNode.gridY, positionToBuildStart);
+					CmdCreateWallFloorAnimation (true, positionToBuildStart);
+
+				}
+
 
 			}
 
@@ -310,6 +249,7 @@ public class BuildHandler : MonoBehaviour {
 		case 0: // No neighbors case
 
 			myWall = (GameObject)Instantiate(wallSolo); //Use solo wall
+
 			break;
 		case 1: //1 Neighbor case
 
@@ -385,30 +325,88 @@ public class BuildHandler : MonoBehaviour {
 
 		myWall.transform.position = n.worldPosition; //Set correct position for new wall
 
+
 		return myWall;
 
 	}
 
-	void CreateWallFloorAnimation(bool isOpening)
+	[Command]
+	void CmdCreateWallFloorAnimation(bool isOpening, Vector3 position)
 	{
 		if (isOpening) {
-			Instantiate (wallFloorOpen, positionToBuildStart - Vector3.up, wallFloorOpen.transform.rotation);
+			GameObject floorOpen = (GameObject) Instantiate (wallFloorOpen, position - Vector3.up, wallFloorOpen.transform.rotation);
+			NetworkServer.Spawn(floorOpen);
 		} else {
-			Instantiate (wallFloorClose, positionToBuildStart - Vector3.up, wallFloorOpen.transform.rotation);
+			GameObject floorClose = (GameObject)Instantiate (wallFloorClose, position - Vector3.up, wallFloorOpen.transform.rotation);
+			NetworkServer.Spawn(floorClose);
 		}
 	}
 
-	IEnumerator BuildAfterTime(float time, GameObject towerToBuild, Node nodeToBuildOn, Vector3 positionToBuild)
-	{		
-		nodeToBuildOn.Tower = ((GameObject)(Instantiate(towerToBuild, positionToBuild - Vector3.up*2f, Quaternion.identity)));
+	[Command]
+	void CmdBuildTower(float time, string towerToBuild, int _nodeX, int _nodeY, Vector3 positionToBuild)
+	{
+		GameObject buildThisTower;
+		switch (towerToBuild) {
 
-		Tower tempTower = nodeToBuildOn.Tower.GetComponent<Tower> ();
+		case "Orb":
+			buildThisTower = ((GameObject)(Instantiate(orbTower, positionToBuild - Vector3.up*2f, Quaternion.identity)));
+			break;
+		case "Cannon":
+			buildThisTower = ((GameObject)(Instantiate(cannonTower, positionToBuild - Vector3.up*2f, Quaternion.identity)));
+			break;
+		case "Laser":
+			buildThisTower = ((GameObject)(Instantiate(laserTower, positionToBuild - Vector3.up*2f, Quaternion.identity)));
+			break;
+		case "Ice":
+			buildThisTower = ((GameObject)(Instantiate(iceTower, positionToBuild - Vector3.up*2f, Quaternion.identity)));
+			break;
+		case "Light":
+			buildThisTower = ((GameObject)(Instantiate(lightTower, positionToBuild - Vector3.up*2f, Quaternion.identity)));
+			break;
+		case "Magic":
+			buildThisTower = ((GameObject)(Instantiate(magicTower, positionToBuild - Vector3.up*2f, Quaternion.identity)));
+			break;
 
-		tempTower.node = nodeToBuildOn;
+		default: 
+			buildThisTower = null;
+			break;
+		}
 
-		yield return new WaitForSeconds (time);
+		Node myNode = mf.TheGrid.NodeFromCoordinates (_nodeX, _nodeY);
 
-		tempTower.startTargetAnimationPoint (positionToBuild);
+		myNode.Tower = buildThisTower;
+		NetworkServer.Spawn(buildThisTower);
+
+		Tower tempTower = buildThisTower.GetComponent<Tower> ();
+
+		tempTower.node = myNode;
+
+		StartCoroutine(startTargetAnimationPoint (tempTower, positionToBuild, time));
+
+		mf.RpcSyncNode (_nodeX, _nodeY, 0, myNode.Tower);
+
+	}
+
+
+	IEnumerator startTargetAnimationPoint(Tower tower, Vector3 moveTo, float _timedelay)
+	{
+		yield return new WaitForSeconds (_timedelay);
+
+		StartCoroutine (buildAnimation(tower, moveTo));
+	}
+
+	IEnumerator buildAnimation(Tower tower, Vector3 buildAt)
+	{
+		
+		while (Vector3.Distance (tower.transform.position, buildAt) > 0.05) {
+
+			tower.transform.position = Vector3.Lerp (tower.transform.position, buildAt, 4 * Time.deltaTime);
+
+			yield return new WaitForSeconds (Time.deltaTime);
+		}
+
+		tower.transform.position = buildAt;
+		tower.isBeingBuilt = false;
 	}
 
 }

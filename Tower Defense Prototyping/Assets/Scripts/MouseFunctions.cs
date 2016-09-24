@@ -2,23 +2,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 //This class manages mouse functions including selection on the grid, cursor hiding/showing
-public class MouseFunctions : MonoBehaviour
+public class MouseFunctions : NetworkBehaviour
 {
 
 	//References
 	//=============================================
-	public GameObject player;
 	KeyboardFunctions kf;
 	BuildHandler bhandler;
 	Bank bank;
 	PathFind pathfind;
+	GameObject gm;
 
 	//Selection
 	//=============================================
 	float camRayLength = 200f;
+
 	Grid grid;
+
 	int mode;
 	Node currentMouseNode;
 	GameObject selectedObject;
@@ -55,9 +58,6 @@ public class MouseFunctions : MonoBehaviour
 	string buildStructure;
 	Vector3 positionToBuildStart;
 	Vector3 positionToBuildEnd;
-	
-	Node startNode;
-	Node endNode;
 
 	//Audio
 	//==============================================
@@ -107,15 +107,16 @@ public class MouseFunctions : MonoBehaviour
 
     void Awake()
     {
+		
 		kf = GetComponent<KeyboardFunctions>();
-        target = GameObject.Find("Destination 1").transform;
-        grid = GetComponent<Grid>();
+        target = GameObject.Find("Destination1").transform;
+		gm = GameObject.Find ("GameManager");
+		grid = GetComponent<Grid>();
 		bhandler = GetComponent<BuildHandler> ();
-        bank = player.GetComponent<Bank>();
+        bank = GetComponent<Bank>();
 		pathfind = GetComponent<PathFind>();
 
-		startNode = new Node(new Vector3(12, 0, 30), 12, 30);
-		endNode = new Node(new Vector3(12,0,5),12,5);
+
 
 
 		wallGhostLoaded = (GameObject)(Resources.Load ("Walls/WallGhost"));
@@ -137,6 +138,7 @@ public class MouseFunctions : MonoBehaviour
 		needMoneySound  = (AudioClip)(Resources.Load("Sounds/needMoney", typeof(AudioClip)));
 		cannotBuildSound  = (AudioClip)(Resources.Load("Sounds/CannotBuild", typeof(AudioClip)));
 		selectSound = Resources.Load<AudioClip> ("Sounds/CarDoorClose");
+
 		sourceSFX = Camera.main.GetComponent<AudioSource>();
 
     }
@@ -165,6 +167,9 @@ public class MouseFunctions : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+		if (!isLocalPlayer) {
+			return;
+		}
 
 		if (mode == 0) {
 			UpdateMouseObjects ();
@@ -241,8 +246,6 @@ public class MouseFunctions : MonoBehaviour
 			currentMouseObject = null;
 		}
 	}
-
-    
 
 	void CheckSelectionClick()
 	//Checks how to handle clicks for selecting buildings and towers (maybe units too later on)
@@ -386,6 +389,7 @@ public class MouseFunctions : MonoBehaviour
 	{
 		rangeIndicatorInstance = (GameObject)Instantiate (rangeIndicator, selectedObject.transform.parent);
 
+
 		float correctScale = selectedObjectCollider.radius * 2f;
 
 		rangeIndicatorInstance.transform.localScale = new Vector3 (correctScale, 0.001f, correctScale);
@@ -526,135 +530,7 @@ public class MouseFunctions : MonoBehaviour
         if (Input.GetButtonUp("Fire1") && buildWallMode == true && building == true)
         {
 
-			List<Node> alreadyChecked = new List<Node> ();
-			List<Node> toCheck = new List<Node> ();
-            kf.building = false;
-            buildWallMode = false;
-
-			if (bank.getMoney() >= ((Mathf.Abs(wallsToBuild) + 1) * 5 )) //Check if we have enough money
-            {
-                if (grid.NodeLineContainsWall(startWallModeNode, endWallModeNode, buildWallModeXY) == false) // Check for existing walls along this line
-                {
-
-					Node currentNode = startWallModeNode;
-					Node nextNode = currentNode;
-					Node[] neighbors;
-					GameObject dummyWall = new GameObject();
-					GameObject newWall;
-                   
-                    sourceSFX.PlayOneShot(BuildFX);
-
-                    for (int i = 0; i <= Mathf.Abs(wallsToBuild); i++)
-                    {
-						neighbors = grid.GetNeighbors (currentNode);
-
-						if (i != Mathf.Abs (wallsToBuild)) { //If statement so we don't try to go OVER the grid boundaries on last iteration
-
-							if (buildWallModeXY == "x") {
-								
-								if (wallsToBuild > 0) {
-
-									neighbors [1].Wall = dummyWall;
-									nextNode = grid.NodeFromCoordinates (currentNode.gridX + 1, currentNode.gridY);
-								} else {
-									neighbors [3].Wall = dummyWall;
-									nextNode = grid.NodeFromCoordinates (currentNode.gridX - 1, currentNode.gridY);
-								}
-
-							} else {
-								
-								if (wallsToBuild > 0) {
-									neighbors [0].Wall = dummyWall;
-									nextNode = grid.NodeFromCoordinates (currentNode.gridX, currentNode.gridY + 1);
-								} else {
-									neighbors [2].Wall = dummyWall;
-									nextNode = grid.NodeFromCoordinates (currentNode.gridX, currentNode.gridY - 1);
-								}
-
-							}
-
-						} 
-
-						newWall = bhandler.wallType (currentNode, neighbors);
-						currentNode.Wall = newWall;
-						newWall.GetComponent<Wall> ().node = currentNode;
-
-						bank.addMoney(-5);
-
-						alreadyChecked.Add (currentNode);
-
-						for(int j = 0; j < 4; j++)
-						{
-							if (neighbors [j] != null) {
-								if (!alreadyChecked.Contains (neighbors [j]) && neighbors [j].Wall != null) {
-									toCheck.Add (neighbors [j]);
-								}
-							}
-						}
-
-						currentNode = nextNode;
-
-                    } // END FOR
-
-					currentNode = startWallModeNode;
-
-					if(pathfind.pathFound(startNode,endNode))
-					{
-						foreach (var node in toCheck) {
-							neighbors = grid.GetNeighbors (node);
-							Destroy (node.Wall);
-							newWall = bhandler.wallType (node, neighbors);
-							node.Wall = newWall;
-							newWall.GetComponent<Wall> ().node = node;
-						}
-					}
-
-					else
-					{
-						for(int i = 0; i <= Mathf.Abs(wallsToBuild); i++) 
-						{
-							if (i != Mathf.Abs (wallsToBuild)) {								
-								if (buildWallModeXY == "x") {
-									
-									if (wallsToBuild > 0) {
-										nextNode = grid.NodeFromCoordinates (currentNode.gridX + 1, currentNode.gridY);
-									} else {
-										nextNode = grid.NodeFromCoordinates (currentNode.gridX - 1, currentNode.gridY);
-									}
-
-								} else {
-									
-									if (wallsToBuild > 0) {
-										nextNode = grid.NodeFromCoordinates (currentNode.gridX, currentNode.gridY + 1);
-									} else {
-										nextNode = grid.NodeFromCoordinates (currentNode.gridX, currentNode.gridY - 1);
-									}
-
-								}
-							}
-							Destroy(currentNode.Wall);
-							currentNode = nextNode;
-
-						} 
-						sourceSFX.PlayOneShot(cannotBuildSound);
-					}
-					Destroy (dummyWall);
-
-                }
-                else
-                {
-                    Debug.Log("CANNOT PLACE, WALL IN LINE");
-					sourceSFX.PlayOneShot(cannotBuildSound);
-                }
-            }
-            else
-            {
-                Debug.Log("Not enough Money");
-				sourceSFX.PlayOneShot(needMoneySound);
-            }
-
-            Destroy(wallGhost);
-
+			BuildWalls ();
 
         }
         if (Input.GetButtonDown("Cancel") || Input.GetButtonDown("Fire2"))
@@ -667,6 +543,173 @@ public class MouseFunctions : MonoBehaviour
         }
 
     }
+
+	void BuildWalls()
+	{
+		
+		kf.building = false;
+		buildWallMode = false;
+
+		if (bank.getMoney() >= ((Mathf.Abs(wallsToBuild) + 1) * 5 )) //Check if we have enough money
+		{
+			if (grid.NodeLineContainsWall(startWallModeNode, endWallModeNode, buildWallModeXY) == false) // Check for existing walls along this line
+			{
+
+				sourceSFX.PlayOneShot(BuildFX);
+				bank.addMoney((int)((Mathf.Abs(wallsToBuild) + 1) * -5));
+				CmdBuildWalls (startWallModeNode.gridX, startWallModeNode.gridY, wallsToBuild, buildWallModeXY);
+				Debug.Log ("Cmd Build Walls");
+
+			}
+			else
+			{
+				Debug.Log("CANNOT PLACE, WALL IN LINE");
+				sourceSFX.PlayOneShot(cannotBuildSound);
+			}
+		}
+		else
+		{
+			Debug.Log("Not enough Money");
+			sourceSFX.PlayOneShot(needMoneySound);
+		}
+
+		Destroy(wallGhost);
+
+	}
+
+	[Command]
+	void CmdBuildWalls(int startNodeX, int startNodeY, float _wallsToBuild, string buildDirection)
+	{
+		List<Node> alreadyChecked = new List<Node> ();
+		List<Node> toCheck = new List<Node> ();
+		Node currentNode = grid.NodeFromCoordinates(startNodeX, startNodeY);
+		Node nextNode = currentNode;
+		Node[] neighbors;
+		GameObject dummyWall = new GameObject();
+		GameObject newWall;
+
+		Node startNode = new Node(new Vector3(12, 0, 30), 12, 30);
+		Node endNode = new Node(new Vector3(12,0,5),12,5);
+
+		for (int i = 0; i <= Mathf.Abs(_wallsToBuild); i++)
+		{
+			neighbors = grid.GetNeighbors (currentNode);
+
+			if (i != Mathf.Abs (_wallsToBuild)) { //If statement so we don't try to go OVER the grid boundaries on last iteration
+
+				if (buildDirection == "x") {
+
+					if (_wallsToBuild > 0) {
+
+						neighbors [1].Wall = dummyWall;
+						nextNode = grid.NodeFromCoordinates (currentNode.gridX + 1, currentNode.gridY);
+					} else {
+						neighbors [3].Wall = dummyWall;
+						nextNode = grid.NodeFromCoordinates (currentNode.gridX - 1, currentNode.gridY);
+					}
+
+				} else {
+
+					if (_wallsToBuild > 0) {
+						neighbors [0].Wall = dummyWall;
+						nextNode = grid.NodeFromCoordinates (currentNode.gridX, currentNode.gridY + 1);
+					} else {
+						neighbors [2].Wall = dummyWall;
+						nextNode = grid.NodeFromCoordinates (currentNode.gridX, currentNode.gridY - 1);
+					}
+
+				}
+
+			} 
+
+			newWall = bhandler.wallType (currentNode, neighbors);
+			currentNode.Wall = newWall;
+			newWall.GetComponent<Wall> ().node = currentNode;
+			NetworkServer.Spawn(newWall);
+			RpcSyncNode (currentNode.gridX, currentNode.gridY, 1, newWall);
+
+
+			alreadyChecked.Add (currentNode);
+
+			for(int j = 0; j < 4; j++)
+			{
+				if (neighbors [j] != null) {
+					if (!alreadyChecked.Contains (neighbors [j]) && neighbors [j].Wall != null) {
+						toCheck.Add (neighbors [j]);
+					}
+				}
+			}
+
+			currentNode = nextNode;
+
+		} // END FOR
+
+		currentNode = grid.NodeFromCoordinates(startNodeX, startNodeY);;
+
+		if(pathfind.pathFound(startNode,endNode))
+		{
+			foreach (var node in toCheck) {
+				neighbors = grid.GetNeighbors (node);
+				Destroy (node.Wall);
+				newWall = bhandler.wallType (node, neighbors);
+				node.Wall = newWall;
+				newWall.GetComponent<Wall> ().node = node;
+				NetworkServer.Spawn(newWall);
+				RpcSyncNode (node.gridX, node.gridY, 1, newWall);
+			}
+		}
+
+		else
+		{
+			for(int i = 0; i <= Mathf.Abs(_wallsToBuild); i++) 
+			{
+				if (i != Mathf.Abs (_wallsToBuild)) {								
+					if (buildDirection == "x") {
+
+						if (_wallsToBuild > 0) {
+							nextNode = grid.NodeFromCoordinates (currentNode.gridX + 1, currentNode.gridY);
+						} else {
+							nextNode = grid.NodeFromCoordinates (currentNode.gridX - 1, currentNode.gridY);
+						}
+
+					} else {
+
+						if (_wallsToBuild > 0) {
+							nextNode = grid.NodeFromCoordinates (currentNode.gridX, currentNode.gridY + 1);
+						} else {
+							nextNode = grid.NodeFromCoordinates (currentNode.gridX, currentNode.gridY - 1);
+						}
+
+					}
+				}
+				Destroy(currentNode.Wall);
+				currentNode = nextNode;
+
+			} 
+			sourceSFX.PlayOneShot(cannotBuildSound);
+		}
+		Destroy (dummyWall);
+
+
+	}
+
+
+	[ClientRpc]
+	public void RpcSyncNode(int nodeX, int nodeY, int tw, GameObject obj)
+	{		
+		if (obj != null) {
+			Node myNode = grid.NodeFromCoordinates (nodeX, nodeY);
+			if (tw == 0) {
+				myNode.Tower = obj;
+				obj.GetComponent<Tower> ().node = myNode;
+			} else if (tw == 1) {
+				myNode.Wall = obj;
+				obj.GetComponent<Wall> ().node = myNode;
+			}
+
+		} 
+
+	}
 
     void MoveBuildSelection()
     {

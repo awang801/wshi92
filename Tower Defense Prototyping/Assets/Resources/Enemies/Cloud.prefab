@@ -313,6 +313,8 @@ GameObject:
   - 114: {fileID: 114000011193487736}
   - 136: {fileID: 136000010076267646}
   - 82: {fileID: 82000012438583030}
+  - 114: {fileID: 114000013284220110}
+  - 114: {fileID: 114000010599031308}
   m_Layer: 12
   m_Name: Cloud
   m_TagString: Enemy
@@ -977,6 +979,26 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114000010599031308
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012830299420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 3
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!114 &114000010911952922
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1035,12 +1057,12 @@ MonoBehaviour:
   PathPending: 0
   PathStale: 0
   PathStatus: 2
-  MixedMode: 0
   target: {fileID: 0}
+  MixedMode: 0
+  isDying: 0
+  HPBarRotation: {x: 0, y: 0, z: 0, w: 0}
   attackPlayer: {fileID: 0}
   sendPlayer: {fileID: 0}
-  HPBarRotation: {x: 0, y: 0, z: 0, w: 0}
-  isDying: 0
 --- !u!114 &114000012514096386
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1068,6 +1090,38 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114000013284220110
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012830299420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 163
+    i1: 73
+    i2: 138
+    i3: 50
+    i4: 206
+    i5: 193
+    i6: 138
+    i7: 4
+    i8: 168
+    i9: 2
+    i10: 140
+    i11: 49
+    i12: 213
+    i13: 49
+    i14: 188
+    i15: 142
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114000013510660790
 MonoBehaviour:
   m_ObjectHideFlags: 1

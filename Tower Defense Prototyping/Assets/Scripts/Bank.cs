@@ -1,9 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
-public class Bank:MonoBehaviour{
+public class Bank : NetworkBehaviour{
+
+	[SyncVar]
     private int money;
+
+	[SyncVar]
 	private int income;
 
 	public Text bankText;
@@ -11,7 +16,7 @@ public class Bank:MonoBehaviour{
 
 	public Bank()
 	{
-		money = 10000;
+		money = 100;
 		income = 10;
 	}
 

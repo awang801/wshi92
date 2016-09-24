@@ -1189,6 +1189,8 @@ GameObject:
   - 114: {fileID: 114000013437131432}
   - 136: {fileID: 136000011192008946}
   - 82: {fileID: 82000014059836278}
+  - 114: {fileID: 114000010524357448}
+  - 114: {fileID: 114000010837846192}
   m_Layer: 12
   m_Name: Reinhardt
   m_TagString: Enemy
@@ -2571,6 +2573,58 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114000010524357448
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013954492026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 201
+    i1: 98
+    i2: 47
+    i3: 124
+    i4: 90
+    i5: 234
+    i6: 141
+    i7: 68
+    i8: 153
+    i9: 172
+    i10: 48
+    i11: 86
+    i12: 215
+    i13: 134
+    i14: 133
+    i15: 197
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
+--- !u!114 &114000010837846192
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013954492026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 3
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!114 &114000011488870600
 MonoBehaviour:
   m_ObjectHideFlags: 1

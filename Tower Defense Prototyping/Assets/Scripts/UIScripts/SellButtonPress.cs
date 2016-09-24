@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 public class SellButtonPress : MonoBehaviour {
 
-	GameObject gm;
+	GameObject myPlayer;
 	KeyboardFunctions kf;
 	BuildHandler bhandler;
 	MouseFunctions mf;
 
-	AudioSource gmAudioSource;
+	AudioSource mainCamAudioSource;
 	AudioClip highlightSFX;
 
 	float buttonHoldTime;
@@ -21,11 +21,12 @@ public class SellButtonPress : MonoBehaviour {
 	string tooltipMessage;
 
 	void Awake () {
-		gm = GameObject.Find ("GameManager");
-		gmAudioSource = gm.GetComponent<AudioSource> ();
-		kf = gm.GetComponent<KeyboardFunctions> ();
-		mf = gm.GetComponent<MouseFunctions> ();
-		bhandler = gm.GetComponent<BuildHandler> ();
+		myPlayer = transform.root.gameObject;
+		mainCamAudioSource = Camera.main.GetComponent<AudioSource> ();
+
+		kf = myPlayer.GetComponent<KeyboardFunctions> ();
+		mf = myPlayer.GetComponent<MouseFunctions> ();
+		bhandler = myPlayer.GetComponent<BuildHandler> ();
 
 		highlightSFX = Resources.Load<AudioClip> ("Sounds/UI/UIMouseOverSound");
 
@@ -70,6 +71,6 @@ public class SellButtonPress : MonoBehaviour {
 
 	public void PlayHighlightSound()
 	{
-		gmAudioSource.PlayOneShot (highlightSFX);
+		mainCamAudioSource.PlayOneShot (highlightSFX);
 	}
 }

@@ -2,44 +2,21 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class CloudButtonPress : MonoBehaviour {
+public class CloudButtonPress : ButtonPress {
 
-	GameObject gm;
-	KeyboardFunctions kf;
-	MouseFunctions mf;
+	public override void Initialize()
+	{
 
-	AudioSource gmAudioSource;
-	AudioClip highlightSFX;
-
-	public Text tooltipText;
-	string tooltipMessage;
-
-	void Awake () {
-		gm = GameObject.Find ("GameManager");
-		gmAudioSource = gm.GetComponent<AudioSource> ();
-		kf = gm.GetComponent<KeyboardFunctions> ();
-		mf = gm.GetComponent<MouseFunctions> ();
 		tooltipMessage = "X - Cost $30 - Income +8 - Cloud Unit \n\nSuper-soldier infused with Mako energy";
-		highlightSFX = Resources.Load<AudioClip> ("Sounds/UI/UIMouseOverSound");
 
 	}
 
-	public void CloudSend()
+	public override void ClickAction()
 	{
-		if (kf.mode == 2) {
-			kf.SendUnit("Cloud");
+
+		if (kf.Mode == 2) {
+			kf.CheckSendUnit("Cloud");
 		}
-	}
 
-	public void PlayHighlightSound()
-	{
-		gmAudioSource.PlayOneShot (highlightSFX);
-	}
-
-	public void DisplayTooltip()
-	{
-		PlayHighlightSound ();
-
-		tooltipText.text = tooltipMessage;
 	}
 }

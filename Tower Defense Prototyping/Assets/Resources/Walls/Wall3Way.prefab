@@ -24,6 +24,8 @@ GameObject:
   - 208: {fileID: 208000011778767950}
   - 65: {fileID: 65000013939444176}
   - 114: {fileID: 114000013299853336}
+  - 114: {fileID: 114000010857732186}
+  - 114: {fileID: 114000011752488652}
   m_Layer: 10
   m_Name: Wall3Way
   m_TagString: Wall
@@ -93,6 +95,58 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1.0000001}
   m_Center: {x: 0.049999982, y: 0.6, z: 0}
+--- !u!114 &114000010857732186
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010524145560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 214
+    i1: 44
+    i2: 215
+    i3: 163
+    i4: 223
+    i5: 161
+    i6: 83
+    i7: 212
+    i8: 218
+    i9: 127
+    i10: 188
+    i11: 148
+    i12: 46
+    i13: 156
+    i14: 209
+    i15: 110
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
+--- !u!114 &114000011752488652
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010524145560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.33333334
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!114 &114000013299853336
 MonoBehaviour:
   m_ObjectHideFlags: 1

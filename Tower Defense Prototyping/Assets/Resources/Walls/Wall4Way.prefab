@@ -24,6 +24,8 @@ GameObject:
   - 208: {fileID: 208000011592099788}
   - 65: {fileID: 65000013276494322}
   - 114: {fileID: 114000012203845028}
+  - 114: {fileID: 114000011429558930}
+  - 114: {fileID: 114000010473811984}
   m_Layer: 10
   m_Name: Wall4Way
   m_TagString: Wall
@@ -93,6 +95,58 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: -0.00000008940697, y: 0.6, z: 0.000000029802322}
+--- !u!114 &114000010473811984
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011922966768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.33333334
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
+--- !u!114 &114000011429558930
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011922966768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 22
+    i1: 105
+    i2: 167
+    i3: 41
+    i4: 138
+    i5: 166
+    i6: 128
+    i7: 212
+    i8: 40
+    i9: 64
+    i10: 155
+    i11: 191
+    i12: 32
+    i13: 187
+    i14: 129
+    i15: 120
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114000012203845028
 MonoBehaviour:
   m_ObjectHideFlags: 1

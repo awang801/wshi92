@@ -3,43 +3,20 @@ using System.Collections;
 using UnityEngine.UI;
 
 
-public class LightButtonPress : MonoBehaviour {
+public class LightButtonPress : ButtonPress {
 
-	GameObject gm;
-	KeyboardFunctions kf;
-	MouseFunctions mf;
 
-	AudioSource gmAudioSource;
-	AudioClip highlightSFX;
-
-	public Text tooltipText;
-	string tooltipMessage;
-
-	void Awake () {
-		gm = GameObject.Find ("GameManager");
-		gmAudioSource = gm.GetComponent<AudioSource> ();
-		kf = gm.GetComponent<KeyboardFunctions> ();
-		mf = gm.GetComponent<MouseFunctions> ();
-
-		highlightSFX = Resources.Load<AudioClip> ("Sounds/UI/UIMouseOverSound");
+	public override void Initialize()
+	{
 
 		tooltipMessage = "H - Cost $80 - Light\n\nDoes TONS OF DAMAGE to units that are slowed.";
+
 	}
 
-	public void DisplayTooltip()
+	public override void ClickAction()
 	{
-		PlayHighlightSound ();
 
-		tooltipText.text = tooltipMessage;
-	}
-
-	public void TowerToggle()
-	{
 		kf.BuildLightTower ();
-	}
 
-	public void PlayHighlightSound()
-	{
-		gmAudioSource.PlayOneShot (highlightSFX);
 	}
 }

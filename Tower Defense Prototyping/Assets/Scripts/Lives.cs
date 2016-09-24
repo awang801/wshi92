@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
-public class Lives:MonoBehaviour{
+public class Lives : NetworkBehaviour{
+
+	[SyncVar]
     private int lives;
+
 	public Text livesText;
 
 	public Lives()

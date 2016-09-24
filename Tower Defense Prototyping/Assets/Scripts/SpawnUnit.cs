@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class SpawnUnit : MonoBehaviour
+public class SpawnUnit : NetworkBehaviour
 {
 
     public GameObject spawnUnit;
 	public Transform target;
+
 
 	public GameObject attackPlayer;
 	public GameObject sendPlayer;
@@ -23,6 +25,8 @@ public class SpawnUnit : MonoBehaviour
 	public float spawnDelay;
 	private float timeSinceSpawn;
 
+
+
 	void Awake()
 	{
 		enemyType1 = (GameObject)Resources.Load ("Enemies/EnemyType1");
@@ -32,7 +36,7 @@ public class SpawnUnit : MonoBehaviour
 
 		unitToSpawn = "Potato";
 
-		bank = sendPlayer.GetComponent<Bank> ();
+
 	}
 
     // Update is called once per frame
@@ -50,51 +54,49 @@ public class SpawnUnit : MonoBehaviour
         
     }
 
-	public void Spawn(string unitName) //For Spawning specific units by name
+	public void lateInit()
 	{
-		int unitCost = 0;
-		int incomeGain = 0;
+		bank = sendPlayer.GetComponent<Bank> ();
+	}
+
+	public void Spawn (string unitName) //For Spawning specific units by name
+	{
+		if (!isServer) {
+			return;
+		}
 
 		switch (unitName) {
 
 		case "EnemyType1":
-			unitCost = 5;
-			incomeGain = 1;
 			spawnUnit = enemyType1;
 			break;
 		case "Potato":
-			unitCost = 5;
-			incomeGain = 1;
 			spawnUnit = potato;
 			break;
 		case "Cloud":
-			unitCost = 30;
-			incomeGain = 8;
 			spawnUnit = cloud;
 			break;
 		case "Reinhardt":
-			unitCost = 30;
-			incomeGain = 8;
 			spawnUnit = reinhardt;
 			break;
 		default:
 			break;
 
 		}
-			
-		if (bank.getMoney() >= unitCost) {
-			GameObject newUnitObject = ((GameObject)(Instantiate(spawnUnit, transform.position, transform.rotation)));
-			Unit newUnit = newUnitObject.GetComponent<Unit> ();
-			newUnitObject.transform.SetParent (this.transform);
-			newUnit.setTarget (target);
-			newUnit.attackPlayer = attackPlayer;
-			newUnit.sendPlayer = sendPlayer;
-			bank.subtractMoney (unitCost);
-			bank.addIncome (incomeGain);
-		} else {
-			Debug.Log ("Not enough money to send!");
-		}
+
+		GameObject newUnitObject = ((GameObject)(Instantiate (spawnUnit, transform.position, transform.rotation)));
+		Unit newUnit = newUnitObject.GetComponent<Unit> ();
+		newUnitObject.transform.SetParent (this.transform);
+		newUnit.attackPlayer = attackPlayer;
+		newUnit.sendPlayer = sendPlayer;
+
+		NetworkServer.Spawn (newUnitObject);
+		newUnit.RpcSetTarget (target.position);
+		newUnit.RpcSetPlayer (attackPlayer.transform.name, sendPlayer.transform.name);
 
 	}
+
+
+
 		
 }

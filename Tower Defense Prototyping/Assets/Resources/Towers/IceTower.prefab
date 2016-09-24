@@ -120,6 +120,8 @@ GameObject:
   - 82: {fileID: 82000010350344262}
   - 135: {fileID: 135000011243678538}
   - 114: {fileID: 114000013063788268}
+  - 114: {fileID: 114000013780305826}
+  - 114: {fileID: 114000013558637878}
   m_Layer: 11
   m_Name: IceTower
   m_TagString: Tower
@@ -481,6 +483,58 @@ MonoBehaviour:
   particles2: {fileID: 198000014077315638}
   damage: 0
   coldness: 0
+--- !u!114 &114000013558637878
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013141070952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.06666667
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
+--- !u!114 &114000013780305826
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013141070952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 5
+    i1: 85
+    i2: 203
+    i3: 8
+    i4: 105
+    i5: 229
+    i6: 27
+    i7: 228
+    i8: 217
+    i9: 161
+    i10: 198
+    i11: 24
+    i12: 64
+    i13: 236
+    i14: 116
+    i15: 83
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!135 &135000011243678538
 SphereCollider:
   m_ObjectHideFlags: 1

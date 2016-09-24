@@ -12,16 +12,19 @@ public class CameraWASD : MonoBehaviour {
 	float MAX_X = 50f;
 	float MIN_Y = 7f;
 	float MAX_Y = 25f;
-	float MIN_Z = -4f;
+	float MIN_Z = -2f;
 	float MAX_Z = 30f;
 	Vector3 move;
 
 	float moveSpeed = 30f;
 
 	void Update () {
+
+
 		xMovement = Input.GetAxisRaw ("Horizontal");
 		yMovement = Input.GetAxisRaw ("Vertical");
 		mouseWheel = Input.GetAxis ("Mouse ScrollWheel");
+
 
 	}
 

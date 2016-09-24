@@ -7,9 +7,6 @@ public class FinishLine : MonoBehaviour {
 
 	Lives lives;
 
-	void Start () {
-		lives = playerToHurt.GetComponent<Lives>();
-    }
 
 	void OnTriggerEnter(Collider other)
 	{
@@ -17,5 +14,11 @@ public class FinishLine : MonoBehaviour {
             other.gameObject.GetComponent<Unit>().Finish();
             lives.loseLife();
         } 
+	}
+
+	public void SetPlayerToHurt(GameObject player)
+	{
+		playerToHurt = player;
+		lives = playerToHurt.GetComponent<Lives>();
 	}
 }

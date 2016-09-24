@@ -83,7 +83,7 @@ public class TowerLaser : Tower
 				if (!targetIsDead() && currentTarget != null) {
 					laser.SetPosition (1, ray.GetPoint (100f));
 				} else {
-					laser.SetPosition (1, ray.GetPoint (0.1f));
+					laser.SetPosition (1, ray.GetPoint (0f));
 				}
 
 

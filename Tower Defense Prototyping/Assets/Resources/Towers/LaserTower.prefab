@@ -39,6 +39,8 @@ GameObject:
   - 82: {fileID: 82000011887710194}
   - 135: {fileID: 135000013404852782}
   - 114: {fileID: 114000013795660622}
+  - 114: {fileID: 114000010065448878}
+  - 114: {fileID: 114000012594837352}
   m_Layer: 11
   m_Name: LaserTower
   m_TagString: Tower
@@ -523,6 +525,58 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!114 &114000010065448878
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010814757616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 200
+    i1: 56
+    i2: 135
+    i3: 129
+    i4: 197
+    i5: 137
+    i6: 167
+    i7: 4
+    i8: 105
+    i9: 175
+    i10: 8
+    i11: 249
+    i12: 186
+    i13: 197
+    i14: 77
+    i15: 72
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
+--- !u!114 &114000012594837352
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010814757616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.06666667
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!114 &114000013795660622
 MonoBehaviour:
   m_ObjectHideFlags: 1

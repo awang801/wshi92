@@ -73,6 +73,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000010274719986}
   - 114: {fileID: 114000010803367728}
+  - 114: {fileID: 114000013525540518}
+  - 114: {fileID: 114000013486449238}
   m_Layer: 0
   m_Name: WallDoorClose
   m_TagString: Untagged
@@ -294,3 +296,55 @@ MonoBehaviour:
   fadeOutOnStart: 1
   timeOut: 3
   openOrClose: -1
+--- !u!114 &114000013486449238
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013786498172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.33333334
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
+--- !u!114 &114000013525540518
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013786498172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 225
+    i1: 65
+    i2: 76
+    i3: 99
+    i4: 130
+    i5: 248
+    i6: 167
+    i7: 116
+    i8: 57
+    i9: 57
+    i10: 91
+    i11: 172
+    i12: 140
+    i13: 37
+    i14: 255
+    i15: 156
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0

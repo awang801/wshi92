@@ -1,17 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class Grid : MonoBehaviour {
+public class Grid : NetworkBehaviour {
+
+	public Vector3 gridZeroPoint;
 
 	public Vector2 gridWorldSize; //Set in editor
 	public float nodeRadius;
 	public LayerMask terrainMask;
+
 	Node[,] grid;
+
 	float nodeDiameter;
 	int gridSizeX, gridSizeY;
 
 	void Start()
 	{
+		gridZeroPoint = transform.position;
 		nodeDiameter = nodeRadius * 2;
 		gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
 		gridSizeY = Mathf.RoundToInt(gridWorldSize.y / nodeDiameter);
@@ -28,7 +34,7 @@ public class Grid : MonoBehaviour {
 
 		for (int x = 0; x < gridSizeX; x++) {
 			for (int y = 0; y < gridSizeY; y++) {
-				grid[x,y] = new Node(new Vector3(x, 0, y), x, y);
+				grid[x,y] = new Node(new Vector3(x + gridZeroPoint.x, 0, y + gridZeroPoint.z), x, y);
 			}
 		}
 	}
@@ -46,8 +52,8 @@ public class Grid : MonoBehaviour {
 	{
 		// Returns a Node from a world position
 
-		int x = Mathf.CeilToInt (worldPosition.x);
-		int y = Mathf.CeilToInt (worldPosition.z);
+		int x = Mathf.CeilToInt (worldPosition.x - gridZeroPoint.x);
+		int y = Mathf.CeilToInt (worldPosition.z - gridZeroPoint.z);
 
 		if (x >= gridSizeX && y >= gridSizeY) {
 			

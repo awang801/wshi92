@@ -207,6 +207,7 @@ GameObject:
   - 114: {fileID: 114000010359916916}
   - 136: {fileID: 136000011188274806}
   - 82: {fileID: 82000010330016466}
+  - 114: {fileID: 114000010799753034}
   m_Layer: 12
   m_Name: Potato
   m_TagString: Enemy
@@ -817,12 +818,12 @@ MonoBehaviour:
   PathPending: 0
   PathStale: 0
   PathStatus: 2
-  MixedMode: 0
   target: {fileID: 0}
+  MixedMode: 0
+  isDying: 0
+  HPBarRotation: {x: 0, y: 0, z: 0, w: 0}
   attackPlayer: {fileID: 0}
   sendPlayer: {fileID: 0}
-  HPBarRotation: {x: 0, y: 0, z: 0, w: 0}
-  isDying: 0
 --- !u!114 &114000010464403732
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -850,6 +851,38 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114000010799753034
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012830299420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 135
+    i1: 255
+    i2: 152
+    i3: 140
+    i4: 171
+    i5: 171
+    i6: 125
+    i7: 68
+    i8: 91
+    i9: 207
+    i10: 54
+    i11: 153
+    i12: 16
+    i13: 136
+    i14: 58
+    i15: 252
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114000012818277692
 MonoBehaviour:
   m_ObjectHideFlags: 1

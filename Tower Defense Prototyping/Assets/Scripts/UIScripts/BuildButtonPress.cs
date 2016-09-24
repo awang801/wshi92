@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class BuildButtonPress : MonoBehaviour {
 
-	GameObject gm;
+	GameObject myPlayer;
 	KeyboardFunctions kf;
 	//MouseFunctions mf;
 	GameObject panel;
@@ -27,7 +27,7 @@ public class BuildButtonPress : MonoBehaviour {
 	Button iceButton;
 
 
-	AudioSource gmAudioSource;
+	AudioSource mainCamAudioSource;
 	AudioClip highlightSFX;
 
 	public Text tooltipText;
@@ -40,10 +40,10 @@ public class BuildButtonPress : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		
-		gm = GameObject.Find ("GameManager");
-		gmAudioSource = gm.GetComponent<AudioSource> ();
+		myPlayer = transform.root.gameObject;
+		mainCamAudioSource = Camera.main.GetComponent<AudioSource> ();
 
-		kf = gm.GetComponent<KeyboardFunctions> ();
+		kf = myPlayer.GetComponent<KeyboardFunctions> ();
 		//mf = gm.GetComponent<MouseFunctions> ();
 
 		panel = GameObject.Find ("ButtonPanel");
@@ -84,7 +84,7 @@ public class BuildButtonPress : MonoBehaviour {
 
 	public void PlayHighlightSound()
 	{
-		gmAudioSource.PlayOneShot (highlightSFX);
+		mainCamAudioSource.PlayOneShot (highlightSFX);
 	}
 
 	public void DisplayTooltip()
@@ -110,7 +110,7 @@ public class BuildButtonPress : MonoBehaviour {
 
 	public void BuildToggle()
 	{
-		if (kf.mode == 2) {
+		if (kf.Mode == 2) {
 			sendButton.SendToggle ();
 			towerButton.interactable = true;
 			cannonButton.interactable = true;
@@ -121,7 +121,7 @@ public class BuildButtonPress : MonoBehaviour {
 			magicButton.interactable = true;
 			kf.Build ();
 		}
-		else if (kf.mode == 1) {
+		else if (kf.Mode == 1) {
 			towerButton.interactable = false;
 			cannonButton.interactable = false;
 			wallButton.interactable = false;
@@ -130,7 +130,7 @@ public class BuildButtonPress : MonoBehaviour {
 			lightButton.interactable = false;
 			magicButton.interactable = false;
 			kf.CancelBuild ();
-		} else if (kf.mode == 0){
+		} else if (kf.Mode == 0){
 			kf.Build ();
 			towerButton.interactable = true;
 			cannonButton.interactable = true;

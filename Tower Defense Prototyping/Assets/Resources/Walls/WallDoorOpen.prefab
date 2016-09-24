@@ -73,6 +73,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000010274719986}
   - 114: {fileID: 114000012713481210}
+  - 114: {fileID: 114000013234859496}
+  - 114: {fileID: 114000010135597812}
   m_Layer: 0
   m_Name: WallDoorOpen
   m_TagString: Untagged
@@ -277,6 +279,26 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114000010135597812
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013786498172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.33333334
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!114 &114000012713481210
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -294,3 +316,35 @@ MonoBehaviour:
   fadeOutOnStart: 1
   timeOut: 3
   openOrClose: 1
+--- !u!114 &114000013234859496
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013786498172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 23
+    i1: 15
+    i2: 171
+    i3: 60
+    i4: 94
+    i5: 196
+    i6: 109
+    i7: 100
+    i8: 72
+    i9: 93
+    i10: 70
+    i11: 6
+    i12: 99
+    i13: 220
+    i14: 202
+    i15: 195
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0

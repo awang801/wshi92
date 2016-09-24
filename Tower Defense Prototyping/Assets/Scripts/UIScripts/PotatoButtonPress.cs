@@ -2,44 +2,21 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class PotatoButtonPress : MonoBehaviour {
+public class PotatoButtonPress : ButtonPress {
 
-	GameObject gm;
-	KeyboardFunctions kf;
-	MouseFunctions mf;
+	public override void Initialize()
+	{
 
-	AudioSource gmAudioSource;
-	AudioClip highlightSFX;
-
-	public Text tooltipText;
-	string tooltipMessage;
-
-	void Awake () {
-		gm = GameObject.Find ("GameManager");
-		gmAudioSource = gm.GetComponent<AudioSource> ();
-		kf = gm.GetComponent<KeyboardFunctions> ();
-		mf = gm.GetComponent<MouseFunctions> ();
 		tooltipMessage = "Z - Cost $10 - Income +1 - Potato Unit \n\nMost basic unit. Delicious.";
-		highlightSFX = Resources.Load<AudioClip> ("Sounds/UI/UIMouseOverSound");
 
 	}
 
-	public void PotatoSend()
+	public override void ClickAction()
 	{
-		if (kf.mode == 2) {
-			kf.SendUnit("Potato");
+
+		if (kf.Mode == 2) {
+			kf.CheckSendUnit("Potato");
 		}
-	}
 
-	public void PlayHighlightSound()
-	{
-		gmAudioSource.PlayOneShot (highlightSFX);
-	}
-
-	public void DisplayTooltip()
-	{
-		PlayHighlightSound ();
-
-		tooltipText.text = tooltipMessage;
 	}
 }

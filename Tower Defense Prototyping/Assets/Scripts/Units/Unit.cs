@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class Unit : MonoBehaviour {
+public class Unit : NetworkBehaviour {
 
 	//==============================================================
 	//Navmesh Variables
@@ -10,7 +11,7 @@ public class Unit : MonoBehaviour {
 	public bool PathStale = false;
 	public NavMeshPathStatus PathStatus = NavMeshPathStatus.PathInvalid;
 
-	public Transform target;
+	public Vector3 target;
 	NavMeshPath path;
 	NavMeshPath calcPath;
 
@@ -31,6 +32,8 @@ public class Unit : MonoBehaviour {
 	//Stats
 
 	float maxHealth;
+
+	[SyncVar]
 	float health;
 
 	float damageAmplifier = 1f;
@@ -61,11 +64,12 @@ public class Unit : MonoBehaviour {
 	//===============================================================
 	//Owner and References
 
+	bool requestedID = false;
 	public GameObject attackPlayer;
 	public GameObject sendPlayer;
 
+
 	Bank bank;
-	MouseFunctions mFunc;
 
 	//==============================================================
 
@@ -78,9 +82,7 @@ public class Unit : MonoBehaviour {
 
 	void Awake()
 	{
-		//Reference Initialization
-		mFunc = GameObject.Find("GameManager").GetComponent<MouseFunctions>();
-
+		
 		//Navigation Initialization
 		navAgent = GetComponent<NavMeshAgent> ();
 
@@ -113,7 +115,6 @@ public class Unit : MonoBehaviour {
 		temperature = baseTemperature;
 
 		//Bank Initialization
-		bank = attackPlayer.GetComponent<Bank>();
 
 	}
 
@@ -132,10 +133,32 @@ public class Unit : MonoBehaviour {
 	}
 
 	//Set destination target
-	public void setTarget(Transform _target)
+	[Command]
+	public void CmdSetTarget(Vector3 tar)
+	{
+		RpcSetTarget (tar);
+	}
+
+	[ClientRpc]
+	public void RpcSetTarget(Vector3 _target)
 	{
 		target = _target;
-		navAgent.SetDestination (target.position);
+		navAgent.SetDestination (target);
+	}
+
+	[Command]
+	public void CmdRequestPlayerID()
+	{
+		RpcSetPlayer (attackPlayer.transform.name, sendPlayer.transform.name);
+	}
+
+	[ClientRpc]
+	public void RpcSetPlayer(string aplayerID, string splayerID)
+	{
+		attackPlayer = GameObject.Find (aplayerID);
+		sendPlayer = GameObject.Find (splayerID);
+
+		bank = attackPlayer.GetComponent<Bank>();
 	}
 
 	//Unit died before reaching target
@@ -161,7 +184,7 @@ public class Unit : MonoBehaviour {
     {
 		isDying = true;
 		animator.SetTrigger (finishHash);
-		if (attackPlayer.name == "Player 2") {
+		if (attackPlayer.transform.name == "Player 4") {
 			myAudioSource.PlayOneShot (goodSound);
 		} else {
 			myAudioSource.PlayOneShot (badSound);
@@ -244,6 +267,8 @@ public class Unit : MonoBehaviour {
 	//==================================================================================
 	void Update()
     {
+
+
 		//Temperature Mechanic
 		Homeostasis ();
 		syncTemperature ();
@@ -272,7 +297,7 @@ public class Unit : MonoBehaviour {
 		}
 
 		if (PathStatus == NavMeshPathStatus.PathInvalid && !PathPending || PathStatus == NavMeshPathStatus.PathPartial && !PathPending) {
-			navAgent.SetDestination (target.position);
+			navAgent.SetDestination (target);
 		}
 
 

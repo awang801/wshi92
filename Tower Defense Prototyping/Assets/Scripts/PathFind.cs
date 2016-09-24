@@ -17,7 +17,8 @@ public class PathFind:MonoBehaviour
 
     public bool pathFound(Node start, Node end)
     {
-        grid = GetComponent<Grid>();
+		//grid = GameObject.Find("GameManager").GetComponent<Grid>();
+		grid = GetComponent<Grid>();
         destination = end;
         current = start;
 		visited = new float[25, 35];

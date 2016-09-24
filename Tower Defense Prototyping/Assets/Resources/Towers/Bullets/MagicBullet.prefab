@@ -23,6 +23,8 @@ GameObject:
   - 198: {fileID: 198000012852745912}
   - 199: {fileID: 199000012410036766}
   - 96: {fileID: 96000010071949096}
+  - 114: {fileID: 114000011156851464}
+  - 114: {fileID: 114000010124198036}
   m_Layer: 0
   m_Name: MagicBullet
   m_TagString: Untagged
@@ -93,6 +95,58 @@ TrailRenderer:
       rgba: 855638015
   m_MinVertexDistance: 0.1
   m_Autodestruct: 1
+--- !u!114 &114000010124198036
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000014292750372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.5
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
+--- !u!114 &114000011156851464
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000014292750372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 18
+    i1: 157
+    i2: 192
+    i3: 25
+    i4: 216
+    i5: 123
+    i6: 126
+    i7: 164
+    i8: 171
+    i9: 146
+    i10: 99
+    i11: 238
+    i12: 25
+    i13: 91
+    i14: 192
+    i15: 104
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114000011733311052
 MonoBehaviour:
   m_ObjectHideFlags: 1

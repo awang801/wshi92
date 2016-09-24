@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
-public abstract class Tower : MonoBehaviour
+public abstract class Tower : NetworkBehaviour
 {
 
 	//Inspector Set Variables ============================================
@@ -47,8 +48,11 @@ public abstract class Tower : MonoBehaviour
 	protected Transform bulletPointTransform;
 	protected Transform rotatePartTransform;
 
-	bool isBeingBuilt;
-	Vector3 buildAt;
+	[SyncVar]
+	public bool isBeingBuilt;
+
+	public Vector3 buildAt;
+
 
 	//REFERENCES 
 	public Node node;
@@ -125,25 +129,7 @@ public abstract class Tower : MonoBehaviour
 		}
 	}
 
-	public void startTargetAnimationPoint(Vector3 moveTo)
-	{
-		buildAt = moveTo;
 
-		StartCoroutine (buildAnimation());
-	}
-
-	IEnumerator buildAnimation()
-	{
-		while (Vector3.Distance (transform.position, buildAt) > 0.05) {
-
-			transform.position = Vector3.Lerp (transform.position, buildAt, 4*Time.deltaTime);
-
-			yield return new WaitForSeconds (Time.deltaTime);
-		}
-
-		transform.position = buildAt;
-		isBeingBuilt = false;
-	}
 
 	void OnTriggerEnter(Collider other)
 	{

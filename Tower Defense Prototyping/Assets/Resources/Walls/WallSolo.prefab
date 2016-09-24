@@ -24,6 +24,8 @@ GameObject:
   - 208: {fileID: 208000013435291018}
   - 65: {fileID: 65000012854229226}
   - 114: {fileID: 114000010749579334}
+  - 114: {fileID: 114000011321679766}
+  - 114: {fileID: 114000011248581176}
   m_Layer: 10
   m_Name: WallSolo
   m_TagString: Wall
@@ -104,6 +106,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b06aa6df1cab53045827804314a3ea86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114000011248581176
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011555477682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.33333334
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
+--- !u!114 &114000011321679766
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011555477682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 188
+    i1: 104
+    i2: 51
+    i3: 188
+    i4: 198
+    i5: 97
+    i6: 199
+    i7: 148
+    i8: 203
+    i9: 77
+    i10: 184
+    i11: 198
+    i12: 233
+    i13: 74
+    i14: 221
+    i15: 187
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!208 &208000013435291018
 NavMeshObstacle:
   m_ObjectHideFlags: 1

@@ -24,6 +24,8 @@ GameObject:
   - 208: {fileID: 208000013010275296}
   - 65: {fileID: 65000014276715702}
   - 114: {fileID: 114000011744334470}
+  - 114: {fileID: 114000013610655912}
+  - 114: {fileID: 114000012815905028}
   m_Layer: 10
   m_Name: Wall2Way
   m_TagString: Wall
@@ -104,6 +106,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b06aa6df1cab53045827804314a3ea86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114000012815905028
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010226234374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.33333334
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
+--- !u!114 &114000013610655912
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010226234374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 209
+    i1: 187
+    i2: 76
+    i3: 70
+    i4: 225
+    i5: 127
+    i6: 244
+    i7: 132
+    i8: 137
+    i9: 47
+    i10: 244
+    i11: 67
+    i12: 59
+    i13: 38
+    i14: 230
+    i15: 152
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!208 &208000013010275296
 NavMeshObstacle:
   m_ObjectHideFlags: 1

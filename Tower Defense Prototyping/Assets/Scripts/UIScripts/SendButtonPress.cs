@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class SendButtonPress : MonoBehaviour {
 
-	GameObject gm;
+	GameObject myPlayer;
 	KeyboardFunctions kf;
 	MouseFunctions mf;
 	GameObject panel;
@@ -18,7 +18,7 @@ public class SendButtonPress : MonoBehaviour {
 	Button potatoButton;
 	Button cloudButton;
 
-	AudioSource gmAudioSource;
+	AudioSource mainCamAudioSource;
 	AudioClip highlightSFX;
 
 	public Text tooltipText;
@@ -29,11 +29,11 @@ public class SendButtonPress : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		
-		gm = GameObject.Find ("GameManager");
-		gmAudioSource = gm.GetComponent<AudioSource> ();
+		myPlayer = transform.root.gameObject;
+		mainCamAudioSource = Camera.main.GetComponent<AudioSource> ();
 
-		kf = gm.GetComponent<KeyboardFunctions> ();
-		mf = gm.GetComponent<MouseFunctions> ();
+		kf = myPlayer.GetComponent<KeyboardFunctions> ();
+		mf = myPlayer.GetComponent<MouseFunctions> ();
 
 		panel = GameObject.Find ("ButtonPanel");
 		panelTransform = panel.GetComponent<RectTransform> ();
@@ -55,7 +55,7 @@ public class SendButtonPress : MonoBehaviour {
 
 	public void PlayHighlightSound()
 	{
-		gmAudioSource.PlayOneShot (highlightSFX);
+		mainCamAudioSource.PlayOneShot (highlightSFX);
 	}
 
 	public void DisplayTooltip()
@@ -67,19 +67,19 @@ public class SendButtonPress : MonoBehaviour {
 		
 	public void SendToggle()
 	{
-		if (kf.mode == 2) {
+		if (kf.Mode == 2) {
 			potatoButton.interactable = false;
 			cloudButton.interactable = false;
 			kf.CancelSend ();
 		} 
-		else if (kf.mode == 1)
+		else if (kf.Mode == 1)
 		{
 			buildButton.BuildToggle ();
 			potatoButton.interactable = true;
 			cloudButton.interactable = true;
 			kf.Send ();
 		}
-		else if (kf.mode == 0)
+		else if (kf.Mode == 0)
 		{
 			kf.Send ();
 			potatoButton.interactable = true;
