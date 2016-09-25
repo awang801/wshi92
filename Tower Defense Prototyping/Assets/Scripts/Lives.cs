@@ -5,7 +5,6 @@ using UnityEngine.Networking;
 
 public class Lives : NetworkBehaviour{
 
-	[SyncVar]
     private int lives;
 
 	public Text livesText;

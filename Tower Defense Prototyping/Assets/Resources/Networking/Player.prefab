@@ -2965,6 +2965,7 @@ MonoBehaviour:
   playerUniqueIdentity: 
   myEnemy: {fileID: 0}
   myTimerText: {fileID: 114000013398119056}
+  myEnemyLivesText: {fileID: 114000014011577768}
 --- !u!114 &114000012711822596
 MonoBehaviour:
   m_ObjectHideFlags: 1

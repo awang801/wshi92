@@ -39,7 +39,10 @@ public class Unit : NetworkBehaviour {
 	float damageAmplifier = 1f;
 
 	float baseTemperature = 98.6f;
+
+	[SyncVar]
 	float temperature;
+
 	float homeostasisTendency = 0.4f;
 	float minTemp = 32f;
 	float maxTemp = 150f;

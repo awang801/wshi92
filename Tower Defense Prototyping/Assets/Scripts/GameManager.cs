@@ -18,7 +18,7 @@ public class GameManager : NetworkBehaviour {
 
 	public PlayerNetworking[] playerPN = new PlayerNetworking[MaxNumPlayers];
 
-	public NetworkInstanceId[] playerIDs = new NetworkInstanceId[MaxNumPlayers];
+	public string[] playerIDs = new string[MaxNumPlayers];
 
 	public int playerNumber = 0;
 
@@ -26,11 +26,15 @@ public class GameManager : NetworkBehaviour {
 	Lives[] lives = new Lives[MaxNumPlayers];
 
 	public bool gameRunning = false;
+	public bool playerLost = false;
+
+	GameObject fireworks;
 
 	void Awake()
 	{
 		mainAudioSource = Camera.main.GetComponent<AudioSource> ();
 		moneySFX = Resources.Load<AudioClip> ("Sounds/money");
+		fireworks = Resources.Load<GameObject> ("Fireworks");
 	}
 
 
@@ -59,11 +63,12 @@ public class GameManager : NetworkBehaviour {
 			}
 		} else {
 
-			if (playerNumber == 2) {
+			if (playerNumber == 2 && !playerLost) {
 
 				if (isServer) {
 					RpcSyncPlayers (playerIDs);
 					RpcStartGame ();
+
 					UpdatePlayerEnemies ();
 				}
 			}
@@ -88,6 +93,17 @@ public class GameManager : NetworkBehaviour {
 		Debug.Log ("A player has left, stopping game");
 	}
 
+	[ClientRpc]
+	void RpcPlayerLostWon(string playerIDLost, string playerIDWon)
+	{
+		playerLost = true;
+		gameRunning = false;
+		Debug.Log (playerIDLost + " has lost the game!");
+		timerText.text = "GG!";
+		fireworks = (GameObject)Instantiate (fireworks, PlayerFromID (playerIDWon).transform.position + new Vector3(13f, 0f, 17.5f), fireworks.transform.rotation);
+
+	}
+
 	void Initialize()
 	{
 
@@ -106,20 +122,49 @@ public class GameManager : NetworkBehaviour {
 	void UpdatePlayerEnemies()
 	{		
 		
-		playerPN [0].RpcAssignEnemies(playerPN[1].playerNetID);
-		playerPN [1].RpcAssignEnemies(playerPN[0].playerNetID);
+		playerPN [0].RpcAssignEnemies(playerPN[1].playerUniqueIdentity);
+		playerPN [1].RpcAssignEnemies(playerPN[0].playerUniqueIdentity);
 
 	}
 		
+	public void PlayerLoseWin(string loserID, string winnerID)
+	{
+
+		RpcPlayerLostWon (loserID, winnerID);
+
+	}
 
 
-
-	public void AddPlayer(NetworkInstanceId newID)
+	public void AddPlayer(string newID)
 	{
 		playerIDs [playerNumber] = newID;
-		player [playerNumber] = PlayerFromID (newID);
-		playerPN [playerNumber] = player [playerNumber].GetComponent<PlayerNetworking> ();
-		playerNumber += 1;
+
+		//player [playerNumber] = PlayerFromID (newID);
+		//playerPN [playerNumber] = player [playerNumber].GetComponent<PlayerNetworking> ();
+		//playerNumber += 1;
+		StartCoroutine (AddPlayerWithDelay (newID));
+	}
+
+
+	IEnumerator AddPlayerWithDelay(string _newID)
+	{
+		
+		while (true) {
+			if (player [playerNumber] == null) {
+				Debug.Log ("Add player tick " + _newID);
+				player [playerNumber] = PlayerFromID (_newID);
+				yield return new WaitForSeconds (0.1f);
+			} else if (playerPN [playerNumber] == null) {
+				Debug.Log ("Add player tick 2" + _newID);
+				playerPN [playerNumber] = player [playerNumber].GetComponent<PlayerNetworking> ();
+				yield return new WaitForSeconds (0.1f);
+
+			} else {
+				playerNumber += 1;
+				Debug.Log ("Done adding new ID " + _newID);
+				break;
+			}
+		}
 	}
 
 	/*
@@ -134,28 +179,51 @@ public class GameManager : NetworkBehaviour {
 	}
 	*/
 
+
 	[ClientRpc]
-	public void RpcSyncPlayers(NetworkInstanceId[] _playerIDs)
+	public void RpcSyncPlayers(string[] _playerIDs)
 	{
 		if (isServer) {
 			return;
-		}
-		playerIDs = _playerIDs;
+		} else {
 
-		for (int i = 0; i < _playerIDs.Length; i++) {
-			player [playerNumber] = PlayerFromID (playerIDs [i]);
-			playerPN [playerNumber] = player [playerNumber].GetComponent<PlayerNetworking> ();
-			playerNumber += 1;
+			StartCoroutine (SyncPlayersWithDelay (_playerIDs));
+
 		}
+
 	}
 
-	GameObject PlayerFromID(NetworkInstanceId id)
+	IEnumerator SyncPlayersWithDelay(string[] _playerIDs)
 	{
-		if (isServer) {
-			return NetworkServer.FindLocalObject (id);
-		} else {
-			return ClientScene.FindLocalObject (id);
+
+		bool done = false;
+		int i = 0;
+		playerIDs = _playerIDs;
+
+		while (!done) {
+
+			Debug.Log ("Coroutine running");
+			player [playerNumber] = PlayerFromID (playerIDs [i]);
+
+			if (player [playerNumber] != null) {
+				playerPN [playerNumber] = player [playerNumber].GetComponent<PlayerNetworking> ();
+				playerNumber += 1;
+				i += 1;
+
+				if (i >= MaxNumPlayers) {
+					done = true;
+				}
+			} else {
+				yield return new WaitForSeconds (0.2f);
+			}
+
 		}
+
+	}
+
+	GameObject PlayerFromID(string id)
+	{
+		return GameObject.Find (id);
 
 	}
 }

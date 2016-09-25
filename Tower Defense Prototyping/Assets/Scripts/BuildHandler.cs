@@ -9,6 +9,7 @@ public class BuildHandler : NetworkBehaviour {
 	MouseFunctions mf;
 	KeyboardFunctions kf;
 	Bank bank;
+	PlayerNetworking pn;
 
 	//Pre-Loaded Objects
 	//====================================================
@@ -58,6 +59,7 @@ public class BuildHandler : NetworkBehaviour {
 		kf = GetComponent<KeyboardFunctions> ();
 		mf = GetComponent<MouseFunctions> ();
 		bank = GetComponent<Bank>();
+		pn = GetComponent<PlayerNetworking> ();
 
 		//Pre-load Objects
 		//============================================================
@@ -81,7 +83,7 @@ public class BuildHandler : NetworkBehaviour {
 		magicTower = (GameObject)(Resources.Load ("Towers/MagicTower"));
 
 		//Audio References
-		sourceSFX = GetComponent<AudioSource> ();
+		sourceSFX = Camera.main.GetComponent<AudioSource> ();
 
 		needMoneySound  = (AudioClip)(Resources.Load("Sounds/needMoney", typeof(AudioClip)));
 		cannotBuildSound  = (AudioClip)(Resources.Load("Sounds/CannotBuild", typeof(AudioClip)));
@@ -99,24 +101,33 @@ public class BuildHandler : NetworkBehaviour {
 			if (mf.CurrentObject.CompareTag ("TowerSelector")) {
 				
 				Tower tempTower = mf.CurrentObject.transform.parent.parent.GetComponent<Tower> ();
-				sellValue = int.Parse (tempTower.Stats [5]);
-				bank.addMoney (sellValue);
-				Destroy (mf.CurrentObject.transform.parent.parent.gameObject);
-				mf.HidePanel();
+				if (tempTower.OwnerPlayerId == pn.playerUniqueIdentity) {
+					sellValue = int.Parse (tempTower.Stats [5]);
+					bank.addMoney (sellValue);
+					Destroy (mf.CurrentObject.transform.parent.parent.gameObject);
+					mf.HidePanel();
+				} else 
+				{
+					Debug.Log ("Cannot sell tower, not owner");
+				}
+
 
 			} else if (mf.CurrentObject.CompareTag ("Wall")) {
 				
 				Wall tempWall = mf.CurrentObject.GetComponent<Wall> ();
+				if (tempWall.OwnerPlayerId == pn.playerUniqueIdentity) {
+					if (tempWall.node.Tower == null) {
 
-				if (tempWall.node.Tower == null) {
-					
-					sellValue = 2;
-					bank.addMoney (sellValue);
-					Destroy (mf.CurrentObject);
-					mf.HidePanel ();
+						sellValue = 2;
+						bank.addMoney (sellValue);
+						Destroy (mf.CurrentObject);
+						mf.HidePanel ();
 
+					} else {
+						Debug.Log ("CANNOT SELL WALL WITH TOWER ON IT");
+					}
 				} else {
-					Debug.Log ("CANNOT SELL WALL WITH TOWER ON IT");
+					Debug.Log ("Cannot sell tower, not owner");
 				}
 
 			}
@@ -375,15 +386,17 @@ public class BuildHandler : NetworkBehaviour {
 		Node myNode = mf.TheGrid.NodeFromCoordinates (_nodeX, _nodeY);
 
 		myNode.Tower = buildThisTower;
+
 		NetworkServer.Spawn(buildThisTower);
 
 		Tower tempTower = buildThisTower.GetComponent<Tower> ();
 
 		tempTower.node = myNode;
+		tempTower.OwnerPlayerId = pn.playerUniqueIdentity;
 
 		StartCoroutine(startTargetAnimationPoint (tempTower, positionToBuild, time));
 
-		mf.RpcSyncNode (_nodeX, _nodeY, 0, myNode.Tower);
+		mf.RpcSyncNode (_nodeX, _nodeY, 0, myNode.Tower, pn.playerUniqueIdentity);
 
 	}
 

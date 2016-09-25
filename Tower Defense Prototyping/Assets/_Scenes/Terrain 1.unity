@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.440469, g: 0.4890344, b: 0.56913394, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -1304,6 +1304,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerToHurt: {fileID: 0}
+  otherPlayer: {fileID: 0}
 --- !u!1 &1332383302
 GameObject:
   m_ObjectHideFlags: 0
@@ -1435,8 +1436,12 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  playerIDs:
+  - 
+  - 
   playerNumber: 0
   gameRunning: 0
+  playerLost: 0
 --- !u!1 &1382940106
 GameObject:
   m_ObjectHideFlags: 0
@@ -2081,6 +2086,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerToHurt: {fileID: 0}
+  otherPlayer: {fileID: 0}
 --- !u!54 &1888157406
 Rigidbody:
   m_ObjectHideFlags: 0

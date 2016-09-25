@@ -21,8 +21,6 @@ public abstract class Tower : NetworkBehaviour
 	float upgradeCost;
 	int sellValue;
 
-
-
 	float rotationSpeed; //How fast the tower rotates to a new target (will track the target afterwards)
 	bool recentNewTarget;
 
@@ -56,6 +54,10 @@ public abstract class Tower : NetworkBehaviour
 
 	//REFERENCES 
 	public Node node;
+	public string OwnerPlayerId;
+
+	//OWNERSHIP ===================================================================
+
 
 
 	protected void setStats(string _name, float _adamage, float _adelay, int _cost, int _sellvalue, int _upcost)

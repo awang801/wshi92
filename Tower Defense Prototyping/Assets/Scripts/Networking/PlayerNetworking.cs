@@ -12,10 +12,13 @@ public class PlayerNetworking : NetworkBehaviour {
 	public GameObject myEnemy;
 
 	public Text myTimerText;
+	public Text myEnemyLivesText;
 
 	GameManager gm;
 
 	GameObject myCanvas;
+
+	bool cmdAddPlayerSent = false;
 		
 	void Awake()
 	{
@@ -47,6 +50,15 @@ public class PlayerNetworking : NetworkBehaviour {
 			
 			SetIdentity ();
 
+		} else {
+			if (isLocalPlayer) {
+
+				if (cmdAddPlayerSent == false) {
+					CmdTellServerToAddPlayer(myTransform.name);
+					cmdAddPlayerSent = true;
+				}
+
+			}
 		}
 
 	}
@@ -54,12 +66,11 @@ public class PlayerNetworking : NetworkBehaviour {
 	public override void OnStartLocalPlayer ()
 	{
 		GetNetIdentity ();
-		CmdTellServerToAddPlayer(playerNetID);
 		UpdateMyTimerText ();
 	}
 
 	[Command]
-	void CmdTellServerToAddPlayer(NetworkInstanceId myID)
+	void CmdTellServerToAddPlayer(string myID)
 	{
 		gm.AddPlayer (myID);
 	}
@@ -68,7 +79,9 @@ public class PlayerNetworking : NetworkBehaviour {
 	void GetNetIdentity()
 	{
 		playerNetID = GetComponent<NetworkIdentity> ().netId;
-		CmdTellServerMyIdentity (MakeUniqueIdentity());
+		Debug.Log ("My Netid is : " + playerNetID);
+		playerUniqueIdentity = MakeUniqueIdentity ();
+		CmdTellServerMyIdentity (playerUniqueIdentity);
 	}
 
 	void SetIdentity()
@@ -82,11 +95,16 @@ public class PlayerNetworking : NetworkBehaviour {
 	}
 
 	[ClientRpc]
-	public void RpcAssignEnemies(NetworkInstanceId enemyID)
+	public void RpcAssignEnemies(string enemyID)
 	{
+		
+		Debug.Log ("Enemy ID to find is : " + enemyID);
 		if (isLocalPlayer) {
-			myEnemy = NetworkServer.FindLocalObject (enemyID);
-			Debug.Log ("Enemy Assigned!");
+			myEnemy = GameObject.Find(enemyID);
+			Debug.Log ("Enemy Assigned! " + myEnemy.transform.name);
+			UpdateMyEnemyLivesText ();
+		} else {
+			Debug.Log ("Not local player, not assigning");
 		}
 
 	}
@@ -96,7 +114,7 @@ public class PlayerNetworking : NetworkBehaviour {
 	{
 		playerUniqueIdentity = name;
 	}
-
+		
 	string MakeUniqueIdentity()
 	{
 		return "Player " + playerNetID.ToString();
@@ -106,6 +124,13 @@ public class PlayerNetworking : NetworkBehaviour {
 	{
 
 		gm.timerText = myTimerText;
+
+	}
+
+	public void UpdateMyEnemyLivesText()
+	{
+
+		myEnemy.GetComponent<Lives> ().livesText = myEnemyLivesText;
 
 	}
 }

@@ -14,7 +14,8 @@ public class MouseFunctions : NetworkBehaviour
 	BuildHandler bhandler;
 	Bank bank;
 	PathFind pathfind;
-	GameObject gm;
+	GameManager gm;
+	PlayerNetworking pn;
 
 	//Selection
 	//=============================================
@@ -110,12 +111,12 @@ public class MouseFunctions : NetworkBehaviour
 		
 		kf = GetComponent<KeyboardFunctions>();
         target = GameObject.Find("Destination1").transform;
-		gm = GameObject.Find ("GameManager");
+		gm = GameObject.Find ("GameManager").GetComponent<GameManager>();
 		grid = GetComponent<Grid>();
 		bhandler = GetComponent<BuildHandler> ();
         bank = GetComponent<Bank>();
 		pathfind = GetComponent<PathFind>();
-
+		pn = GetComponent<PlayerNetworking> ();
 
 
 
@@ -170,23 +171,25 @@ public class MouseFunctions : NetworkBehaviour
 		if (!isLocalPlayer) {
 			return;
 		}
+		if (gm.gameRunning) {
+			if (mode == 0) {
+				UpdateMouseObjects ();
+				CheckSelectionClick ();
 
-		if (mode == 0) {
-			UpdateMouseObjects ();
-			CheckSelectionClick ();
-
-		}
-		else if (mode == 1)
-        {
-			UpdateMouseNode();
-
-			MoveBuildSelection();
-            CheckBuildClick();
-			if (buildWallMode)
-			{
-				MoveWallGhost();
 			}
-        }
+			else if (mode == 1)
+			{
+				UpdateMouseNode();
+
+				MoveBuildSelection();
+				CheckBuildClick();
+				if (buildWallMode)
+				{
+					MoveWallGhost();
+				}
+			}
+		}
+
 
         
 
@@ -557,7 +560,7 @@ public class MouseFunctions : NetworkBehaviour
 
 				sourceSFX.PlayOneShot(BuildFX);
 				bank.addMoney((int)((Mathf.Abs(wallsToBuild) + 1) * -5));
-				CmdBuildWalls (startWallModeNode.gridX, startWallModeNode.gridY, wallsToBuild, buildWallModeXY);
+				CmdBuildWalls (startWallModeNode.gridX, startWallModeNode.gridY, wallsToBuild, buildWallModeXY, pn.playerUniqueIdentity);
 				Debug.Log ("Cmd Build Walls");
 
 			}
@@ -578,7 +581,7 @@ public class MouseFunctions : NetworkBehaviour
 	}
 
 	[Command]
-	void CmdBuildWalls(int startNodeX, int startNodeY, float _wallsToBuild, string buildDirection)
+	void CmdBuildWalls(int startNodeX, int startNodeY, float _wallsToBuild, string buildDirection, string playerID)
 	{
 		List<Node> alreadyChecked = new List<Node> ();
 		List<Node> toCheck = new List<Node> ();
@@ -587,6 +590,7 @@ public class MouseFunctions : NetworkBehaviour
 		Node[] neighbors;
 		GameObject dummyWall = new GameObject();
 		GameObject newWall;
+		Wall tempWall;
 
 		Node startNode = new Node(new Vector3(12, 0, 30), 12, 30);
 		Node endNode = new Node(new Vector3(12,0,5),12,5);
@@ -624,9 +628,12 @@ public class MouseFunctions : NetworkBehaviour
 
 			newWall = bhandler.wallType (currentNode, neighbors);
 			currentNode.Wall = newWall;
-			newWall.GetComponent<Wall> ().node = currentNode;
+			tempWall = newWall.GetComponent<Wall> ();
+			tempWall.node = currentNode;
+			tempWall.OwnerPlayerId = pn.playerUniqueIdentity;
+
 			NetworkServer.Spawn(newWall);
-			RpcSyncNode (currentNode.gridX, currentNode.gridY, 1, newWall);
+			RpcSyncNode (currentNode.gridX, currentNode.gridY, 1, newWall, pn.playerUniqueIdentity);
 
 
 			alreadyChecked.Add (currentNode);
@@ -653,9 +660,12 @@ public class MouseFunctions : NetworkBehaviour
 				Destroy (node.Wall);
 				newWall = bhandler.wallType (node, neighbors);
 				node.Wall = newWall;
-				newWall.GetComponent<Wall> ().node = node;
+				tempWall = newWall.GetComponent<Wall> ();
+				tempWall.node = node;
+				tempWall.OwnerPlayerId = pn.playerUniqueIdentity;
+
 				NetworkServer.Spawn(newWall);
-				RpcSyncNode (node.gridX, node.gridY, 1, newWall);
+				RpcSyncNode (node.gridX, node.gridY, 1, newWall, pn.playerUniqueIdentity);
 			}
 		}
 
@@ -686,25 +696,52 @@ public class MouseFunctions : NetworkBehaviour
 				currentNode = nextNode;
 
 			} 
-			sourceSFX.PlayOneShot(cannotBuildSound);
+			RpcPlaySound (playerID, "CannotBuild");
 		}
 		Destroy (dummyWall);
 
 
 	}
 
+	[ClientRpc]
+	void RpcPlaySound(string playerID, string sound)
+	{
+		
+		if (pn.playerUniqueIdentity == playerID && isLocalPlayer) {
+
+			switch (sound) {
+
+			case "CannotBuild":
+				sourceSFX.PlayOneShot (cannotBuildSound);
+				break;
+
+			default:
+				break;
+
+			}
+
+		}
+
+	}
+
+
 
 	[ClientRpc]
-	public void RpcSyncNode(int nodeX, int nodeY, int tw, GameObject obj)
+	public void RpcSyncNode(int nodeX, int nodeY, int tw, GameObject obj, string owner)
 	{		
 		if (obj != null) {
 			Node myNode = grid.NodeFromCoordinates (nodeX, nodeY);
+
 			if (tw == 0) {
 				myNode.Tower = obj;
-				obj.GetComponent<Tower> ().node = myNode;
+				Tower tempTower = obj.GetComponent<Tower>();
+				tempTower.node = myNode;
+				tempTower.OwnerPlayerId = owner;
 			} else if (tw == 1) {
 				myNode.Wall = obj;
-				obj.GetComponent<Wall> ().node = myNode;
+				Wall tempWall = obj.GetComponent<Wall> ();
+				tempWall.node = myNode;
+				tempWall.OwnerPlayerId = owner;
 			}
 
 		} 

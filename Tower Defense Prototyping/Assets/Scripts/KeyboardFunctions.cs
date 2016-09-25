@@ -7,6 +7,7 @@ using System.Collections;
 
 public class KeyboardFunctions : NetworkBehaviour
 {
+	GameManager gm;
 
     AudioClip UIClickFX;
     AudioSource sourceSFX;
@@ -42,7 +43,6 @@ public class KeyboardFunctions : NetworkBehaviour
 	PlayerNetworking myPN;
 	string myID = "";
 
-
 	SpawnUnit mySpawner;
 	NetworkInstanceId mySpawnID;
 	SpawnUnit enemySpawner;
@@ -61,6 +61,7 @@ public class KeyboardFunctions : NetworkBehaviour
 
     void Awake()
     {
+		gm = GameObject.Find ("GameManager").GetComponent<GameManager> ();;
         mFunc = GetComponent<MouseFunctions>();
 		bhandler = GetComponent<BuildHandler> ();
 
@@ -85,7 +86,6 @@ public class KeyboardFunctions : NetworkBehaviour
 
 		myPN = GetComponent<PlayerNetworking> ();
 		bank = GetComponent<Bank>();
-
     }
 
 
@@ -93,9 +93,6 @@ public class KeyboardFunctions : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
-
 
 		if (myID == "" || myID == "Player(Clone)") {
 
@@ -109,37 +106,38 @@ public class KeyboardFunctions : NetworkBehaviour
 				mySpawner = GameObject.Find ("EnemySpawn2").GetComponent<SpawnUnit>();
 				enemySpawner = GameObject.Find("EnemySpawn1").GetComponent<SpawnUnit>();
 				myFinish = GameObject.Find ("FinishLine1").GetComponent<FinishLine> ();
-
+				enemyFinish = GameObject.Find ("FinishLine2").GetComponent<FinishLine> ();
 			} else if (myID == "Player 4") {
 				Debug.Log ("Set Spawner");
 				mySpawner = GameObject.Find ("EnemySpawn1").GetComponent<SpawnUnit>();
 				enemySpawner = GameObject.Find("EnemySpawn2").GetComponent<SpawnUnit>();
 				myFinish = GameObject.Find ("FinishLine2").GetComponent<FinishLine> ();
+				enemyFinish = GameObject.Find ("FinishLine1").GetComponent<FinishLine> ();
 			}
 
 		}
 
 		if (mySpawnID.IsEmpty()) {
-			Debug.Log ("Set Spawn ID");
-			mySpawnID = mySpawner.GetComponent<NetworkIdentity> ().netId;
 
-			mySpawner.sendPlayer = gameObject;
+			if (mySpawner != null) {
+				Debug.Log ("Set Spawn ID");
+				mySpawnID = mySpawner.GetComponent<NetworkIdentity> ().netId;
 
-			enemySpawner.attackPlayer = gameObject;
-			mySpawner.lateInit ();
+				mySpawner.sendPlayer = gameObject;
 
-			myFinish.SetPlayerToHurt (gameObject);
+				enemySpawner.attackPlayer = gameObject;
+				mySpawner.lateInit ();
+
+				myFinish.SetPlayerToHurt (gameObject, myID);
+				enemyFinish.setOtherPlayer (gameObject, myID);
+			}
+
 		}
-			
-
-		
-
-
 
 		if (!isLocalPlayer) {
 			return;
 
-		} else {
+		} else if (gm.gameRunning) {
 
 			CheckButtons(); //Checks if any buttons are pressed
 

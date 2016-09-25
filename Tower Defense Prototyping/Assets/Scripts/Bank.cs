@@ -5,10 +5,8 @@ using UnityEngine.Networking;
 
 public class Bank : NetworkBehaviour{
 
-	[SyncVar]
     private int money;
 
-	[SyncVar]
 	private int income;
 
 	public Text bankText;
