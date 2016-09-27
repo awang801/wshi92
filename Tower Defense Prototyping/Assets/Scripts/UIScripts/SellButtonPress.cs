@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class SellButtonPress : MonoBehaviour {
 
+	public GameManager gm;
+
 	GameObject myPlayer;
 	KeyboardFunctions kf;
 	BuildHandler bhandler;
@@ -21,12 +23,7 @@ public class SellButtonPress : MonoBehaviour {
 	string tooltipMessage;
 
 	void Awake () {
-		myPlayer = transform.root.gameObject;
 		mainCamAudioSource = Camera.main.GetComponent<AudioSource> ();
-
-		kf = myPlayer.GetComponent<KeyboardFunctions> ();
-		mf = myPlayer.GetComponent<MouseFunctions> ();
-		bhandler = myPlayer.GetComponent<BuildHandler> ();
 
 		highlightSFX = Resources.Load<AudioClip> ("Sounds/UI/UIMouseOverSound");
 
@@ -35,6 +32,31 @@ public class SellButtonPress : MonoBehaviour {
 
 	void Update()
 	{
+		if (myPlayer == null) 
+		{
+			
+			myPlayer = gm.MyLocalPlayer ();
+
+		} 
+
+		else {
+			if (kf == null) 
+			{
+				kf = myPlayer.GetComponent<KeyboardFunctions> ();
+			}
+
+			if (mf == null) 
+			{
+				mf = myPlayer.GetComponent<MouseFunctions> ();
+			} 
+
+			if (bhandler == null)
+			{
+				bhandler = myPlayer.GetComponent<BuildHandler> ();
+			}
+
+		}
+
 		if (runTimer == true) {
 			buttonHoldTime += Time.deltaTime;
 

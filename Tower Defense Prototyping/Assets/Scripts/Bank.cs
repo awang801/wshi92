@@ -12,6 +12,7 @@ public class Bank : NetworkBehaviour{
 	public Text bankText;
 	public Text incomeText;
 
+
 	public Bank()
 	{
 		money = 100;
@@ -24,10 +25,24 @@ public class Bank : NetworkBehaviour{
 		income = startIncome;
 	}
 
-	void Start()
+	void Update()
 	{
-		updateMoneyText ();
-		updateIncomeText ();
+		if (isLocalPlayer) {
+			if (bankText == null) {
+				bankText = GameObject.Find ("MoneyText").GetComponent<Text> ();
+				updateMoneyText ();
+
+				Debug.Log ("Bank Textset to local player!");
+			}
+				
+			if (incomeText == null) {
+				incomeText = GameObject.Find ("IncomeText").GetComponent<Text> ();
+				updateIncomeText ();
+				Debug.Log ("Income Text set to local player!");
+			}
+
+		}
+
 	}
 
 	//===============================================================

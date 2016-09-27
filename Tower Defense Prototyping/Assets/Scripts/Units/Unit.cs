@@ -127,12 +127,29 @@ public class Unit : NetworkBehaviour {
 		health -= damageAmplifier * dmg;
 
 		if (health <= 0 && !isDying) {
-			HPBar.localScale = new Vector3 (0, 1, 1);
-			Death ();
+			if (isServer) {
+				RpcDie ();
+			} else {
+				HPBar.localScale = new Vector3 (0, 1, 1);
+				Death ();
+			}
 		} else {
 			HPBar.localScale = new Vector3 (Mathf.Clamp(health / maxHealth, 0f, 1f), 1, 1);
 		}
 
+	}
+
+	[ClientRpc]
+	public void RpcDie()
+	{
+		HPBar.localScale = new Vector3 (0, 1, 1);
+		Death ();
+	}
+
+	[ClientRpc]
+	public void RpcFinish()
+	{
+		Finish ();
 	}
 
 	//Set destination target

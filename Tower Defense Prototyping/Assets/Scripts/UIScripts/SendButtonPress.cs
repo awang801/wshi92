@@ -5,6 +5,8 @@ using UnityEngine.EventSystems;
 
 public class SendButtonPress : MonoBehaviour {
 
+	public GameManager gm;
+
 	GameObject myPlayer;
 	KeyboardFunctions kf;
 	MouseFunctions mf;
@@ -29,11 +31,7 @@ public class SendButtonPress : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		
-		myPlayer = transform.root.gameObject;
 		mainCamAudioSource = Camera.main.GetComponent<AudioSource> ();
-
-		kf = myPlayer.GetComponent<KeyboardFunctions> ();
-		mf = myPlayer.GetComponent<MouseFunctions> ();
 
 		panel = GameObject.Find ("ButtonPanel");
 		panelTransform = panel.GetComponent<RectTransform> ();
@@ -52,6 +50,20 @@ public class SendButtonPress : MonoBehaviour {
 
 		tooltipMessage = "T - Toggle Send Mode\n\nSend units to build your income and attack the enemy!";
 	}
+
+	void Update()
+	{
+		if (myPlayer == null) {
+			myPlayer = gm.MyLocalPlayer ();
+		} else {
+			if (kf == null)
+			kf = myPlayer.GetComponent<KeyboardFunctions> ();
+
+			if (mf == null)
+			mf = myPlayer.GetComponent<MouseFunctions> ();
+		}
+	}
+
 
 	public void PlayHighlightSound()
 	{

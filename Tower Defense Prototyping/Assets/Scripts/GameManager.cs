@@ -28,6 +28,8 @@ public class GameManager : NetworkBehaviour {
 	public bool gameRunning = false;
 	public bool playerLost = false;
 
+	bool IDsSynced = false;
+
 	GameObject fireworks;
 
 	void Awake()
@@ -66,6 +68,8 @@ public class GameManager : NetworkBehaviour {
 			if (playerNumber == 2 && !playerLost) {
 
 				if (isServer) {
+					IDsSynced = true;
+					Debug.Log ("Calling RpcSyncPlayers and passing " + playerIDs[0] + " " + playerIDs[1]);
 					RpcSyncPlayers (playerIDs);
 					RpcStartGame ();
 
@@ -139,28 +143,31 @@ public class GameManager : NetworkBehaviour {
 	{
 		playerIDs [playerNumber] = newID;
 
-		//player [playerNumber] = PlayerFromID (newID);
-		//playerPN [playerNumber] = player [playerNumber].GetComponent<PlayerNetworking> ();
+		player [playerNumber] = PlayerFromID (newID);
+		playerPN [playerNumber] = player [playerNumber].GetComponent<PlayerNetworking> ();
+		playerNumber += 1;
+		Debug.Log ("Added new ID " + newID);
+		//StartCoroutine (AddPlayerWithDelay (newID, playerNumber));
+
 		//playerNumber += 1;
-		StartCoroutine (AddPlayerWithDelay (newID));
 	}
 
 
-	IEnumerator AddPlayerWithDelay(string _newID)
+	IEnumerator AddPlayerWithDelay(string _newID, int _playerNumber)
 	{
 		
 		while (true) {
-			if (player [playerNumber] == null) {
+			if (player [_playerNumber] == null) {
 				Debug.Log ("Add player tick " + _newID);
-				player [playerNumber] = PlayerFromID (_newID);
+				player [_playerNumber] = PlayerFromID (_newID);
 				yield return new WaitForSeconds (0.1f);
-			} else if (playerPN [playerNumber] == null) {
+			} else if (playerPN [_playerNumber] == null) {
 				Debug.Log ("Add player tick 2" + _newID);
-				playerPN [playerNumber] = player [playerNumber].GetComponent<PlayerNetworking> ();
+				playerPN [_playerNumber] = player [_playerNumber].GetComponent<PlayerNetworking> ();
 				yield return new WaitForSeconds (0.1f);
 
 			} else {
-				playerNumber += 1;
+				
 				Debug.Log ("Done adding new ID " + _newID);
 				break;
 			}
@@ -202,7 +209,7 @@ public class GameManager : NetworkBehaviour {
 
 		while (!done) {
 
-			Debug.Log ("Coroutine running");
+			Debug.Log ("Coroutine running on playerNumber " + playerNumber + " playerID " + playerIDs[i]);
 			player [playerNumber] = PlayerFromID (playerIDs [i]);
 
 			if (player [playerNumber] != null) {
@@ -211,6 +218,7 @@ public class GameManager : NetworkBehaviour {
 				i += 1;
 
 				if (i >= MaxNumPlayers) {
+					IDsSynced = true;
 					done = true;
 				}
 			} else {
@@ -224,6 +232,34 @@ public class GameManager : NetworkBehaviour {
 	GameObject PlayerFromID(string id)
 	{
 		return GameObject.Find (id);
+	}
+
+	public int MyPlayerIndex(string id)
+	{
+		if (IDsSynced) {
+			for (int i = 0; i < MaxNumPlayers; i++) {
+				if (playerIDs [i] == id) {
+					return i;
+				}
+			}
+		}
+
+
+		return -1;
+	}
+
+	public GameObject MyLocalPlayer()
+	{
+
+		for (int i = 0; i < MaxNumPlayers; i++) {
+			if (playerPN [i] != null) {
+				if (playerPN [i].IAmTheLocalPlayer ()) {
+					return player [i];
+				}
+			}
+		}
+
+		return null;
 
 	}
 }

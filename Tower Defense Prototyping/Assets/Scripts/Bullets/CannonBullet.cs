@@ -29,8 +29,10 @@ public class CannonBullet : Bullet
 	{
 		foreach (var unit in unitsInRange)
 		{
-			Unit currentUnit = unit.GetComponent<Unit> ();
-			currentUnit.Damage (damage);
+			if (unit != null) {
+				Unit currentUnit = unit.GetComponent<Unit> ();
+				currentUnit.Damage (damage);
+			}
 		}
 	}
 

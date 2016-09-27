@@ -19,9 +19,15 @@ public class Lives : NetworkBehaviour{
 		lives = startAmount;
 	}
 
-	void Start()
+	void Update()
 	{
-		updateText ();
+		if (isLocalPlayer) {
+			if (livesText == null) {
+				livesText = GameObject.Find ("LivesText").GetComponent<Text> ();
+				updateText ();
+				Debug.Log ("Lives Text set to local player!");
+			}
+		}
 	}
 
     public void setLives(int amount)
@@ -29,6 +35,12 @@ public class Lives : NetworkBehaviour{
         lives = amount;
 		updateText ();
     }
+
+	[ClientRpc]
+	public void RpcLoseLife()
+	{
+		loseLife ();
+	}
 
     public void loseLife()
     {
@@ -53,7 +65,7 @@ public class Lives : NetworkBehaviour{
         return lives;
     }
 
-	void updateText()
+	public void updateText()
 	{
 		if (livesText != null) {
 			livesText.text = lives.ToString();

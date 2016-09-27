@@ -7,11 +7,12 @@ using System.Collections;
 
 public class KeyboardFunctions : NetworkBehaviour
 {
+	GameObject gmObject;
 	GameManager gm;
 
     AudioClip UIClickFX;
     AudioSource sourceSFX;
-
+	AudioClip needMoneySound;
 
     MouseFunctions mFunc; //Reference to Mouse functions
 	BuildHandler bhandler;
@@ -32,6 +33,8 @@ public class KeyboardFunctions : NetworkBehaviour
 	public Texture2D attackCursor;
 	public CursorMode cursorMode = CursorMode.Auto;
 	public Vector2 hotSpot = Vector2.zero;
+
+	bool cursorReset = false;
 
 	GameObject orbGhost;
 	GameObject cannonGhost;
@@ -61,14 +64,12 @@ public class KeyboardFunctions : NetworkBehaviour
 
     void Awake()
     {
-		gm = GameObject.Find ("GameManager").GetComponent<GameManager> ();;
+		
         mFunc = GetComponent<MouseFunctions>();
 		bhandler = GetComponent<BuildHandler> ();
 
-		buildButton = GetComponentInChildren<BuildButtonPress>();
-		sendButton = GetComponentInChildren<SendButtonPress>();
-
         UIClickFX = (AudioClip)(Resources.Load("Sounds/UIButtonclick", typeof(AudioClip)));
+		needMoneySound  = (AudioClip)(Resources.Load("Sounds/needMoney", typeof(AudioClip)));
 		sourceSFX = Camera.main.GetComponent<AudioSource>();
 
 		//spawner = spawnObject.GetComponent<SpawnUnit> ();
@@ -89,10 +90,16 @@ public class KeyboardFunctions : NetworkBehaviour
     }
 
 
-
     // Update is called once per frame
     void Update()
     {
+		if (gmObject == null) {
+			gmObject = GameObject.Find ("GameManager");
+			buildButton = GameObject.Find("BuildButtonText").GetComponent<BuildButtonPress>();
+			sendButton = GameObject.Find("SendButtonText").GetComponent<SendButtonPress>();
+		} else if (gm == null) {
+			gm = gmObject.GetComponent<GameManager>();
+		}
 
 		if (myID == "" || myID == "Player(Clone)") {
 
@@ -100,20 +107,29 @@ public class KeyboardFunctions : NetworkBehaviour
 			Debug.Log (myID);
 
 		} else if (mySpawner == null) {
+			if (gm != null) {
 
-			if (myID == "Player 5") {
-				Debug.Log ("Set Spawner");
-				mySpawner = GameObject.Find ("EnemySpawn2").GetComponent<SpawnUnit>();
-				enemySpawner = GameObject.Find("EnemySpawn1").GetComponent<SpawnUnit>();
-				myFinish = GameObject.Find ("FinishLine1").GetComponent<FinishLine> ();
-				enemyFinish = GameObject.Find ("FinishLine2").GetComponent<FinishLine> ();
-			} else if (myID == "Player 4") {
-				Debug.Log ("Set Spawner");
-				mySpawner = GameObject.Find ("EnemySpawn1").GetComponent<SpawnUnit>();
-				enemySpawner = GameObject.Find("EnemySpawn2").GetComponent<SpawnUnit>();
-				myFinish = GameObject.Find ("FinishLine2").GetComponent<FinishLine> ();
-				enemyFinish = GameObject.Find ("FinishLine1").GetComponent<FinishLine> ();
+				int myIdx = gm.MyPlayerIndex (myID);
+					
+				if (myIdx == -1) {
+					Debug.Log ("My index is not found yet");
+				} else {
+					if (myIdx == 1) {
+						Debug.Log ("Set Spawner");
+						mySpawner = GameObject.Find ("EnemySpawn2").GetComponent<SpawnUnit>();
+						enemySpawner = GameObject.Find("EnemySpawn1").GetComponent<SpawnUnit>();
+						myFinish = GameObject.Find ("FinishLine1").GetComponent<FinishLine> ();
+						enemyFinish = GameObject.Find ("FinishLine2").GetComponent<FinishLine> ();
+					} else if (myIdx == 0) {
+						Debug.Log ("Set Spawner");
+						mySpawner = GameObject.Find ("EnemySpawn1").GetComponent<SpawnUnit>();
+						enemySpawner = GameObject.Find("EnemySpawn2").GetComponent<SpawnUnit>();
+						myFinish = GameObject.Find ("FinishLine2").GetComponent<FinishLine> ();
+						enemyFinish = GameObject.Find ("FinishLine1").GetComponent<FinishLine> ();
+					}
+				}
 			}
+
 
 		}
 
@@ -137,9 +153,24 @@ public class KeyboardFunctions : NetworkBehaviour
 		if (!isLocalPlayer) {
 			return;
 
-		} else if (gm.gameRunning) {
+		} else if (gm != null) {
 
-			CheckButtons(); //Checks if any buttons are pressed
+			if (gm.gameRunning) {
+
+				if (cursorReset == true) {
+					cursorReset = false;
+				}
+				CheckButtons (); //Checks if any buttons are pressed
+
+			} else {
+				
+				if (cursorReset == false) {
+					cursorReset = true;
+					Cursor.SetCursor(normalCursor, hotSpot, CursorMode.Auto);
+					Cursor.visible = true;
+				}
+
+			}
 
 		}
 
@@ -404,10 +435,13 @@ public class KeyboardFunctions : NetworkBehaviour
 				bank.subtractMoney (unitCost);
 				bank.addIncome (incomeGain);
 
+				sourceSFX.PlayOneShot (UIClickFX);
+
 				CmdSendUnit (mySpawnID, unitName);
 
 			} else {
 				Debug.Log ("Not enough money to send!");
+				sourceSFX.PlayOneShot(needMoneySound);
 			}
 
 		}

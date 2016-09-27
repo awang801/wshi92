@@ -14,6 +14,7 @@ public class PlayerNetworking : NetworkBehaviour {
 	public Text myTimerText;
 	public Text myEnemyLivesText;
 
+	GameObject gmObject;
 	GameManager gm;
 
 	GameObject myCanvas;
@@ -24,18 +25,13 @@ public class PlayerNetworking : NetworkBehaviour {
 	{
 		myTransform = transform;
 		playerUniqueIdentity = myTransform.name;
-		gm = GameObject.Find ("GameManager").GetComponent<GameManager>();
+
 
 	}
 
 	void Start () {
 
-		myCanvas = transform.GetChild (0).gameObject;
-
 		if (!isLocalPlayer) {
-			
-			myCanvas.SetActive (false);
-
 			return;
 		}
 
@@ -46,6 +42,16 @@ public class PlayerNetworking : NetworkBehaviour {
 	void Update()
 	{
 
+		if (gmObject == null) {
+			myTimerText = GameObject.Find ("TimerText").GetComponent<Text> ();
+			myEnemyLivesText = GameObject.Find ("LivesEnemyText").GetComponent<Text> ();
+			gmObject = GameObject.Find ("GameManager");
+			Debug.Log ("GM is null, setting in PN script");
+		} else if (gm == null) {
+			gm = gmObject.GetComponent<GameManager>();
+
+		}
+
 		if (myTransform.name == "" || myTransform.name == "Player(Clone)") {
 			
 			SetIdentity ();
@@ -54,8 +60,13 @@ public class PlayerNetworking : NetworkBehaviour {
 			if (isLocalPlayer) {
 
 				if (cmdAddPlayerSent == false) {
-					CmdTellServerToAddPlayer(myTransform.name);
-					cmdAddPlayerSent = true;
+					
+					if (gm != null) {
+						UpdateMyTimerText ();
+						CmdTellServerToAddPlayer(myTransform.name);
+						cmdAddPlayerSent = true;
+					}
+
 				}
 
 			}
@@ -66,15 +77,28 @@ public class PlayerNetworking : NetworkBehaviour {
 	public override void OnStartLocalPlayer ()
 	{
 		GetNetIdentity ();
-		UpdateMyTimerText ();
 	}
 
 	[Command]
 	void CmdTellServerToAddPlayer(string myID)
 	{
+		Debug.Log ("Server has been commanded to add player " + myID);
 		gm.AddPlayer (myID);
 	}
+	/*
+	IEnumerable AddPlayerWIthDelay(string _myID)
+	{
+		while (true) {
+			if (gm != null) {
+				gm.AddPlayer (_myID);
+				break;
+			} else {
+				yield return new WaitForSeconds (0.1f);
+			}
 
+		}
+	}
+*/
 	[Client]
 	void GetNetIdentity()
 	{
@@ -130,7 +154,15 @@ public class PlayerNetworking : NetworkBehaviour {
 	public void UpdateMyEnemyLivesText()
 	{
 
-		myEnemy.GetComponent<Lives> ().livesText = myEnemyLivesText;
+		Lives myEnemyLives = myEnemy.GetComponent<Lives> ();
+		myEnemyLives.livesText = myEnemyLivesText;
+		myEnemyLives.updateText ();
 
+
+	}
+
+	public bool IAmTheLocalPlayer()
+	{
+		return isLocalPlayer;
 	}
 }

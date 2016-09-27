@@ -15,6 +15,7 @@ public class MouseFunctions : NetworkBehaviour
 	Bank bank;
 	PathFind pathfind;
 	GameManager gm;
+	GameObject gmObject;
 	PlayerNetworking pn;
 
 	//Selection
@@ -97,6 +98,7 @@ public class MouseFunctions : NetworkBehaviour
 	public CursorMode cursorMode = CursorMode.Auto;
 	public Vector2 hotSpot = Vector2.zero;
 
+
 	//Other..?
 	//===============================================
     Transform target; //Target of the enemies (need to change this in the future)
@@ -109,9 +111,10 @@ public class MouseFunctions : NetworkBehaviour
     void Awake()
     {
 		
+
 		kf = GetComponent<KeyboardFunctions>();
-        target = GameObject.Find("Destination1").transform;
-		gm = GameObject.Find ("GameManager").GetComponent<GameManager>();
+		target = GameObject.Find("Destination1").transform;
+
 		grid = GetComponent<Grid>();
 		bhandler = GetComponent<BuildHandler> ();
         bank = GetComponent<Bank>();
@@ -145,9 +148,10 @@ public class MouseFunctions : NetworkBehaviour
     }
 
 
+
+
     void Start()
     {
-		
 		terrainFloorMask = LayerMask.GetMask("BoardTerrain");
         path = new NavMeshPath();
 		Cursor.SetCursor(cursorTexture, hotSpot, cursorMode);
@@ -161,7 +165,8 @@ public class MouseFunctions : NetworkBehaviour
 
 		selectedValues = new string[7];
 
-		StartCoroutine (animateSelectionPanel (-1));
+
+
 
     }
 
@@ -171,28 +176,39 @@ public class MouseFunctions : NetworkBehaviour
 		if (!isLocalPlayer) {
 			return;
 		}
-		if (gm.gameRunning) {
-			if (mode == 0) {
-				UpdateMouseObjects ();
-				CheckSelectionClick ();
 
-			}
-			else if (mode == 1)
-			{
-				UpdateMouseNode();
-
-				MoveBuildSelection();
-				CheckBuildClick();
-				if (buildWallMode)
-				{
-					MoveWallGhost();
-				}
-			}
+		if (gmObject == null) {
+			infoText = GameObject.Find ("Info Values").GetComponent<Text> ();
+			nameText = GameObject.Find ("Title").GetComponent<Text> ();
+			selectionImage = GameObject.Find ("InfoPicture").GetComponent<Image> ();;
+			selectionPanel = GameObject.Find ("InfoPanel");
+			gmObject = GameObject.Find ("GameManager");
+			StopCoroutine ("animateSelectionPanel");
+			StartCoroutine (animateSelectionPanel (-1));
+			Debug.Log ("GM is NULL, setting in MF script");
+		} else if (gm == null) {
+			gm = gmObject.GetComponent<GameManager>();
 		}
 
+		if (gm != null) {
+			if (gm.gameRunning) {
+				
 
-        
+				if (mode == 0) {
+					UpdateMouseObjects ();
+					CheckSelectionClick ();
 
+				} else if (mode == 1) {
+					UpdateMouseNode ();
+
+					MoveBuildSelection ();
+					CheckBuildClick ();
+					if (buildWallMode) {
+						MoveWallGhost ();
+					}
+				}
+			} 
+		}
     }
 
     //=====================================================

@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class ButtonPress : MonoBehaviour {
 
+	public GameManager gm;
 	protected GameObject myPlayer;
 	protected KeyboardFunctions kf;
 	protected MouseFunctions mf;
@@ -16,15 +17,24 @@ public class ButtonPress : MonoBehaviour {
 
 	void Awake () {
 		
-		myPlayer = transform.root.gameObject;
 		mainCamAudioSource = Camera.main.GetComponent<AudioSource> ();
-		kf = myPlayer.GetComponent<KeyboardFunctions> ();
-		mf = myPlayer.GetComponent<MouseFunctions> ();
 
 		highlightSFX = Resources.Load<AudioClip> ("Sounds/UI/UIMouseOverSound");
 
 		Initialize ();
 
+	}
+
+	void Update()
+	{
+		if (myPlayer == null) {
+			myPlayer = gm.MyLocalPlayer ();
+		} else {
+			if (kf == null)
+				kf = myPlayer.GetComponent<KeyboardFunctions> ();
+			if (mf == null)
+			mf = myPlayer.GetComponent<MouseFunctions> ();
+		}
 	}
 
 	public virtual void Initialize()

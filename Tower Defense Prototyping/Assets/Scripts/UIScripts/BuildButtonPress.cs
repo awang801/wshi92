@@ -5,6 +5,8 @@ using UnityEngine.EventSystems;
 
 public class BuildButtonPress : MonoBehaviour {
 
+	public GameManager gm;
+
 	GameObject myPlayer;
 	KeyboardFunctions kf;
 	//MouseFunctions mf;
@@ -40,10 +42,10 @@ public class BuildButtonPress : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		
-		myPlayer = transform.root.gameObject;
+
 		mainCamAudioSource = Camera.main.GetComponent<AudioSource> ();
 
-		kf = myPlayer.GetComponent<KeyboardFunctions> ();
+
 		//mf = gm.GetComponent<MouseFunctions> ();
 
 		panel = GameObject.Find ("ButtonPanel");
@@ -80,6 +82,16 @@ public class BuildButtonPress : MonoBehaviour {
 		tooltipFader = tooltipText.GetComponentInParent<FadeObjectInOut> ();
 
 		tooltipMessage = "B - Toggle Build Mode\n\nBuild walls and towers for defense!\n(Towers must be placed on walls)";
+	}
+
+	void Update()
+	{
+		if (myPlayer == null) {
+			myPlayer = gm.MyLocalPlayer ();
+		} else {
+			if (kf == null)
+			kf = myPlayer.GetComponent<KeyboardFunctions> ();
+		}
 	}
 
 	public void PlayHighlightSound()
