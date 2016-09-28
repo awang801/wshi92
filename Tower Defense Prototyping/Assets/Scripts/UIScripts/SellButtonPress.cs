@@ -11,7 +11,6 @@ public class SellButtonPress : MonoBehaviour {
 	KeyboardFunctions kf;
 	BuildHandler bhandler;
 	MouseFunctions mf;
-
 	AudioSource mainCamAudioSource;
 	AudioClip highlightSFX;
 

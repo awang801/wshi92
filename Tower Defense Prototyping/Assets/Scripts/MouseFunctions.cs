@@ -33,7 +33,8 @@ public class MouseFunctions : NetworkBehaviour
 	int numberOfRenderers;
 	int[] numberOfMaterials;
 	GameObject currentMouseObject;
-
+	GameObject SellButton;
+	
 	GameObject rangeIndicator;
 	GameObject rangeIndicatorInstance;
 
@@ -45,6 +46,8 @@ public class MouseFunctions : NetworkBehaviour
 	public Image selectionImage;
 	public GameObject selectionPanel;
 	public bool panelShowing;
+	Tower tempTower;
+	Wall tempWall;
 
 
 	//Building
@@ -182,6 +185,7 @@ public class MouseFunctions : NetworkBehaviour
 			nameText = GameObject.Find ("Title").GetComponent<Text> ();
 			selectionImage = GameObject.Find ("InfoPicture").GetComponent<Image> ();;
 			selectionPanel = GameObject.Find ("InfoPanel");
+			SellButton = GameObject.Find ("SellButton");
 			gmObject = GameObject.Find ("GameManager");
 			StopCoroutine ("animateSelectionPanel");
 			StartCoroutine (animateSelectionPanel (-1));
@@ -272,10 +276,12 @@ public class MouseFunctions : NetworkBehaviour
 		if (Input.GetButtonDown ("Fire1")) {
 			
 			if (currentMouseObject != null) {
-					
 				if (currentMouseObject.CompareTag ("TowerSelector")) {
 
-					SelectTower ();
+					if(selectedObject != currentMouseObject)
+					{
+						SelectTower ();
+					}
 
 				} else if (currentMouseObject.CompareTag ("Wall")) {
 
@@ -309,7 +315,15 @@ public class MouseFunctions : NetworkBehaviour
 		selectedObjectRenderer = selectedObject.transform.parent.parent.GetComponentsInChildren<Renderer> ();
 
 		numberOfRenderers = selectedObjectRenderer.Length;
-
+		tempTower = selectedObject.transform.parent.parent.GetComponent<Tower> ();
+		if (tempTower.OwnerPlayerId != pn.playerUniqueIdentity) 
+		{
+			SellButton.gameObject.SetActive(false);
+		}
+		else
+		{
+			SellButton.gameObject.SetActive(true);
+		}
 		for (int i = 0; i < numberOfRenderers; i++) {
 
 			if (!selectedObjectRenderer [i].CompareTag ("BulletPoint")) {
@@ -322,6 +336,7 @@ public class MouseFunctions : NetworkBehaviour
 				selectedObjectRenderer [i].materials = tempMaterials;
 			} 
 		}
+
 
 		ShowRangeIndicator ();
 
@@ -340,6 +355,16 @@ public class MouseFunctions : NetworkBehaviour
 		selectedObjectRenderer = selectedObject.GetComponents<Renderer> ();
 
 		numberOfRenderers = selectedObjectRenderer.Length;
+		tempWall = selectedObject.GetComponent<Wall> ();
+		if (tempWall.OwnerPlayerId != pn.playerUniqueIdentity) 
+		{
+			SellButton.gameObject.SetActive(false);
+		}
+		else
+		{
+			SellButton.gameObject.SetActive(true);
+		}
+
 
 		for (int i = 0; i < numberOfRenderers; i++) {
 
@@ -473,8 +498,11 @@ public class MouseFunctions : NetworkBehaviour
 		if (selectedObject != null) {
 			for (int i = 0; i < numberOfRenderers; i++) {
 				for (int j = 0; j < numberOfMaterials[i]; j++) {
-					if (!selectedObjectRenderer [i].CompareTag ("BulletPoint")) {
-						selectedObjectRenderer[i].materials = selectedObjectResetMaterial[i];
+					if(selectedObjectRenderer != null)
+					{
+						if (!selectedObjectRenderer [i].CompareTag ("BulletPoint")) {
+							selectedObjectRenderer[i].materials = selectedObjectResetMaterial[i];
+						}
 					}
 				}
 			}
@@ -502,11 +530,18 @@ public class MouseFunctions : NetworkBehaviour
 
             if (buildStructure == "Wall")
             {
-                startWallModeNode = currentMouseNode; 
-                buildWallMode = true;
-				wallGhost = ((GameObject)(Instantiate(wallGhostLoaded)));
-                kf.building = true;
-                building = true;
+                startWallModeNode = currentMouseNode;
+				if(currentMouseNode.gridY > 5 && currentMouseNode.gridY < 30)
+				{
+					buildWallMode = true;
+					wallGhost = ((GameObject)(Instantiate(wallGhostLoaded)));
+					kf.building = true;
+					building = true;
+				}
+				else
+				{
+					sourceSFX.PlayOneShot(cannotBuildSound);
+				}
             }
             else
             {
@@ -524,23 +559,25 @@ public class MouseFunctions : NetworkBehaviour
 
 				//Updates the wall ghost as you drag the mouse along the X or Y axis
                 Vector2 difference = grid.NodeDifference(startWallModeNode, currentMouseNode);
+				if(currentMouseNode.gridY > 5 && currentMouseNode.gridY < 30)
+				{
+					if (Mathf.Abs(difference.x) >= Mathf.Abs(difference.y))
+					{
 
-                if (Mathf.Abs(difference.x) >= Mathf.Abs(difference.y))
-                {
+						endWallModeNode = grid.NodeFromCoordinates(currentMouseNode.gridX, startWallModeNode.gridY);
+						buildWallModeXY = "x";
+						wallsToBuild = difference.x;
 
-                    endWallModeNode = grid.NodeFromCoordinates(currentMouseNode.gridX, startWallModeNode.gridY);
-                    buildWallModeXY = "x";
-                    wallsToBuild = difference.x;
+					}
+					else if (Mathf.Abs(difference.y) > Mathf.Abs(difference.x))
+					{
 
-                }
-                else if (Mathf.Abs(difference.y) > Mathf.Abs(difference.x))
-                {
+						endWallModeNode = grid.NodeFromCoordinates(startWallModeNode.gridX, currentMouseNode.gridY);
+						buildWallModeXY = "y";
+						wallsToBuild = difference.y;
 
-                    endWallModeNode = grid.NodeFromCoordinates(startWallModeNode.gridX, currentMouseNode.gridY);
-                    buildWallModeXY = "y";
-                    wallsToBuild = difference.y;
-
-                }
+					}
+				}
             }
         }
 

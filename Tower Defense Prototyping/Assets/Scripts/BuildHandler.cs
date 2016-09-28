@@ -101,21 +101,22 @@ public class BuildHandler : NetworkBehaviour {
 			if (mf.CurrentObject.CompareTag ("TowerSelector")) {
 				
 				Tower tempTower = mf.CurrentObject.transform.parent.parent.GetComponent<Tower> ();
-				if (tempTower.OwnerPlayerId == pn.playerUniqueIdentity) {
+				//if (tempTower.OwnerPlayerId == pn.playerUniqueIdentity) {
 					sellValue = int.Parse (tempTower.Stats [5]);
 					bank.addMoney (sellValue);
 					Destroy (mf.CurrentObject.transform.parent.parent.gameObject);
 					mf.HidePanel();
-				} else 
-				{
-					Debug.Log ("Cannot sell tower, not owner");
-				}
+				//} else 
+				//{
+					//Debug.Log ("Cannot sell tower, not owner");
+				//}
 
 
-			} else if (mf.CurrentObject.CompareTag ("Wall")) {
+			} 
+			else if (mf.CurrentObject.CompareTag ("Wall")) {
 				
 				Wall tempWall = mf.CurrentObject.GetComponent<Wall> ();
-				if (tempWall.OwnerPlayerId == pn.playerUniqueIdentity) {
+				//if (tempWall.OwnerPlayerId == pn.playerUniqueIdentity) {
 					if (tempWall.node.Tower == null) {
 
 						sellValue = 2;
@@ -126,14 +127,14 @@ public class BuildHandler : NetworkBehaviour {
 					} else {
 						Debug.Log ("CANNOT SELL WALL WITH TOWER ON IT");
 					}
-				} else {
-					Debug.Log ("Cannot sell tower, not owner");
-				}
+				//} else {
+					//Debug.Log ("Cannot sell tower, not owner");
+				//}
 
 			}
 
-		} else {
-			Debug.Log ("Nothing to sell");
+		//} else {
+			//Debug.Log ("Nothing to sell");
 		}
 	}
 
