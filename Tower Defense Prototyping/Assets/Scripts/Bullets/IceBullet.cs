@@ -1,13 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class IceBullet : MonoBehaviour {
 
 	public ParticleSystem particles;
 	public ParticleSystem particles2;
-	ParticleCollisionEvent[] collisionEvents;
+
+	public List<GameObject> unitsInRange;
+
 	public float damage;
 	public float coldness;
+
+	public bool attacking;
 
 	public void Setup(float dmg, float cold)
 	{
@@ -17,12 +22,11 @@ public class IceBullet : MonoBehaviour {
 
 	}
 
-	void Awake()
+	void Update()
 	{
-		particles = GetComponent<ParticleSystem> ();
-		particles2 = GetComponentInParent<ParticleSystem> ();
-		collisionEvents = new ParticleCollisionEvent[128];
-
+		if (attacking) {
+			DamageUnitsInTrigger ();
+		}
 	}
 
 	public void ToggleOn()
@@ -30,6 +34,7 @@ public class IceBullet : MonoBehaviour {
 		if (!particles.isPlaying) {
 			particles.Play ();
 			particles2.Play ();
+			attacking = true;
 		}
 
 	}
@@ -39,27 +44,48 @@ public class IceBullet : MonoBehaviour {
 		if (particles.isPlaying) {
 			particles.Stop ();
 			particles2.Stop ();
+			attacking = false;
 		}
 	}
 
-	void OnParticleCollision(GameObject other)
+	void DamageUnitsInTrigger()
 	{
-		int safeLength = particles.GetSafeCollisionEventSize ();
-		if (collisionEvents.Length < safeLength) {
-			collisionEvents = new ParticleCollisionEvent[safeLength];
+		foreach (var unit in unitsInRange)
+		{
+			if (unit != null) {
+				Unit currentUnit = unit.GetComponent<Unit> ();
+				if (!currentUnit.isDying) {
+					currentUnit.Damage (damage * Time.deltaTime);
+					currentUnit.addTemperature (-coldness * Time.deltaTime);
+				}
+			}
 		}
+	}
 
-		int numCollisionEvents = particles.GetCollisionEvents (other, collisionEvents);
+	void OnTriggerEnter(Collider other)
+	{
 
-		Unit unit = other.GetComponent<Unit> ();
+		GameObject newTarget = other.gameObject;
 
-		int i = 0;
-		while (i < numCollisionEvents) {
+		if (newTarget.CompareTag ("Enemy")) {
 
-			unit.Damage (damage);
-			unit.addTemperature (-coldness);
+			if (!unitsInRange.Contains (newTarget)) {
+				unitsInRange.Add (newTarget);
+			}
 
-			i++;
+		}
+	}
+
+	void OnTriggerExit(Collider other)
+	{
+		GameObject newTarget = other.gameObject;
+
+		if (newTarget.CompareTag ("Enemy")) {
+
+			if (unitsInRange.Contains (newTarget)) {
+				unitsInRange.Remove (newTarget);
+			}
+
 		}
 	}
 

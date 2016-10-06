@@ -20,12 +20,16 @@ public class FinishLine : MonoBehaviour {
 	void OnTriggerEnter(Collider other)
 	{
 		if (other.gameObject.CompareTag ("Enemy")) {
-            other.gameObject.GetComponent<Unit>().Finish();
-            lives.loseLife();
+			Unit tempUnit = other.gameObject.GetComponent<Unit> ();
+			if (!tempUnit.isDying) {
+				tempUnit.Finish();
+				lives.loseLife();
 
-			if (lives.getLives() <= 0) {
-				gm.PlayerLoseWin (playerToHurtId, otherPlayerId);
+				if (lives.getLives() <= 0) {
+					gm.PlayerLoseWin (playerToHurtId, otherPlayerId);
+				}
 			}
+            
 
         } 
 	}

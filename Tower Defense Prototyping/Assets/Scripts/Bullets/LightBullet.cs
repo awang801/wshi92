@@ -20,9 +20,13 @@ public class LightBullet : Bullet
 		timeElapsed += Time.fixedDeltaTime;
 
 		if (timeElapsed >= lifeTime) {
+			
 			Destroy (gameObject);
+
 		} else if (timeElapsed >= chargeTime && timeElapsed <= maxDamageTime) {
+			
 			DamageUnitsInTrigger ();
+
 		}
         
     }
@@ -36,10 +40,10 @@ public class LightBullet : Bullet
 	{
 		foreach (var unit in unitsInRange)
 		{
+			
 			Unit currentUnit = unit.GetComponent<Unit> ();
-			float dist = Vector3.Distance (unit.transform.position, transform.position);
 
-			currentUnit.Damage (damage * Time.fixedDeltaTime * (dist / maxDist));
+			currentUnit.Damage (damage * Time.fixedDeltaTime);
 
 		}
 	}
@@ -52,7 +56,9 @@ public class LightBullet : Bullet
 		if (newTarget.CompareTag ("Enemy")) {
 			
 			if (!unitsInRange.Contains (newTarget)) {
+				
 				unitsInRange.Add (newTarget);
+
 			}
 
 		}
@@ -65,7 +71,9 @@ public class LightBullet : Bullet
 		if (newTarget.CompareTag ("Enemy")) {
 
 			if (unitsInRange.Contains (newTarget)) {
+				
 				unitsInRange.Remove (newTarget);
+
 			}
 
 		}

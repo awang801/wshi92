@@ -18,6 +18,7 @@ public class SpawnUnit : NetworkBehaviour
 	GameObject potato;
 	GameObject cloud;
 	GameObject reinhardt;
+	GameObject mercy;
 
 	public string unitToSpawn;
 
@@ -33,6 +34,7 @@ public class SpawnUnit : NetworkBehaviour
 		potato = (GameObject)Resources.Load ("Enemies/Potato");
 		cloud = (GameObject)Resources.Load ("Enemies/Cloud");
 		reinhardt = (GameObject)Resources.Load ("Enemies/Reinhardt");
+		mercy = (GameObject)Resources.Load ("Enemies/Mercy");
 
 		unitToSpawn = "Potato";
 
@@ -78,6 +80,9 @@ public class SpawnUnit : NetworkBehaviour
 			break;
 		case "Reinhardt":
 			spawnUnit = reinhardt;
+			break;
+		case "Mercy":
+			spawnUnit = mercy;
 			break;
 		default:
 			break;

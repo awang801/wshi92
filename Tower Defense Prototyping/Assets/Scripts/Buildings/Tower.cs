@@ -138,7 +138,20 @@ public abstract class Tower : NetworkBehaviour
 
 		GameObject newTarget = other.gameObject;
 
-		if (newTarget.CompareTag ("Enemy")) {
+		if (newTarget.CompareTag ("Enemy")) {			
+			if (!unitsInRange.Contains (newTarget)) {
+				unitsInRange.Add (newTarget);
+			}
+
+		}
+	}
+
+	void OnTriggerStay(Collider other)
+	{
+
+		GameObject newTarget = other.gameObject;
+
+		if (newTarget.CompareTag ("Enemy")) {			
 			if (!unitsInRange.Contains (newTarget)) {
 				unitsInRange.Add (newTarget);
 			}
@@ -167,14 +180,26 @@ public abstract class Tower : NetworkBehaviour
 	{
 		if (unitsInRange.Count > 0) {
 			foreach (var unit in unitsInRange) {
-				if (unit == null) {
+				if (unit == null || unit.activeSelf == false) {
 					unitsInRange.Remove (unit);
+					continue;
 				} else {
+					if (currentTargetUnit != null) {
+						if (unit.GetInstanceID () == currentTargetUnit.GetInstanceID ()) {
+							//Don't switch to the same target!!!
+							continue;
+						} 
+					}
+
 					currentTargetUnit = unit.GetComponent<Unit> ();
-					currentTarget = unit;
-					currentTargetT = currentTarget.transform;
-					recentNewTarget = true;
-					break;
+					if (currentTargetUnit.sendPlayer.name != OwnerPlayerId && !currentTargetUnit.isDying) {
+						currentTarget = unit;
+						currentTargetT = currentTarget.transform;
+						recentNewTarget = true;
+						break;
+					}
+
+
 				}
 			}
 		} 
@@ -184,7 +209,6 @@ public abstract class Tower : NetworkBehaviour
 	{
 		if (currentTarget != null) {
 			if (currentTargetUnit.isDying == true) {
-				unitsInRange.Remove (currentTarget);
 				return true;
 			} else {
 				return false;

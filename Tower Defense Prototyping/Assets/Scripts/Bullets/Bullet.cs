@@ -8,7 +8,7 @@ public class Bullet : MonoBehaviour
     public Unit target;
 	protected Transform targetT;
 	protected Vector3 targetPosition;
-    protected float damage = 1f;
+	public float damage = 1f;
 	protected float velocity = 1f;
 
     protected virtual void FixedUpdate()

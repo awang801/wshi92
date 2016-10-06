@@ -204,10 +204,10 @@ GameObject:
   - 95: {fileID: 95000014080231042}
   - 195: {fileID: 195000010187813452}
   - 54: {fileID: 54000011031864474}
-  - 114: {fileID: 114000010359916916}
   - 136: {fileID: 136000011188274806}
   - 82: {fileID: 82000010330016466}
   - 114: {fileID: 114000010799753034}
+  - 114: {fileID: 114000013543741384}
   m_Layer: 12
   m_Name: Potato
   m_TagString: Enemy
@@ -720,7 +720,8 @@ AudioSource:
   m_GameObject: {fileID: 1000012830299420}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 243000013503464500, guid: 4f42dd5d3877b3c4bae67b2e88eefe31,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 4cca872068218894d9aef7458b88d4d7, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -731,7 +732,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 300
+  MaxDistance: 200
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -803,27 +804,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114000010359916916
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012830299420}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 248a1f019b680a741beb6fd11fe86e9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HasPath: 0
-  PathPending: 0
-  PathStale: 0
-  PathStatus: 2
-  target: {fileID: 0}
-  MixedMode: 0
-  isDying: 0
-  HPBarRotation: {x: 0, y: 0, z: 0, w: 0}
-  attackPlayer: {fileID: 0}
-  sendPlayer: {fileID: 0}
 --- !u!114 &114000010464403732
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -953,6 +933,29 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114000013543741384
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012830299420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b99eb62cf7d9b54418b2f05216354f4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HasPath: 0
+  PathPending: 0
+  PathStale: 0
+  PathStatus: 2
+  target: {x: 0, y: 0, z: 0}
+  MixedMode: 0
+  isDying: 0
+  isDead: 0
+  isBeingResurrected: 0
+  HPBarRotation: {x: 0, y: 0, z: 0, w: 0}
+  attackPlayer: {fileID: 0}
+  sendPlayer: {fileID: 0}
 --- !u!114 &114000013725304826
 MonoBehaviour:
   m_ObjectHideFlags: 1

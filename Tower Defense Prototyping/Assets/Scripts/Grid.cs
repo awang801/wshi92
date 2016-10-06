@@ -69,7 +69,7 @@ public class Grid : NetworkBehaviour {
 
 		} else if (x <= 0) {
 
-			return grid [0, y];
+			return grid [1, y];
 
 		} else if (y <= 0) {
 

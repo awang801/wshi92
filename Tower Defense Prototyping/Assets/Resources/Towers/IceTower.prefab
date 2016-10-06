@@ -45,6 +45,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1000011693838368
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 4000010686334784}
+  - 135: {fileID: 135000010529433562}
+  - 114: {fileID: 114000013565155718}
+  m_Layer: 0
+  m_Name: IceBullet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1000012072690302
 GameObject:
   m_ObjectHideFlags: 1
@@ -85,7 +102,6 @@ GameObject:
   - 4: {fileID: 4000012649570754}
   - 199: {fileID: 199000011946443248}
   - 198: {fileID: 198000012290335532}
-  - 114: {fileID: 114000013314034866}
   m_Layer: 0
   m_Name: IceBlast
   m_TagString: BulletPoint
@@ -120,8 +136,8 @@ GameObject:
   - 82: {fileID: 82000010350344262}
   - 135: {fileID: 135000011243678538}
   - 114: {fileID: 114000013063788268}
-  - 114: {fileID: 114000013780305826}
-  - 114: {fileID: 114000013558637878}
+  - 114: {fileID: 114000012895022806}
+  - 114: {fileID: 114000012849046070}
   m_Layer: 11
   m_Name: IceTower
   m_TagString: Tower
@@ -161,6 +177,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!4 &4000010686334784
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011693838368}
+  m_LocalRotation: {x: -0.000000021855694, y: 1.11022296e-16, z: -1.110223e-16, w: 1}
+  m_LocalPosition: {x: 0, y: -0.052299995, z: 0.052799996}
+  m_LocalScale: {x: 0.04, y: 0.04, z: 0.04}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children:
+  - {fileID: 4000012649570754}
+  - {fileID: 4000012263384554}
+  m_Father: {fileID: 4000013460259320}
+  m_RootOrder: 0
 --- !u!4 &4000010905661776
 Transform:
   m_ObjectHideFlags: 1
@@ -223,26 +254,25 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010470916322}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: 2.4264693e-24, w: 1}
+  m_LocalPosition: {x: 0, y: 1.3075, z: -1.3199998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
-  m_Father: {fileID: 4000012649570754}
-  m_RootOrder: 0
+  m_Father: {fileID: 4000010686334784}
+  m_RootOrder: 1
 --- !u!4 &4000012649570754
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012656969750}
-  m_LocalRotation: {x: -0.000000021855694, y: 1.11022296e-16, z: -1.110223e-16, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.04, y: 0.04, z: 0.04}
+  m_LocalRotation: {x: -0, y: -0, z: 2.4264693e-24, w: 1}
+  m_LocalPosition: {x: 0, y: 1.3075, z: -1.3199998}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children:
-  - {fileID: 4000012263384554}
-  m_Father: {fileID: 4000013460259320}
+  m_Children: []
+  m_Father: {fileID: 4000010686334784}
   m_RootOrder: 0
 --- !u!4 &4000013460259320
 Transform:
@@ -255,7 +285,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 4000012649570754}
+  - {fileID: 4000010686334784}
   m_Father: {fileID: 4000011790884210}
   m_RootOrder: 0
 --- !u!4 &4000013477543110
@@ -265,7 +295,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013141070952}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.211553, y: 0, z: 14.858341}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -382,7 +412,8 @@ AudioSource:
   m_GameObject: {fileID: 1000013141070952}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 243000012747709296, guid: 4f42dd5d3877b3c4bae67b2e88eefe31,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: b6dcc288938802e45a3ebf7e5b6f2d76, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.7
@@ -453,37 +484,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!114 &114000013063788268
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013141070952}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06d1cb4c6489d2f43b327a59bbaf4ae5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bullet: {fileID: 0}
-  shootParticle: {fileID: 1000012656969750}
-  unitsInRange: []
-  ice: {fileID: 0}
---- !u!114 &114000013314034866
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012656969750}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f4111abd579db440a1660577aca3137, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  particles: {fileID: 198000012290335532}
-  particles2: {fileID: 198000014077315638}
-  damage: 0
-  coldness: 0
---- !u!114 &114000013558637878
+--- !u!114 &114000012849046070
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -503,7 +504,7 @@ MonoBehaviour:
   m_SnapThreshold: 5
   m_InterpolateRotation: 1
   m_InterpolateMovement: 1
---- !u!114 &114000013780305826
+--- !u!114 &114000012895022806
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -535,6 +536,53 @@ MonoBehaviour:
     i15: 83
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!114 &114000013063788268
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013141070952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06d1cb4c6489d2f43b327a59bbaf4ae5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bullet: {fileID: 0}
+  shootParticle: {fileID: 1000011693838368}
+  unitsInRange: []
+  isBeingBuilt: 0
+  buildAt: {x: 0, y: 0, z: 0}
+  OwnerPlayerId: 
+  ice: {fileID: 0}
+--- !u!114 &114000013565155718
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011693838368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f4111abd579db440a1660577aca3137, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  particles: {fileID: 198000012290335532}
+  particles2: {fileID: 198000014077315638}
+  unitsInRange: []
+  damage: 0
+  coldness: 0
+  attacking: 0
+--- !u!135 &135000010529433562
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011693838368}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.25
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!135 &135000011243678538
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -553,7 +601,7 @@ ParticleSystem:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012656969750}
-  serializedVersion: 2
+  serializedVersion: 4
   lengthInSec: 1
   startDelay:
     scalar: 0
@@ -591,12 +639,13 @@ ParticleSystem:
       m_RotationOrder: 4
     minMaxState: 0
   speed: 1
-  randomSeed: 0
   looping: 1
   prewarm: 0
   playOnAwake: 1
   moveWithTransform: 1
+  autoRandomSeed: 1
   scalingMode: 2
+  randomSeed: -1885984474
   InitialModule:
     serializedVersion: 2
     enabled: 1
@@ -2281,7 +2330,7 @@ ParticleSystem:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010470916322}
-  serializedVersion: 2
+  serializedVersion: 4
   lengthInSec: 1
   startDelay:
     scalar: 0
@@ -2319,12 +2368,13 @@ ParticleSystem:
       m_RotationOrder: 4
     minMaxState: 0
   speed: 1
-  randomSeed: 0
   looping: 1
   prewarm: 0
   playOnAwake: 1
   moveWithTransform: 1
+  autoRandomSeed: 1
   scalingMode: 2
+  randomSeed: 1666974075
   InitialModule:
     serializedVersion: 2
     enabled: 1

@@ -320,7 +320,8 @@ AudioSource:
   m_GameObject: {fileID: 1000010810888510}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 243000012747709296, guid: 4f42dd5d3877b3c4bae67b2e88eefe31,
+    type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 0.7
@@ -405,6 +406,9 @@ MonoBehaviour:
   bullet: {fileID: 1000014292750372, guid: 8a518f0763d664146915307721919987, type: 2}
   shootParticle: {fileID: 1000013250490692}
   unitsInRange: []
+  isBeingBuilt: 0
+  buildAt: {x: 0, y: 0, z: 0}
+  OwnerPlayerId: 
 --- !u!114 &114000011233777712
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -475,7 +479,7 @@ ParticleSystem:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013250490692}
-  serializedVersion: 2
+  serializedVersion: 4
   lengthInSec: 1
   startDelay:
     scalar: 0
@@ -513,12 +517,13 @@ ParticleSystem:
       m_RotationOrder: 4
     minMaxState: 0
   speed: 1
-  randomSeed: 1111302376
   looping: 1
   prewarm: 0
   playOnAwake: 1
   moveWithTransform: 1
+  autoRandomSeed: 0
   scalingMode: 1
+  randomSeed: 1111302376
   InitialModule:
     serializedVersion: 2
     enabled: 1

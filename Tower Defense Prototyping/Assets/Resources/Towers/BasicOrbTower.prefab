@@ -383,7 +383,8 @@ AudioSource:
   m_GameObject: {fileID: 1000010135462680}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 243000012747709296, guid: 4f42dd5d3877b3c4bae67b2e88eefe31,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: eecbe93b4f62b60418e1576de03f13d1, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.7
@@ -486,6 +487,9 @@ MonoBehaviour:
   shootParticle: {fileID: 1000012430551894, guid: bf0b0649848c50148b6db85b2048f9a5,
     type: 2}
   unitsInRange: []
+  isBeingBuilt: 0
+  buildAt: {x: 0, y: 0, z: 0}
+  OwnerPlayerId: 
 --- !u!114 &114000012654408036
 MonoBehaviour:
   m_ObjectHideFlags: 1

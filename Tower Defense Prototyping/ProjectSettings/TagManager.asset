@@ -12,6 +12,9 @@ TagManager:
   - UI
   - Fire
   - BulletPoint
+  - Shield
+  - Bullet
+  - Ability
   layers:
   - Default
   - TransparentFX
@@ -26,9 +29,9 @@ TagManager:
   - Objects
   - Towers
   - Enemies
-  - 
-  - 
-  - 
+  - Shields
+  - Bullets
+  - Ability
   - 
   - 
   - 

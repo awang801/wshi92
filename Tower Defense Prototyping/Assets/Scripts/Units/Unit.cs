@@ -18,12 +18,13 @@ public class Unit : NetworkBehaviour {
 	NavMeshAgent navAgent = null;
 	//==============================================================
 	//Animation
-	Animator animator = null;
+	protected Animator animator = null;
 
-	int angleHash;
-	int speedHash;
-	int deathHash;
-	int finishHash;
+	protected int angleHash;
+	protected int speedHash;
+	protected int deathHash;
+	protected int finishHash;
+	protected int beingResurrectedHash;
 
 	float smoothAngle = 0f;
 	public bool MixedMode = false;
@@ -31,28 +32,34 @@ public class Unit : NetworkBehaviour {
 	//==============================================================
 	//Stats
 
-	float maxHealth;
+	protected float maxHealth;
 
 	[SyncVar]
-	float health;
+	protected float health;
 
-	float damageAmplifier = 1f;
+	protected float damageAmplifier;
 
-	float baseTemperature = 98.6f;
+	protected float baseTemperature;
 
 	[SyncVar]
-	float temperature;
+	protected float temperature;
 
-	float homeostasisTendency = 0.4f;
-	float minTemp = 32f;
-	float maxTemp = 150f;
+	protected float homeostasisTendency;
+	protected float minTemp;
+	protected float maxTemp;
+
+	protected int killValue;
+
+	protected float baseSpeed;
 
 	public bool isDying;
+	public bool isDead = false;
+	public bool isBeingResurrected = false;
 
 	//==============================================================
 	//Audio
 
-	AudioSource myAudioSource;
+	protected AudioSource myAudioSource;
 	AudioClip deathSound;
 	AudioClip goodSound;
 	AudioClip badSound;
@@ -60,7 +67,7 @@ public class Unit : NetworkBehaviour {
 
 	//===============================================================
 	//Visuals
-	Transform HPBarCanvas;
+	protected Transform HPBarCanvas;
 	Transform HPBar;
 	public Quaternion HPBarRotation;
 
@@ -71,17 +78,9 @@ public class Unit : NetworkBehaviour {
 	public GameObject attackPlayer;
 	public GameObject sendPlayer;
 
-
 	Bank bank;
 
 	//==============================================================
-
-
-
-	//bool ableToFind;
-	//bool calculating;
-
-
 
 	void Awake()
 	{
@@ -95,6 +94,7 @@ public class Unit : NetworkBehaviour {
 		speedHash = Animator.StringToHash ("Speed");
 		deathHash = Animator.StringToHash ("Dead");
 		finishHash = Animator.StringToHash ("Finish");
+		beingResurrectedHash = Animator.StringToHash ("Resurrected");
 
 		//Visual Initialization
 		HPBarCanvas = transform.GetChild (2);
@@ -110,33 +110,78 @@ public class Unit : NetworkBehaviour {
 		badSound  = (AudioClip)Resources.Load ("Sounds/BadBeep");
 	}
 
-	void Start () {
+	protected virtual void Start () {
+			
+		Initialize ();
 
+	}
+
+	protected virtual void Initialize()
+	{
 		//Stats Initialization
 		maxHealth = 10;
 		health = 10;
+		homeostasisTendency = 0.4f;
+		baseTemperature = 98.6f;
+		damageAmplifier = 1f;
+		minTemp = 32f;
+		maxTemp = 150f;
 		temperature = baseTemperature;
 
-		//Bank Initialization
+		baseSpeed = 1f;
 
+		killValue = 3;
 	}
 
 	//Apply damage to unit
 	public void Damage(float dmg)
 	{		
-		health -= damageAmplifier * dmg;
+		if (!isDying) {
+			health -= damageAmplifier * dmg;
+			OnDamageTaken (dmg);
 
-		if (health <= 0 && !isDying) {
-			if (isServer) {
-				RpcDie ();
-			} else {
+			if (health <= 0 && !isDying) {
+				//if (isServer) {
+				//	RpcDie ();
+				//} else {
 				HPBar.localScale = new Vector3 (0, 1, 1);
 				Death ();
+				//}
+			} else {
+				HPBar.localScale = new Vector3 (Mathf.Clamp(health / maxHealth, 0f, 1f), 1, 1);
 			}
+		}
+
+
+	}
+
+	public void Heal(float amt)
+	{
+		health += amt;
+
+		if (health >= maxHealth) {
+			HPBar.localScale = new Vector3 (1, 1, 1);
+			health = maxHealth;
+			//}
 		} else {
 			HPBar.localScale = new Vector3 (Mathf.Clamp(health / maxHealth, 0f, 1f), 1, 1);
 		}
 
+	}
+
+	protected virtual void OnDamageTaken(float dmg)
+	{
+		//Nothing
+	}
+
+	protected virtual void OnDeath()
+	{
+		//Nothing
+	}
+
+	protected virtual void OnFinish()
+	{
+		//Nothing
 	}
 
 	[ClientRpc]
@@ -179,29 +224,65 @@ public class Unit : NetworkBehaviour {
 		sendPlayer = GameObject.Find (splayerID);
 
 		bank = attackPlayer.GetComponent<Bank>();
+
+		OnPlayerSet ();
+	}
+
+	protected virtual void OnPlayerSet()
+	{
+
 	}
 
 	//Unit died before reaching target
 	void Death()
 	{
+		OnDeath ();
 		isDying = true;
 		animator.SetTrigger (deathHash);
 		myAudioSource.PlayOneShot (deathSound);
+		HPBarCanvas.gameObject.SetActive (false);
+
+		//Death Animation Particle Effect
 		//Instantiate (Resources.Load ("Enemies/EnemyDeath"), transform.position, transform.rotation);
+
 		//Destroy (gameObject, animator.GetCurrentAnimatorClipInfo(0).Length + 1);
 		//myFader.FadeOut();
-		Invoke("temporaryWorkAround", animator.GetCurrentAnimatorClipInfo(0).Length + 1);
-        bank.addMoney(15);
+		Invoke("temporaryWorkAround", animator.GetCurrentAnimatorClipInfo(0).Length + 10);
+		bank.addMoney(killValue);
     }
+
+	public void ResurrectMe()
+	{
+		isBeingResurrected = true;
+		Heal (maxHealth);
+
+		CancelInvoke ();
+		animator.SetTrigger (beingResurrectedHash);
+		animator.speed = 1.5f;
+
+		Invoke ("SetAlive", 2.5f);
+
+	}
+
+	void SetAlive()
+	{
+		HPBarCanvas.gameObject.SetActive (true);
+		isDying = false;
+		isDead = false;
+		isBeingResurrected = false;
+	}
 
 	void temporaryWorkAround()
 	{
+		isDead = true;
 		gameObject.SetActive (false);
 	}
 
 	//Unit reached target
     public void Finish()
     {
+		OnFinish ();
+		isDead = true;
 		isDying = true;
 		animator.SetTrigger (finishHash);
 		if (attackPlayer.transform.name == "Player 4") {
@@ -211,7 +292,10 @@ public class Unit : NetworkBehaviour {
 		}
 		//myFader.FadeOut();
 		Invoke("temporaryWorkAround", animator.GetCurrentAnimatorClipInfo(0).Length + 1);
+
+		//Finish Animation Particle Effect
         //Instantiate(Resources.Load("Enemies/EnemyDeath"), transform.position, transform.rotation); //Play some sort of teleport animation here
+
 		//Destroy(gameObject, animator.GetCurrentAnimatorClipInfo(0).Length);
     }
 
@@ -248,7 +332,7 @@ public class Unit : NetworkBehaviour {
 	{
 		//NEED TO - Also add blue-ing effect on materials
 
-		float percent = temperature / baseTemperature;
+		float percent = temperature / baseTemperature * baseSpeed;
 
 		animator.speed = percent;
 
@@ -285,48 +369,25 @@ public class Unit : NetworkBehaviour {
 	//==================================================================================
 
 	//==================================================================================
-	void Update()
+	protected virtual void Update()
     {
 
+		if (!isDying) {
+			//Temperature Mechanic
+			Homeostasis ();
+			syncTemperature ();
 
-		//Temperature Mechanic
-		Homeostasis ();
-		syncTemperature ();
-
-		//FROM DEAD EARTH TUTORIAL
-		//**************************************************************************************
-		HasPath = navAgent.hasPath;
-		PathPending = navAgent.pathPending;
-		PathStale = navAgent.isPathStale;
-		PathStatus = navAgent.pathStatus;
-
-		Vector3 localDesiredVelocity = transform.InverseTransformVector (navAgent.desiredVelocity);
-		float angle = Mathf.Atan2 (localDesiredVelocity.x, localDesiredVelocity.z) * Mathf.Rad2Deg;
-		smoothAngle = Mathf.MoveTowardsAngle (smoothAngle, angle, 80.0f * Time.deltaTime);
-
-		float speed = localDesiredVelocity.z;
-
-		animator.SetFloat (angleHash, smoothAngle);
-		animator.SetFloat (speedHash, speed, 0.1f, Time.deltaTime);
-
-		if (navAgent.desiredVelocity.sqrMagnitude > Mathf.Epsilon) {
-			if (!MixedMode || (MixedMode && Mathf.Abs(angle) < 80f && animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Locomotion") )) {
-				Quaternion lookRotation = Quaternion.LookRotation (navAgent.desiredVelocity, Vector3.up);
-				transform.rotation = Quaternion.Slerp (transform.rotation, lookRotation, 5.0f * Time.deltaTime);
-			} 
+			//Navigation
+			Navigate ();
 		}
-
-		if (PathStatus == NavMeshPathStatus.PathInvalid && !PathPending || PathStatus == NavMeshPathStatus.PathPartial && !PathPending) {
-			navAgent.SetDestination (target);
-		}
-
+	
 
 		//**************************************************************************************
-
 		//OLD CODE - Testing how to prevent enemies from stopping everytime a new wall is built
 		//======================================================================================
 
-        /*if (navAgent.pathStatus == NavMeshPathStatus.PathInvalid)
+        /*
+         * if (navAgent.pathStatus == NavMeshPathStatus.PathInvalid)
         {
             Debug.LogWarning("Agent has an incomplete path? " + gameObject);
             navAgent.SetDestination(target.position);
@@ -361,6 +422,37 @@ public class Unit : NetworkBehaviour {
     }
 
 	//Update HP bar rotations
+
+	void Navigate()
+	{
+		//FROM DEAD EARTH TUTORIAL
+		//**************************************************************************************
+		HasPath = navAgent.hasPath;
+		PathPending = navAgent.pathPending;
+		PathStale = navAgent.isPathStale;
+		PathStatus = navAgent.pathStatus;
+
+		Vector3 localDesiredVelocity = transform.InverseTransformVector (navAgent.desiredVelocity);
+		float angle = Mathf.Atan2 (localDesiredVelocity.x, localDesiredVelocity.z) * Mathf.Rad2Deg;
+		smoothAngle = Mathf.MoveTowardsAngle (smoothAngle, angle, 80.0f * Time.deltaTime);
+
+		float speed = localDesiredVelocity.z;
+
+		animator.SetFloat (angleHash, smoothAngle);
+		animator.SetFloat (speedHash, speed, 0.1f, Time.deltaTime);
+
+		if (navAgent.desiredVelocity.sqrMagnitude > Mathf.Epsilon) {
+			if (!MixedMode || (MixedMode && Mathf.Abs(angle) < 80f && animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Locomotion") )) {
+				Quaternion lookRotation = Quaternion.LookRotation (navAgent.desiredVelocity, Vector3.up);
+				transform.rotation = Quaternion.Slerp (transform.rotation, lookRotation, 5.0f * Time.deltaTime);
+			} 
+		}
+
+		if (PathStatus == NavMeshPathStatus.PathInvalid && !PathPending || PathStatus == NavMeshPathStatus.PathPartial && !PathPending) {
+			navAgent.SetDestination (target);
+		}
+	}
+
 	void LateUpdate()
 	{
 		HPBarCanvas.rotation = HPBarRotation;

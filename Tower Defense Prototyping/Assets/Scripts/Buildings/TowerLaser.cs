@@ -8,6 +8,7 @@ public class TowerLaser : Tower
 	LineRenderer laser;
 	bool isAttacking;
 	bool isCharging;
+	bool hasTarget;
 	float attackTime;
 	float maxAttackTime;
 	float chargeTime;
@@ -81,21 +82,28 @@ public class TowerLaser : Tower
 				laser.SetPosition (0, ray.origin);
 
 				if (!targetIsDead() && currentTarget != null) {
+					hasTarget = true;
 					laser.SetPosition (1, ray.GetPoint (100f));
 				} else {
-					laser.SetPosition (1, ray.GetPoint (0f));
+					hasTarget = false;
+					laser.SetPosition (1, ray.GetPoint (50f));
 				}
 
+				if (hasTarget) {
+					
+					hit = Physics.SphereCastAll (bulletPointTransform.position, 0.5f, shootDirection, 100f, enemyLayerMask);
 
-				hit = Physics.SphereCastAll (bulletPointTransform.position, 0.5f, shootDirection, 100f, enemyLayerMask);
+					for (int i = 0; i < hit.Length; i++) {
 
-				for (int i = 0; i < hit.Length; i++) {
+						if (hit [i].transform.CompareTag ("Enemy")) {
+							Unit currentUnit = hit [i].transform.GetComponent<Unit> ();
+							currentUnit.Damage (attackDamage * Time.fixedDeltaTime);
+						}
 
-					if (hit[i].transform.CompareTag ("Enemy")) {
-						Unit currentUnit = hit[i].transform.GetComponent<Unit> ();
-						currentUnit.Damage (attackDamage * Time.fixedDeltaTime);
 					}
+
 				}
+
 			}
 
 			yield return null;

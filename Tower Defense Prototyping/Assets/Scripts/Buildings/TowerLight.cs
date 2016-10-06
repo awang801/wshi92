@@ -23,7 +23,7 @@ public class TowerLight : Tower
 		shootSFX = (AudioClip)(Resources.Load("Sounds/LightFireSFX", typeof(AudioClip)));
 
 		//setStats(string _name, float _adamage, float _adelay, int _cost, int _sellvalue, int _upcost)
-		setStats ("Light", 6f, 3f, 40, 25, 60);
+		setStats ("Light", 3f, 3f, 40, 25, 60);
 
 		chargeTime = 1f;
 

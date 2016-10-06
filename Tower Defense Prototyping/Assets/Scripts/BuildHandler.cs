@@ -101,43 +101,59 @@ public class BuildHandler : NetworkBehaviour {
 			if (mf.CurrentObject.CompareTag ("TowerSelector")) {
 				
 				Tower tempTower = mf.CurrentObject.transform.parent.parent.GetComponent<Tower> ();
-				//if (tempTower.OwnerPlayerId == pn.playerUniqueIdentity) {
-					sellValue = int.Parse (tempTower.Stats [5]);
-					bank.addMoney (sellValue);
-					Destroy (mf.CurrentObject.transform.parent.parent.gameObject);
-					mf.HidePanel();
-				//} else 
-				//{
-					//Debug.Log ("Cannot sell tower, not owner");
-				//}
+				NetworkIdentity tempNetID = mf.CurrentObject.transform.parent.parent.GetComponent<NetworkIdentity> ();
+				sellValue = int.Parse (tempTower.Stats [5]);
+				bank.addMoney (sellValue);
+				CmdSell (tempNetID.netId);
+				mf.HidePanel ();
+				mf.selectedObjectType = "";
 
 
-			} 
-			else if (mf.CurrentObject.CompareTag ("Wall")) {
+			} else if (mf.CurrentObject.CompareTag ("Wall")) {
 				
 				Wall tempWall = mf.CurrentObject.GetComponent<Wall> ();
-				//if (tempWall.OwnerPlayerId == pn.playerUniqueIdentity) {
-					if (tempWall.node.Tower == null) {
+				NetworkIdentity tempNetID = mf.CurrentObject.GetComponent<NetworkIdentity> ();
+				if (tempWall.node.Tower == null) {
 
-						sellValue = 2;
-						bank.addMoney (sellValue);
-						Destroy (mf.CurrentObject);
-						mf.HidePanel ();
+					sellValue = 2;
+					bank.addMoney (sellValue);
+					CmdSell (tempNetID.netId);
+					mf.HidePanel ();
+					mf.selectedObjectType = "";
 
-					} else {
-						Debug.Log ("CANNOT SELL WALL WITH TOWER ON IT");
-					}
-				//} else {
-					//Debug.Log ("Cannot sell tower, not owner");
-				//}
+				} else {
+					Debug.Log ("CANNOT SELL WALL WITH TOWER ON IT");
+				}
 
 			}
 
-		//} else {
-			//Debug.Log ("Nothing to sell");
 		}
 	}
 
+
+	[Command]
+	void CmdSell(NetworkInstanceId id)
+	{
+		RpcSell (id);
+	}
+
+	[ClientRpc]
+	void RpcSell(NetworkInstanceId id)
+	{
+		SellThis (id);
+	}
+
+	void SellThis(NetworkInstanceId id)
+	{
+		if (isServer) {
+			GameObject toDelete = NetworkServer.FindLocalObject (id);
+			Destroy (toDelete);
+		} else {
+			GameObject toDelete = ClientScene.FindLocalObject (id);
+			Destroy (toDelete);
+		}
+
+	}
 
 	public void HandleBuildTower(Node buildNode) 
 	//Checks if it is possible to build a tower in current node

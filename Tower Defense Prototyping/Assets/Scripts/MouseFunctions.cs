@@ -38,7 +38,7 @@ public class MouseFunctions : NetworkBehaviour
 	GameObject rangeIndicator;
 	GameObject rangeIndicatorInstance;
 
-	string selectedObjectType;
+	public string selectedObjectType;
 
 	string[] selectedValues;
 	public Text infoText;
@@ -48,6 +48,9 @@ public class MouseFunctions : NetworkBehaviour
 	public bool panelShowing;
 	Tower tempTower;
 	Wall tempWall;
+
+	Coroutine selectionPanelRoutine;
+	bool selectionPanelRoutineRunning;
 
 
 	//Building
@@ -76,8 +79,6 @@ public class MouseFunctions : NetworkBehaviour
 
 	//Preloaded Objects
 	//===============================================
-
-
 	GameObject wallGhostLoaded;
 
 	GameObject selHighlight;
@@ -124,10 +125,7 @@ public class MouseFunctions : NetworkBehaviour
 		pathfind = GetComponent<PathFind>();
 		pn = GetComponent<PlayerNetworking> ();
 
-
-
 		wallGhostLoaded = (GameObject)(Resources.Load ("Walls/WallGhost"));
-
 
 		wallIcon = Resources.Load<Sprite> ("Sprites/WallIcon");
 		orbIcon = Resources.Load<Sprite> ("Sprites/OrbIcon");
@@ -150,12 +148,9 @@ public class MouseFunctions : NetworkBehaviour
 
     }
 
-
-
-
     void Start()
     {
-		terrainFloorMask = LayerMask.GetMask("BoardTerrain");
+		terrainFloorMask = LayerMask.GetMask("DecorationTerrain");
         path = new NavMeshPath();
 		Cursor.SetCursor(cursorTexture, hotSpot, cursorMode);
 
@@ -167,9 +162,6 @@ public class MouseFunctions : NetworkBehaviour
 		numberOfMaterials = new int[10];
 
 		selectedValues = new string[7];
-
-
-
 
     }
 
@@ -187,8 +179,9 @@ public class MouseFunctions : NetworkBehaviour
 			selectionPanel = GameObject.Find ("InfoPanel");
 			SellButton = GameObject.Find ("SellButton");
 			gmObject = GameObject.Find ("GameManager");
-			StopCoroutine ("animateSelectionPanel");
-			StartCoroutine (animateSelectionPanel (-1));
+
+			HidePanel ();
+
 			Debug.Log ("GM is NULL, setting in MF script");
 		} else if (gm == null) {
 			gm = gmObject.GetComponent<GameManager>();
@@ -356,6 +349,7 @@ public class MouseFunctions : NetworkBehaviour
 
 		numberOfRenderers = selectedObjectRenderer.Length;
 		tempWall = selectedObject.GetComponent<Wall> ();
+
 		if (tempWall.OwnerPlayerId != pn.playerUniqueIdentity) 
 		{
 			SellButton.gameObject.SetActive(false);
@@ -433,7 +427,6 @@ public class MouseFunctions : NetworkBehaviour
 	{
 		rangeIndicatorInstance = (GameObject)Instantiate (rangeIndicator, selectedObject.transform.parent);
 
-
 		float correctScale = selectedObjectCollider.radius * 2f;
 
 		rangeIndicatorInstance.transform.localScale = new Vector3 (correctScale, 0.001f, correctScale);
@@ -450,46 +443,57 @@ public class MouseFunctions : NetworkBehaviour
 
 	public void HidePanel()
 	{
-		if (panelShowing == true) {
-			StopCoroutine ("animateSelectionPanel");
-			StartCoroutine (animateSelectionPanel (-1));
+		if (selectionPanelRoutineRunning) {
+			StopCoroutine (selectionPanelRoutine);
+			selectionPanelRoutineRunning = false;
 		}
+
+		selectionPanel.transform.position.Set (40f, 212.5f, 0f);
+
+		selectionPanelRoutine = StartCoroutine (AnimHideSelectionPanel());
 	}
 
 	public void ShowPanel()
 	{
-		if (panelShowing == false) {
-			StopCoroutine ("animateSelectionPanel");
-			StartCoroutine (animateSelectionPanel (1));
+		if (selectionPanelRoutineRunning) {
+			StopCoroutine (selectionPanelRoutine);
+			selectionPanelRoutineRunning = false;
 		}
+
+		selectionPanel.transform.position.Set (-160f, 212.5f, 0f);
+
+		selectionPanelRoutine = StartCoroutine (AnimShowSelectionPanel());
+
 	}
 
-	IEnumerator animateSelectionPanel(int direction)
+	IEnumerator AnimHideSelectionPanel()
 	{
-		
-		Vector3 targetPosition;
-		if (direction > 0) {
-			selectionPanel.transform.position.Set (-160f, 212.5f, 0f);
-			targetPosition = new Vector3(40f, 212.5f, 0f);
-			while (selectionPanel.transform.position.x < 40f) {
-				selectionPanel.transform.position = Vector3.Lerp (selectionPanel.transform.position, targetPosition, 30f * Time.deltaTime);
+		Vector3 targetPosition = new Vector3 (-160f, 212.5f, 0f);
 
-				yield return null;
-			}
-			panelShowing = true;
+		while (selectionPanel.transform.position.x > -160f) {
+			selectionPanelRoutineRunning = true;
+			selectionPanel.transform.position = Vector3.Lerp (selectionPanel.transform.position, targetPosition, 30f * Time.deltaTime);
 
-		} else {
-			selectionPanel.transform.position.Set (40f, 212.5f, 0f);
-			targetPosition = new Vector3(-160f, 212.5f, 0f);
-			while (selectionPanel.transform.position.x > -160f) {
-				selectionPanel.transform.position = Vector3.Lerp (selectionPanel.transform.position, targetPosition, 30f * Time.deltaTime);
-
-				yield return null;
-			}
-			panelShowing = false;
-
+			yield return null;
 		}
+
+		selectionPanelRoutineRunning = false;
 	}
+
+	IEnumerator AnimShowSelectionPanel()
+	{
+		Vector3 targetPosition = new Vector3 (40f, 212.5f, 0f);
+
+		while (selectionPanel.transform.position.x < 40f) {
+			selectionPanelRoutineRunning = true;
+			selectionPanel.transform.position = Vector3.Lerp (selectionPanel.transform.position, targetPosition, 30f * Time.deltaTime);
+
+			yield return null;
+		}
+
+		selectionPanelRoutineRunning = false;
+	}
+
 
 	public void Deselect()
 	{
@@ -521,7 +525,7 @@ public class MouseFunctions : NetworkBehaviour
             kf.building = false;
         }
 
-		//On mouse DOWN
+		//On LMB DOWN
         if (Input.GetButtonDown("Fire1"))
         {
 
@@ -551,7 +555,7 @@ public class MouseFunctions : NetworkBehaviour
         }
 
 
-
+		//On LMB HELD down
         if (Input.GetButton("Fire1"))
         {
             if (buildWallMode == true)
@@ -581,14 +585,15 @@ public class MouseFunctions : NetworkBehaviour
             }
         }
 
-
-
+		//On LMB Release
         if (Input.GetButtonUp("Fire1") && buildWallMode == true && building == true)
         {
 
 			BuildWalls ();
 
         }
+
+		//On ESC or RMB
         if (Input.GetButtonDown("Cancel") || Input.GetButtonDown("Fire2"))
         {
             for (int i = 0; i <= Mathf.Abs(wallsToBuild); i++)
@@ -640,11 +645,15 @@ public class MouseFunctions : NetworkBehaviour
 		List<Node> toCheck = new List<Node> ();
 		Node currentNode = grid.NodeFromCoordinates(startNodeX, startNodeY);
 		Node nextNode = currentNode;
-		Node[] neighbors;
-		GameObject dummyWall = new GameObject();
+
+		Node[] neighbors; //Stores neighbors of currentNode
+
+		GameObject dummyWall = new GameObject(); //Empty object used as a placeholder for neighbor calculations
+
 		GameObject newWall;
 		Wall tempWall;
 
+		//Nodes for Pathfinding (To prevent blocking)
 		Node startNode = new Node(new Vector3(12, 0, 30), 12, 30);
 		Node endNode = new Node(new Vector3(12,0,5),12,5);
 
@@ -657,7 +666,6 @@ public class MouseFunctions : NetworkBehaviour
 				if (buildDirection == "x") {
 
 					if (_wallsToBuild > 0) {
-
 						neighbors [1].Wall = dummyWall;
 						nextNode = grid.NodeFromCoordinates (currentNode.gridX + 1, currentNode.gridY);
 					} else {
@@ -756,6 +764,7 @@ public class MouseFunctions : NetworkBehaviour
 
 	}
 
+	//Play sound on clients
 	[ClientRpc]
 	void RpcPlaySound(string playerID, string sound)
 	{
@@ -778,7 +787,7 @@ public class MouseFunctions : NetworkBehaviour
 	}
 
 
-
+	//Update node on clients to store tower or wall.
 	[ClientRpc]
 	public void RpcSyncNode(int nodeX, int nodeY, int tw, GameObject obj, string owner)
 	{		

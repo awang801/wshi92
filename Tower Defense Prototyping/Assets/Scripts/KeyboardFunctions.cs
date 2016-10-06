@@ -12,6 +12,7 @@ public class KeyboardFunctions : NetworkBehaviour
 
     AudioClip UIClickFX;
     AudioSource sourceSFX;
+	AudioSource BGMusic;
 	AudioClip needMoneySound;
 
     MouseFunctions mFunc; //Reference to Mouse functions
@@ -35,6 +36,8 @@ public class KeyboardFunctions : NetworkBehaviour
 	public Vector2 hotSpot = Vector2.zero;
 
 	bool cursorReset = false;
+
+	bool Key_ctrl = false;
 
 	GameObject orbGhost;
 	GameObject cannonGhost;
@@ -71,6 +74,7 @@ public class KeyboardFunctions : NetworkBehaviour
         UIClickFX = (AudioClip)(Resources.Load("Sounds/UIButtonclick", typeof(AudioClip)));
 		needMoneySound  = (AudioClip)(Resources.Load("Sounds/needMoney", typeof(AudioClip)));
 		sourceSFX = Camera.main.GetComponent<AudioSource>();
+		BGMusic = Camera.main.transform.GetComponentInChildren<AudioSource> ();
 
 		//spawner = spawnObject.GetComponent<SpawnUnit> ();
 
@@ -423,8 +427,12 @@ public class KeyboardFunctions : NetworkBehaviour
 				incomeGain = 8;
 				break;
 			case "Reinhardt":
-				unitCost = 30;
-				incomeGain = 8;
+				unitCost = 100;
+				incomeGain = 15;
+				break;
+			case "Mercy":
+				unitCost = 75;
+				incomeGain = 15;
 				break;
 			default:
 				break;
@@ -459,6 +467,14 @@ public class KeyboardFunctions : NetworkBehaviour
 	[Client]
     void CheckButtons()
     {
+		if (Input.GetButtonDown ("Ctrl")) {
+			Key_ctrl = true;
+		}
+
+		if (Input.GetButtonUp ("Ctrl")) {
+			Key_ctrl = false;
+		}
+
         if (Input.GetButtonDown("Cancel") || Input.GetButtonDown("Fire2"))
         { //If ESC is pressed
 
@@ -475,11 +491,12 @@ public class KeyboardFunctions : NetworkBehaviour
                 Cancel();
             }
         }
-        else if (Input.GetButtonDown("B"))
+        if (Input.GetButtonDown("B"))
         { //If B is pressed, Enter Build this.mode
 			buildButton.BuildToggle ();
         }
-        else if (Input.GetButtonDown("Z"))
+
+        if (Input.GetButtonDown("Z"))
         { //If Z is pressed, and Building Mode is enabled, -- Build wall
 			if (this.mode == 1) {
 				BuildWall ();
@@ -491,7 +508,8 @@ public class KeyboardFunctions : NetworkBehaviour
            
 
         }
-		else if (Input.GetButtonDown("X"))
+
+		if (Input.GetButtonDown("X"))
 		{
 			if (this.mode == 1) {
 				BuildOrbTower ();
@@ -499,43 +517,52 @@ public class KeyboardFunctions : NetworkBehaviour
 				CheckSendUnit("Cloud");
 			}
 		}
-		else if (Input.GetButtonDown("C"))
+
+		if (Input.GetButtonDown("C"))
 		{
 			if (this.mode == 1) {
 				BuildCannonTower ();
 			} else if (this.mode == 2) {
+				CheckSendUnit ("Reinhardt");
 			}
 		}
-        else if (Input.GetButtonDown("T"))
+        
+		if (Input.GetButtonDown("T"))
         {
 			sendButton.SendToggle ();
         }
-		else if (Input.GetButtonDown("Q"))
+
+		if (Input.GetButtonDown("Q"))
 		{
 			bank.addMoney (50);
 		}
-		else if (Input.GetButtonDown("V"))
+
+		if (Input.GetButtonDown("V"))
 		{
 			if (this.mode == 1) {
 				BuildLaserTower ();
 			} else if (this.mode == 2) {
 			}
 		}
-		else if (Input.GetButtonDown("F"))
+
+		if (Input.GetButtonDown("F"))
 		{
 			if (this.mode == 1) {
 				BuildIceTower ();
 			} else if (this.mode == 2) {
+				CheckSendUnit ("Mercy");
 			}
 		}
-		else if (Input.GetButtonDown("G"))
+
+		if (Input.GetButtonDown("G"))
 		{
 			if (this.mode == 1) {
 				BuildLightTower ();
 			} else if (this.mode == 2) {
 			}
 		}
-		else if (Input.GetButtonDown("H"))
+
+		if (Input.GetButtonDown("H"))
 		{
 			if (this.mode == 1) {
 				BuildMagicTower ();
@@ -543,9 +570,25 @@ public class KeyboardFunctions : NetworkBehaviour
 			}
 		}
 
+		if (Input.GetButtonDown ("M")) {
+
+			if (Key_ctrl) {
+				ToggleSounds ();
+			}
+
+		}
+
 
     }
 
+	void ToggleSounds()
+	{
+		if (BGMusic.mute == true) {
+			BGMusic.mute = false;
+		} else {
+			BGMusic.mute = true;
+		}
+	}
     
 	public int Mode{
 
