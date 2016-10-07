@@ -24,7 +24,6 @@ GameObject:
   - 82: {fileID: 82000013136041374}
   - 114: {fileID: 114000010015885984}
   - 114: {fileID: 114000013163790050}
-  - 114: {fileID: 114000014191592438}
   m_Layer: 11
   m_Name: CannonTower
   m_TagString: Tower
@@ -488,6 +487,7 @@ MonoBehaviour:
   bullet: {fileID: 1000013743580444, guid: 89b36f0ea28acbd4bbb13ba67aef6b08, type: 2}
   shootParticle: {fileID: 100010, guid: 111612a1fb00afb4ca57ca7d13ab895b, type: 2}
   unitsInRange: []
+  dyingUnitsInRange: []
   isBeingBuilt: 0
   buildAt: {x: 40, y: 1, z: 17}
   OwnerPlayerId: 
@@ -523,26 +523,6 @@ MonoBehaviour:
     i15: 195
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
---- !u!114 &114000014191592438
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010132935788}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TransformSyncMode: 1
-  m_SendInterval: 0.06666667
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 0
-  m_MovementTheshold: 0.001
-  m_SnapThreshold: 5
-  m_InterpolateRotation: 1
-  m_InterpolateMovement: 1
 --- !u!135 &135000010386444672
 SphereCollider:
   m_ObjectHideFlags: 1

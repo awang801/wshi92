@@ -36,7 +36,6 @@ public class BuildHandler : NetworkBehaviour {
 	AudioSource sourceSFX;
 	AudioClip needMoneySound;
 	AudioClip cannotBuildSound;
-	AudioClip selectSound;
 
 	//Building
 	//==============================================
@@ -87,7 +86,6 @@ public class BuildHandler : NetworkBehaviour {
 
 		needMoneySound  = (AudioClip)(Resources.Load("Sounds/needMoney", typeof(AudioClip)));
 		cannotBuildSound  = (AudioClip)(Resources.Load("Sounds/CannotBuild", typeof(AudioClip)));
-		selectSound = Resources.Load<AudioClip> ("Sounds/CarDoorClose");
 
 
 	}
@@ -411,32 +409,11 @@ public class BuildHandler : NetworkBehaviour {
 		tempTower.node = myNode;
 		tempTower.OwnerPlayerId = pn.playerUniqueIdentity;
 
-		StartCoroutine(startTargetAnimationPoint (tempTower, positionToBuild, time));
-
 		mf.RpcSyncNode (_nodeX, _nodeY, 0, myNode.Tower, pn.playerUniqueIdentity);
 
 	}
 
 
-	IEnumerator startTargetAnimationPoint(Tower tower, Vector3 moveTo, float _timedelay)
-	{
-		yield return new WaitForSeconds (_timedelay);
 
-		StartCoroutine (buildAnimation(tower, moveTo));
-	}
-
-	IEnumerator buildAnimation(Tower tower, Vector3 buildAt)
-	{
-		
-		while (Vector3.Distance (tower.transform.position, buildAt) > 0.05) {
-
-			tower.transform.position = Vector3.Lerp (tower.transform.position, buildAt, 4 * Time.deltaTime);
-
-			yield return new WaitForSeconds (Time.deltaTime);
-		}
-
-		tower.transform.position = buildAt;
-		tower.isBeingBuilt = false;
-	}
 
 }

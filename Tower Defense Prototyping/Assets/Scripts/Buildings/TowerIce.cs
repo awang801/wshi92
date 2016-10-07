@@ -6,7 +6,6 @@ public class TowerIce : Tower
 {
 
 	bool isAttacking;
-	int enemyLayerMask;
 
 	public IceBullet ice;
 
@@ -22,9 +21,10 @@ public class TowerIce : Tower
 
 		ice.Setup (attackDamage, 40f);
 
-		enemyLayerMask = LayerMask.GetMask ("Enemies");
 
 	}
+
+
 
 	protected override void Attack()
 	{
@@ -39,7 +39,7 @@ public class TowerIce : Tower
 	{
 		while (isAttacking) {
 
-			if (currentTargetUnit == null || targetIsDead() == true) {
+			if (currentTargetUnit == null || targetIsDying() == true) {
 
 				ice.ToggleOff ();
 				isAttacking = false;

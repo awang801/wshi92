@@ -23,7 +23,6 @@ GameObject:
   - 135: {fileID: 135000011093213740}
   - 114: {fileID: 114000010087695370}
   - 114: {fileID: 114000011992122274}
-  - 114: {fileID: 114000011233777712}
   m_Layer: 11
   m_Name: LightTower
   m_TagString: Tower
@@ -406,29 +405,10 @@ MonoBehaviour:
   bullet: {fileID: 1000014292750372, guid: 8a518f0763d664146915307721919987, type: 2}
   shootParticle: {fileID: 1000013250490692}
   unitsInRange: []
+  dyingUnitsInRange: []
   isBeingBuilt: 0
   buildAt: {x: 0, y: 0, z: 0}
   OwnerPlayerId: 
---- !u!114 &114000011233777712
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010810888510}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TransformSyncMode: 1
-  m_SendInterval: 0.06666667
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 0
-  m_MovementTheshold: 0.001
-  m_SnapThreshold: 5
-  m_InterpolateRotation: 1
-  m_InterpolateMovement: 1
 --- !u!114 &114000011992122274
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -523,7 +503,7 @@ ParticleSystem:
   moveWithTransform: 1
   autoRandomSeed: 0
   scalingMode: 1
-  randomSeed: 1111302376
+  randomSeed: 1111302400
   InitialModule:
     serializedVersion: 2
     enabled: 1
@@ -2230,7 +2210,7 @@ ParticleSystemRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1630b7fedc9b5e14f86a4422f259ac37, type: 2}
+  - {fileID: 2100000, guid: f414b746ac3032e4ca076e04d4dd40c3, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}

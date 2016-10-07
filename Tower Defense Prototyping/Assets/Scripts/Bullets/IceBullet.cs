@@ -14,6 +14,9 @@ public class IceBullet : MonoBehaviour {
 
 	public bool attacking;
 
+	public int everyXFrames = 3;
+	public int frameCounter = 0;
+
 	public void Setup(float dmg, float cold)
 	{
 		damage = dmg;
@@ -24,9 +27,15 @@ public class IceBullet : MonoBehaviour {
 
 	void Update()
 	{
-		if (attacking) {
-			DamageUnitsInTrigger ();
+		if (frameCounter < everyXFrames) {
+			frameCounter += 1;
+		} else {
+			frameCounter = 0;
+			if (attacking) {
+				DamageUnitsInTrigger ();
+			}
 		}
+
 	}
 
 	public void ToggleOn()
@@ -55,8 +64,8 @@ public class IceBullet : MonoBehaviour {
 			if (unit != null) {
 				Unit currentUnit = unit.GetComponent<Unit> ();
 				if (!currentUnit.isDying) {
-					currentUnit.Damage (damage * Time.deltaTime);
-					currentUnit.addTemperature (-coldness * Time.deltaTime);
+					currentUnit.Damage (damage * Time.deltaTime * everyXFrames);
+					currentUnit.addTemperature (-coldness * Time.deltaTime * everyXFrames);
 				}
 			}
 		}

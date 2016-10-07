@@ -711,7 +711,7 @@ GameObject:
   - 54: {fileID: 54000010291737138}
   - 135: {fileID: 135000011275280410}
   m_Layer: 15
-  m_Name: Resurrect
+  m_Name: Healbot
   m_TagString: Ability
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2103,8 +2103,8 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 243000013503464500, guid: 4f42dd5d3877b3c4bae67b2e88eefe31,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 4cca872068218894d9aef7458b88d4d7, type: 3}
-  m_PlayOnAwake: 0
+  m_audioClip: {fileID: 8300000, guid: a05d491a52ce3cc41a5a1f8d6689e672, type: 3}
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

@@ -10,8 +10,6 @@ public class BuildButtonPress : MonoBehaviour {
 	GameObject myPlayer;
 	KeyboardFunctions kf;
 	//MouseFunctions mf;
-	GameObject panel;
-	RectTransform panelTransform;
 	GameObject cannonButtonObj;
 	GameObject towerButtonObj;
 	GameObject wallButtonObj;
@@ -47,9 +45,6 @@ public class BuildButtonPress : MonoBehaviour {
 
 
 		//mf = gm.GetComponent<MouseFunctions> ();
-
-		panel = GameObject.Find ("ButtonPanel");
-		panelTransform = panel.GetComponent<RectTransform> ();
 
 		towerButtonObj = GameObject.Find ("OrbTowerButton");
 		cannonButtonObj = GameObject.Find ("CannonTowerButton");

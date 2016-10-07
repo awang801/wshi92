@@ -7,26 +7,32 @@ public class LightBullet : Bullet
 
 	public float maxDamageTime = 2f;
 	public float lifeTime = 2.5f;
-	float maxDist = 1f;
 
 	float chargeTime = 0.6f;
 	float timeElapsed;
 
 	public List<GameObject> unitsInRange;
 
-    protected override void FixedUpdate()
+	public int everyXFrames = 3;
+	public int frameCounter = 0;
+
+    protected override void Update()
     {
        
-		timeElapsed += Time.fixedDeltaTime;
+		timeElapsed += Time.deltaTime;
 
 		if (timeElapsed >= lifeTime) {
 			
 			Destroy (gameObject);
 
 		} else if (timeElapsed >= chargeTime && timeElapsed <= maxDamageTime) {
-			
-			DamageUnitsInTrigger ();
 
+			if (frameCounter < everyXFrames) {
+				frameCounter += 1;
+			} else {
+				frameCounter = 0;
+				DamageUnitsInTrigger ();
+			}
 		}
         
     }
@@ -43,7 +49,7 @@ public class LightBullet : Bullet
 			
 			Unit currentUnit = unit.GetComponent<Unit> ();
 
-			currentUnit.Damage (damage * Time.fixedDeltaTime);
+			currentUnit.Damage (damage * Time.deltaTime * everyXFrames);
 
 		}
 	}

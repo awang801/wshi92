@@ -11,7 +11,7 @@ public class Bullet : MonoBehaviour
 	public float damage = 1f;
 	protected float velocity = 1f;
 
-    protected virtual void FixedUpdate()
+    protected virtual void Update()
     {
         if (targetT == null)
         {
@@ -20,7 +20,7 @@ public class Bullet : MonoBehaviour
         else
         {
 			transform.LookAt (targetT.position);
-			transform.Translate(Vector3.forward * velocity * Time.fixedDeltaTime);
+			transform.Translate(Vector3.forward * velocity * Time.deltaTime);
 
             if (Vector3.Distance(targetT.transform.position, transform.position) < 1f)
             {

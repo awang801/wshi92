@@ -25,7 +25,7 @@ public class HealBot : MonoBehaviour {
 			if (unit != null) {
 				Unit currentUnit = unit.GetComponent<Unit> ();
 
-				if (currentUnit.isDying && !currentUnit.isDead && !currentUnit.isBeingResurrected) {
+				if (currentUnit.isDying && !currentUnit.isDead && !currentUnit.isBeingResurrected && !currentUnit.attackPlayer.name.Equals(OwnerPlayerId)) {
 
 					currentUnit.ResurrectMe ();
 					Instantiate (resurrectedParticle, currentUnit.transform, false);

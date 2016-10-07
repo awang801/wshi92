@@ -7,7 +7,7 @@ public class MagicBullet : Bullet
 
 	public GameObject explosionParticle;
 
-    protected override void FixedUpdate()
+    protected override void Update()
     {
         
 		if (targetT == null)
@@ -19,8 +19,8 @@ public class MagicBullet : Bullet
 			Vector3 relativePos = targetT.position - transform.position;
 			Quaternion toRotation = Quaternion.LookRotation(relativePos);
 				
-			transform.rotation = Quaternion.Lerp (transform.rotation, toRotation, 0.1f);
-			transform.Translate(Vector3.forward * velocity * Time.fixedDeltaTime);
+			transform.rotation = Quaternion.Lerp (transform.rotation, toRotation, 0.2f);
+			transform.Translate(Vector3.forward * velocity * Time.deltaTime);
 
 			if (Vector3.Distance(targetT.transform.position, transform.position) < 1f)
 			{

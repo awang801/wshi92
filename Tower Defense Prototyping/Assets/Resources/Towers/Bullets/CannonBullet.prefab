@@ -23,9 +23,8 @@ GameObject:
   - 135: {fileID: 135000013123856408}
   - 23: {fileID: 23000011326175342}
   - 114: {fileID: 114000010709934184}
-  - 114: {fileID: 114000012562588976}
-  - 114: {fileID: 114000014136936688}
   - 54: {fileID: 54000013890764718}
+  - 114: {fileID: 114000010582425172}
   m_Layer: 14
   m_Name: CannonBullet
   m_TagString: Bullet
@@ -97,6 +96,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 2
+--- !u!114 &114000010582425172
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013743580444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46260e5feb0450f4cbdc836ae2dfcde9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeOut: 5
+  detachChildren: 0
 --- !u!114 &114000010709934184
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -113,58 +125,6 @@ MonoBehaviour:
   unitsInRange: []
   explosionParticle: {fileID: 1000013145859520, guid: 9213c0484485e7e4b83caf0850f7784c,
     type: 2}
---- !u!114 &114000012562588976
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013743580444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 137
-    i1: 179
-    i2: 111
-    i3: 14
-    i4: 162
-    i5: 138
-    i6: 203
-    i7: 212
-    i8: 187
-    i9: 177
-    i10: 59
-    i11: 166
-    i12: 122
-    i13: 239
-    i14: 107
-    i15: 8
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
---- !u!114 &114000014136936688
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013743580444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TransformSyncMode: 1
-  m_SendInterval: 0.5
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 0
-  m_MovementTheshold: 0.001
-  m_SnapThreshold: 5
-  m_InterpolateRotation: 1
-  m_InterpolateMovement: 1
 --- !u!135 &135000013123856408
 SphereCollider:
   m_ObjectHideFlags: 1

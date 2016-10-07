@@ -4,17 +4,27 @@ using System.Collections;
 public class FinishLine : MonoBehaviour {
 
 	GameManager gm;
+
 	public GameObject playerToHurt;
 	public GameObject otherPlayer;
 
 	string playerToHurtId;
 	string otherPlayerId;
+	string playerInstanceId;
+
+	AudioSource mainAudioSource;
+	AudioClip goodSound;
+	AudioClip badSound;
 
 	Lives lives;
 
 	void Awake()
 	{
 		gm = GameObject.Find ("GameManager").GetComponent<GameManager> ();
+
+		mainAudioSource = Camera.main.GetComponent<AudioSource> ();
+		goodSound  = (AudioClip)Resources.Load ("Sounds/GoodBeep");
+		badSound  = (AudioClip)Resources.Load ("Sounds/BadBeep");
 	}
 
 	void OnTriggerEnter(Collider other)
@@ -28,10 +38,23 @@ public class FinishLine : MonoBehaviour {
 				if (lives.getLives() <= 0) {
 					gm.PlayerLoseWin (playerToHurtId, otherPlayerId);
 				}
+
+				if (playerToHurtId.Equals (playerInstanceId)) {
+					mainAudioSource.PlayOneShot (badSound);
+				} else {
+					mainAudioSource.PlayOneShot (goodSound);
+				}
+
+
 			}
             
 
         } 
+	}
+
+	public void SetMyPlayer(string playerID)
+	{
+		playerInstanceId = playerID;
 	}
 
 	public void SetPlayerToHurt(GameObject player, string playerID)

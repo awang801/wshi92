@@ -29,7 +29,7 @@ public class Mercy : Unit {
 		homeostasisTendency = 0.6f;
 		baseTemperature = 98.6f;
 		damageAmplifier = 1f;
-		minTemp = 60f;
+		minTemp = 32f;
 		maxTemp = 150f;
 		temperature = baseTemperature;
 
@@ -37,12 +37,14 @@ public class Mercy : Unit {
 
 		killValue = 50;
 
-		ultGainRatio = 1f;
-		ultPassiveGain = 5f;
+		ultGainRatio = 1.5f;
+		ultPassiveGain = 3f;
 
 		heroesNeverDie = (AudioClip)(Resources.Load("Sounds/HeroesNeverDie", typeof(AudioClip)));
 
 		resurrectingHash = Animator.StringToHash ("Resurrecting");
+
+		isFemale = true;
 
 	}
 
@@ -81,6 +83,7 @@ public class Mercy : Unit {
 
 		ultReady = false;
 		ultCharge = 0;
+		animator.SetTrigger (resurrectingHash);
 		myAudioSource.PlayOneShot (heroesNeverDie);
 		myHealBot.CastResurrect ();
 		Instantiate (castParticle, transform, false);

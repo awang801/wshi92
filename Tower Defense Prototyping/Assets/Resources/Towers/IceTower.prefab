@@ -137,7 +137,6 @@ GameObject:
   - 135: {fileID: 135000011243678538}
   - 114: {fileID: 114000013063788268}
   - 114: {fileID: 114000012895022806}
-  - 114: {fileID: 114000012849046070}
   m_Layer: 11
   m_Name: IceTower
   m_TagString: Tower
@@ -484,26 +483,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!114 &114000012849046070
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013141070952}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TransformSyncMode: 1
-  m_SendInterval: 0.06666667
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 0
-  m_MovementTheshold: 0.001
-  m_SnapThreshold: 5
-  m_InterpolateRotation: 1
-  m_InterpolateMovement: 1
 --- !u!114 &114000012895022806
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -550,6 +529,7 @@ MonoBehaviour:
   bullet: {fileID: 0}
   shootParticle: {fileID: 1000011693838368}
   unitsInRange: []
+  dyingUnitsInRange: []
   isBeingBuilt: 0
   buildAt: {x: 0, y: 0, z: 0}
   OwnerPlayerId: 

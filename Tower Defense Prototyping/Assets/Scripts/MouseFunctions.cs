@@ -40,7 +40,6 @@ public class MouseFunctions : NetworkBehaviour
 
 	public string selectedObjectType;
 
-	string[] selectedValues;
 	public Text infoText;
 	public Text nameText;
 	public Image selectionImage;
@@ -64,7 +63,6 @@ public class MouseFunctions : NetworkBehaviour
     public bool building;
 
 	string buildStructure;
-	Vector3 positionToBuildStart;
 	Vector3 positionToBuildEnd;
 
 	//Audio
@@ -91,9 +89,6 @@ public class MouseFunctions : NetworkBehaviour
 	Sprite lightIcon;
 	Sprite magicIcon;
 
-
-    NavMeshPath path;
-
 	Material highlightCastleMaterial;
 
 	//Cursor
@@ -105,7 +100,6 @@ public class MouseFunctions : NetworkBehaviour
 
 	//Other..?
 	//===============================================
-    Transform target; //Target of the enemies (need to change this in the future)
     int terrainFloorMask;
 
 	public LayerMask objectUILayerMask;
@@ -117,7 +111,6 @@ public class MouseFunctions : NetworkBehaviour
 		
 
 		kf = GetComponent<KeyboardFunctions>();
-		target = GameObject.Find("Destination1").transform;
 
 		grid = GetComponent<Grid>();
 		bhandler = GetComponent<BuildHandler> ();
@@ -151,7 +144,6 @@ public class MouseFunctions : NetworkBehaviour
     void Start()
     {
 		terrainFloorMask = LayerMask.GetMask("DecorationTerrain");
-        path = new NavMeshPath();
 		Cursor.SetCursor(cursorTexture, hotSpot, cursorMode);
 
 		selectedObjectRenderer = new Renderer[10];
@@ -160,8 +152,6 @@ public class MouseFunctions : NetworkBehaviour
 			selectedObjectResetMaterial [i] = new Material[10];
 		}
 		numberOfMaterials = new int[10];
-
-		selectedValues = new string[7];
 
     }
 
@@ -530,7 +520,6 @@ public class MouseFunctions : NetworkBehaviour
         {
 
             buildStructure = kf.ObjectToBuild;
-            positionToBuildStart = currentMouseNode.worldPosition;
 
             if (buildStructure == "Wall")
             {
@@ -813,7 +802,7 @@ public class MouseFunctions : NetworkBehaviour
     void MoveBuildSelection()
     {
 		//Moves the green highlight box around with the mouse
-        if (SelHighlight != null && currentMouseNode.worldPosition != null)
+        if (SelHighlight != null && currentMouseNode != null)
         {
             if (currentMouseNode.Wall != null)
             {

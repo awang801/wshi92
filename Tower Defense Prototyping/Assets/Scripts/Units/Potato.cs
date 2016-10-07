@@ -19,6 +19,8 @@ public class Potato : Unit {
 		baseSpeed = 1f;
 
 		killValue = 3;
+
+		isFemale = false;
 	}
 
 }

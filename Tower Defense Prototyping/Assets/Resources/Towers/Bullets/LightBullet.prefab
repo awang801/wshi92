@@ -72,8 +72,6 @@ GameObject:
   - 4: {fileID: 4000013693572722}
   - 135: {fileID: 135000011806334270}
   - 114: {fileID: 114000011708303646}
-  - 114: {fileID: 114000010059064096}
-  - 114: {fileID: 114000010142111754}
   m_Layer: 0
   m_Name: LightBullet
   m_TagString: Untagged
@@ -136,58 +134,6 @@ Transform:
   - {fileID: 4000012603205306}
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &114000010059064096
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000014292750372}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 138
-    i1: 81
-    i2: 143
-    i3: 7
-    i4: 99
-    i5: 214
-    i6: 100
-    i7: 20
-    i8: 105
-    i9: 21
-    i10: 48
-    i11: 119
-    i12: 33
-    i13: 145
-    i14: 153
-    i15: 135
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
---- !u!114 &114000010142111754
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000014292750372}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TransformSyncMode: 1
-  m_SendInterval: 0.5
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 0
-  m_MovementTheshold: 0.001
-  m_SnapThreshold: 5
-  m_InterpolateRotation: 1
-  m_InterpolateMovement: 1
 --- !u!114 &114000011708303646
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5426,7 +5372,7 @@ ParticleSystemRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1630b7fedc9b5e14f86a4422f259ac37, type: 2}
+  - {fileID: 2100000, guid: f414b746ac3032e4ca076e04d4dd40c3, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -5470,7 +5416,7 @@ ParticleSystemRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1630b7fedc9b5e14f86a4422f259ac37, type: 2}
+  - {fileID: 2100000, guid: f414b746ac3032e4ca076e04d4dd40c3, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -5514,7 +5460,7 @@ ParticleSystemRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1630b7fedc9b5e14f86a4422f259ac37, type: 2}
+  - {fileID: 2100000, guid: f414b746ac3032e4ca076e04d4dd40c3, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}

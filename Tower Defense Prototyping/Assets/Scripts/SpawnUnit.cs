@@ -12,8 +12,6 @@ public class SpawnUnit : NetworkBehaviour
 	public GameObject attackPlayer;
 	public GameObject sendPlayer;
 
-	Bank bank;
-
 	GameObject enemyType1;
 	GameObject potato;
 	GameObject cloud;
@@ -55,11 +53,6 @@ public class SpawnUnit : NetworkBehaviour
 		}
         
     }
-
-	public void lateInit()
-	{
-		bank = sendPlayer.GetComponent<Bank> ();
-	}
 
 	public void Spawn (string unitName) //For Spawning specific units by name
 	{

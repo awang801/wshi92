@@ -17,7 +17,7 @@ public class TowerCannon : Tower
 	{
 		Bullet newBullet = ((GameObject)(Instantiate(bullet, bulletPointTransform.position, Quaternion.identity))).GetComponent<Bullet>();
 		Instantiate (shootParticle, bulletPointTransform.position, bulletPointTransform.rotation);
-		newBullet.Setup(currentTargetUnit, attackDamage, 25f);
+		newBullet.Setup(currentTargetUnit, attackDamage, 18f);
 
 		timeUntilAttack = attackDelay;
 

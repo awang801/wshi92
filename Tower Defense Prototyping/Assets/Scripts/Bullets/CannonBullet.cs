@@ -10,11 +10,11 @@ public class CannonBullet : Bullet
 	public GameObject explosionParticle;
 
 
-    protected override void FixedUpdate()
+    protected override void Update()
     {
         
 			transform.LookAt (targetPosition);
-			transform.Translate(Vector3.forward * velocity * Time.fixedDeltaTime);
+			transform.Translate(Vector3.forward * velocity * Time.deltaTime);
 
 		if (Vector3.Distance(targetPosition, transform.position) < 1f)
         {

@@ -17,7 +17,6 @@ public class Reinhardt : Unit {
 
 
 	//Audio
-	AudioClip crusaderOnline;
 	AudioClip barrierActivated;
 
 	//Shield
@@ -27,12 +26,12 @@ public class Reinhardt : Unit {
 	protected override void Initialize ()
 	{
 		//Stats Initialization
-		maxHealth = 75;
-		health = 75;
+		maxHealth = 100;
+		health = 100;
 		homeostasisTendency = 0.4f;
 		baseTemperature = 98.6f;
 		damageAmplifier = 1f;
-		minTemp = 60f;
+		minTemp = 32f;
 		maxTemp = 150f;
 		temperature = baseTemperature;
 
@@ -45,9 +44,10 @@ public class Reinhardt : Unit {
 
 		shieldingHash = Animator.StringToHash ("Shielding");
 
-		crusaderOnline = (AudioClip)(Resources.Load("Sounds/CrusaderOnline", typeof(AudioClip)));
 		barrierActivated = (AudioClip)(Resources.Load("Sounds/Barrier", typeof(AudioClip)));
 		ShieldOff ();
+
+		isFemale = false;
 
 	}
 

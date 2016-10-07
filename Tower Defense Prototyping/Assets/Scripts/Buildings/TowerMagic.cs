@@ -17,7 +17,7 @@ public class TowerMagic : Tower
 	{
 		Bullet newBullet = ((GameObject)(Instantiate(bullet, bulletPointTransform.position, Quaternion.identity))).GetComponent<Bullet>();
 		Instantiate (shootParticle, bulletPointTransform.position, bulletPointTransform.rotation);
-		newBullet.Setup(currentTargetUnit, attackDamage, 20f);
+		newBullet.Setup(currentTargetUnit, attackDamage, 10f);
 
 		timeUntilAttack = attackDelay;
 

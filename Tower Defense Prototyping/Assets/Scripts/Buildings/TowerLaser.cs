@@ -15,6 +15,10 @@ public class TowerLaser : Tower
 	int enemyLayerMask;
 	AudioClip whileShootingSFX;
 	AudioClip onShootSFX;
+
+	public int everyXFrames = 3;
+	public int frameCounter = 0;
+
 	protected override void Awake()
 	{
 		base.Awake ();
@@ -55,7 +59,7 @@ public class TowerLaser : Tower
 
 		while (isAttacking) {
 
-			attackTime += Time.fixedDeltaTime;
+			attackTime += Time.deltaTime;
 
 			if (attackTime >= maxAttackTime && sourceSFX.isPlaying == false) {
 				laser.enabled = false;
@@ -81,32 +85,38 @@ public class TowerLaser : Tower
 
 				laser.SetPosition (0, ray.origin);
 
-				if (!targetIsDead() && currentTarget != null) {
+				if (!targetIsDying() && currentTarget != null) {
 					hasTarget = true;
 					laser.SetPosition (1, ray.GetPoint (100f));
 				} else {
 					hasTarget = false;
-					laser.SetPosition (1, ray.GetPoint (50f));
+					laser.SetPosition (1, ray.GetPoint (0f));
 				}
 
-				if (hasTarget) {
-					
-					hit = Physics.SphereCastAll (bulletPointTransform.position, 0.5f, shootDirection, 100f, enemyLayerMask);
 
-					for (int i = 0; i < hit.Length; i++) {
+				if (frameCounter < everyXFrames) {
+					frameCounter += 1;
+				} else {
+					frameCounter = 0;
+					if (hasTarget) {
 
-						if (hit [i].transform.CompareTag ("Enemy")) {
-							Unit currentUnit = hit [i].transform.GetComponent<Unit> ();
-							currentUnit.Damage (attackDamage * Time.fixedDeltaTime);
+						hit = Physics.SphereCastAll (bulletPointTransform.position, 0.5f, shootDirection, 100f, enemyLayerMask);
+
+						for (int i = 0; i < hit.Length; i++) {
+
+							if (hit [i].transform.CompareTag ("Enemy")) {
+								Unit currentUnit = hit [i].transform.GetComponent<Unit> ();
+								currentUnit.Damage (attackDamage * Time.deltaTime * everyXFrames);
+							}
 						}
-
 					}
-
 				}
+
+
 
 			}
 
-			yield return null;
+			yield return new WaitForSeconds(Time.deltaTime);
 		}
 
 

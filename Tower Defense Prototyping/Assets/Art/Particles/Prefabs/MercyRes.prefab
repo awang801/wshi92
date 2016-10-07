@@ -362,7 +362,7 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 0
     startSize:
-      scalar: 3
+      scalar: 1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -635,13 +635,13 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
       minMaxState: 0
-    cnt0: 70
-    cnt1: 70
-    cnt2: 70
+    cnt0: 50
+    cnt1: 50
+    cnt2: 50
     cnt3: 30
-    cntmax0: 70
-    cntmax1: 70
-    cntmax2: 70
+    cntmax0: 50
+    cntmax1: 50
+    cntmax2: 50
     cntmax3: 30
     time0: 0
     time1: 0.2
@@ -1935,7 +1935,7 @@ ParticleSystem:
   moveWithTransform: 1
   autoRandomSeed: 1
   scalingMode: 1
-  randomSeed: 1104537961
+  randomSeed: 905743981
   InitialModule:
     serializedVersion: 2
     enabled: 1
@@ -2101,7 +2101,7 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 0
     startSize:
-      scalar: 1.5
+      scalar: 0.75
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -3689,7 +3689,7 @@ ParticleSystem:
   moveWithTransform: 1
   autoRandomSeed: 1
   scalingMode: 2
-  randomSeed: -8425077
+  randomSeed: 1358576807
   InitialModule:
     serializedVersion: 2
     enabled: 1
@@ -5366,7 +5366,7 @@ ParticleSystemRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1630b7fedc9b5e14f86a4422f259ac37, type: 2}
+  - {fileID: 2100000, guid: c83d944ef2b5df642ad926c0d33a5823, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -5410,7 +5410,7 @@ ParticleSystemRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1630b7fedc9b5e14f86a4422f259ac37, type: 2}
+  - {fileID: 2100000, guid: c83d944ef2b5df642ad926c0d33a5823, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -5454,7 +5454,7 @@ ParticleSystemRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1630b7fedc9b5e14f86a4422f259ac37, type: 2}
+  - {fileID: 2100000, guid: c83d944ef2b5df642ad926c0d33a5823, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}

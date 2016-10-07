@@ -16,7 +16,7 @@ public class KeyboardFunctions : NetworkBehaviour
 	AudioClip needMoneySound;
 
     MouseFunctions mFunc; //Reference to Mouse functions
-	BuildHandler bhandler;
+	//BuildHandler bhandler;
 	Bank bank;
 
     string objectToBuild; //Contains name of Prefab to be instantiated
@@ -69,7 +69,7 @@ public class KeyboardFunctions : NetworkBehaviour
     {
 		
         mFunc = GetComponent<MouseFunctions>();
-		bhandler = GetComponent<BuildHandler> ();
+		//bhandler = GetComponent<BuildHandler> ();
 
         UIClickFX = (AudioClip)(Resources.Load("Sounds/UIButtonclick", typeof(AudioClip)));
 		needMoneySound  = (AudioClip)(Resources.Load("Sounds/needMoney", typeof(AudioClip)));
@@ -146,9 +146,9 @@ public class KeyboardFunctions : NetworkBehaviour
 				mySpawner.sendPlayer = gameObject;
 
 				enemySpawner.attackPlayer = gameObject;
-				mySpawner.lateInit ();
 
 				myFinish.SetPlayerToHurt (gameObject, myID);
+				myFinish.SetMyPlayer (myID);
 				enemyFinish.setOtherPlayer (gameObject, myID);
 			}
 
@@ -427,12 +427,12 @@ public class KeyboardFunctions : NetworkBehaviour
 				incomeGain = 8;
 				break;
 			case "Reinhardt":
-				unitCost = 100;
-				incomeGain = 15;
+				unitCost = 500;
+				incomeGain = 50;
 				break;
 			case "Mercy":
-				unitCost = 75;
-				incomeGain = 15;
+				unitCost = 300;
+				incomeGain = 35;
 				break;
 			default:
 				break;
@@ -523,7 +523,7 @@ public class KeyboardFunctions : NetworkBehaviour
 			if (this.mode == 1) {
 				BuildCannonTower ();
 			} else if (this.mode == 2) {
-				CheckSendUnit ("Reinhardt");
+				
 			}
 		}
         
@@ -534,7 +534,7 @@ public class KeyboardFunctions : NetworkBehaviour
 
 		if (Input.GetButtonDown("Q"))
 		{
-			bank.addMoney (50);
+			bank.addMoney (5000);
 		}
 
 		if (Input.GetButtonDown("V"))
@@ -551,6 +551,7 @@ public class KeyboardFunctions : NetworkBehaviour
 				BuildIceTower ();
 			} else if (this.mode == 2) {
 				CheckSendUnit ("Mercy");
+				
 			}
 		}
 
@@ -559,6 +560,7 @@ public class KeyboardFunctions : NetworkBehaviour
 			if (this.mode == 1) {
 				BuildLightTower ();
 			} else if (this.mode == 2) {
+				CheckSendUnit ("Reinhardt");
 			}
 		}
 
@@ -567,6 +569,7 @@ public class KeyboardFunctions : NetworkBehaviour
 			if (this.mode == 1) {
 				BuildMagicTower ();
 			} else if (this.mode == 2) {
+				
 			}
 		}
 

@@ -10,15 +10,21 @@ public class SendButtonPress : MonoBehaviour {
 	GameObject myPlayer;
 	KeyboardFunctions kf;
 	MouseFunctions mf;
-	GameObject panel;
-
-	RectTransform panelTransform;
 
 	GameObject potatoButtonObj;
 	GameObject cloudButtonObj;
+	GameObject paladinButtonObj;
+	GameObject vampireButtonObj;
+	GameObject mercyButtonObj;
+	GameObject reinhardtButtonObj;
+
 
 	Button potatoButton;
 	Button cloudButton;
+	Button paladinButton;
+	Button vampireButton;
+	Button mercyButton;
+	Button reinhardtButton;
 
 	AudioSource mainCamAudioSource;
 	AudioClip highlightSFX;
@@ -33,17 +39,27 @@ public class SendButtonPress : MonoBehaviour {
 		
 		mainCamAudioSource = Camera.main.GetComponent<AudioSource> ();
 
-		panel = GameObject.Find ("ButtonPanel");
-		panelTransform = panel.GetComponent<RectTransform> ();
-
 		potatoButtonObj = GameObject.Find ("PotatoButton");
 		cloudButtonObj = GameObject.Find ("CloudButton");
+		paladinButtonObj = GameObject.Find ("PaladinButton");
+		vampireButtonObj = GameObject.Find ("VampireButton");
+		mercyButtonObj = GameObject.Find ("MercyButton");
+		reinhardtButtonObj = GameObject.Find ("ReinhardtButton");
 
 		potatoButton = potatoButtonObj.GetComponent<Button> ();
 		cloudButton = cloudButtonObj.GetComponent<Button> ();
+		paladinButton = paladinButtonObj.GetComponent<Button> ();
+		vampireButton = vampireButtonObj.GetComponent<Button> ();
+		mercyButton = mercyButtonObj.GetComponent<Button> ();
+		reinhardtButton = reinhardtButtonObj.GetComponent<Button> ();
 
 		potatoButton.interactable = false;
 		cloudButton.interactable = false;
+		paladinButton.interactable = false;
+		vampireButton.interactable = false;
+		mercyButton.interactable = false;
+		reinhardtButton.interactable = false;
+
 
 		buildButton = GameObject.Find("BuildButtonText").GetComponent<BuildButtonPress>();
 		highlightSFX = Resources.Load<AudioClip> ("Sounds/UI/UIMouseOverSound");
@@ -82,6 +98,10 @@ public class SendButtonPress : MonoBehaviour {
 		if (kf.Mode == 2) {
 			potatoButton.interactable = false;
 			cloudButton.interactable = false;
+			paladinButton.interactable = false;
+			vampireButton.interactable = false;
+			mercyButton.interactable = false;
+			reinhardtButton.interactable = false;
 			kf.CancelSend ();
 		} 
 		else if (kf.Mode == 1)
@@ -89,6 +109,10 @@ public class SendButtonPress : MonoBehaviour {
 			buildButton.BuildToggle ();
 			potatoButton.interactable = true;
 			cloudButton.interactable = true;
+			paladinButton.interactable = true;
+			vampireButton.interactable = true;
+			mercyButton.interactable = true;
+			reinhardtButton.interactable = true;
 			kf.Send ();
 		}
 		else if (kf.Mode == 0)
@@ -96,6 +120,10 @@ public class SendButtonPress : MonoBehaviour {
 			kf.Send ();
 			potatoButton.interactable = true;
 			cloudButton.interactable = true;
+			paladinButton.interactable = true;
+			vampireButton.interactable = true;
+			mercyButton.interactable = true;
+			reinhardtButton.interactable = true;
 		}
 	}
 		

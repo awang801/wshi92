@@ -144,7 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46260e5feb0450f4cbdc836ae2dfcde9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeOut: 1.5
+  timeOut: 3
   detachChildren: 0
 --- !u!198 &198000011264039700
 ParticleSystem:
@@ -153,7 +153,7 @@ ParticleSystem:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010642761486}
   serializedVersion: 4
-  lengthInSec: 1
+  lengthInSec: 2
   startDelay:
     scalar: 0.5
     maxCurve:
@@ -196,7 +196,7 @@ ParticleSystem:
   moveWithTransform: 1
   autoRandomSeed: 1
   scalingMode: 2
-  randomSeed: 221668444
+  randomSeed: -1517127719
   InitialModule:
     serializedVersion: 2
     enabled: 1
@@ -1867,7 +1867,7 @@ ParticleSystem:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013661108542}
   serializedVersion: 4
-  lengthInSec: 1
+  lengthInSec: 1.5
   startDelay:
     scalar: 0.5
     maxCurve:
@@ -1910,12 +1910,12 @@ ParticleSystem:
   moveWithTransform: 1
   autoRandomSeed: 1
   scalingMode: 1
-  randomSeed: 1584212353
+  randomSeed: 537006061
   InitialModule:
     serializedVersion: 2
     enabled: 1
     startLifetime:
-      scalar: 0.5
+      scalar: 0.75
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1950,7 +1950,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     startSpeed:
-      scalar: 20
+      scalar: 10
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -3621,7 +3621,7 @@ ParticleSystem:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012527744804}
   serializedVersion: 4
-  lengthInSec: 1
+  lengthInSec: 2
   startDelay:
     scalar: 0
     maxCurve:
@@ -3669,7 +3669,7 @@ ParticleSystem:
     serializedVersion: 2
     enabled: 1
     startLifetime:
-      scalar: 1
+      scalar: 2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -3704,7 +3704,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     startSpeed:
-      scalar: -35
+      scalar: -17.5
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -3830,7 +3830,7 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 0
     startSize:
-      scalar: 5
+      scalar: 2
       maxCurve:
         serializedVersion: 2
         m_Curve:

@@ -16,9 +16,11 @@ public class Cloud : Unit {
 		maxTemp = 150f;
 		temperature = baseTemperature;
 
-		baseSpeed = 1.5f;
+		baseSpeed = 1.2f;
 
 		killValue = 15;
+
+		isFemale = false;
 	}
 
 }

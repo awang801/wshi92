@@ -21,12 +21,13 @@ public abstract class Tower : NetworkBehaviour
 	float upgradeCost;
 	int sellValue;
 
-	float rotationSpeed; //How fast the tower rotates to a new target (will track the target afterwards)
-	bool recentNewTarget;
+	//float rotationSpeed; //How fast the tower rotates to a new target (will track the target afterwards)
+	//bool recentNewTarget;
 
 	protected Unit currentTargetUnit;
 	protected Transform currentTargetT;
 	public List<GameObject> unitsInRange;
+	public List<GameObject> dyingUnitsInRange;
 
 	//AUDIO =================================================================
 	protected AudioClip shootSFX;
@@ -34,7 +35,7 @@ public abstract class Tower : NetworkBehaviour
 	protected AudioSource sourceSFX;
 
 
-	//ANIMATION ==============================================================
+	//ANIMATION =============================================================
 	Animator animator;
 	int shootHash;
 
@@ -46,7 +47,6 @@ public abstract class Tower : NetworkBehaviour
 	protected Transform bulletPointTransform;
 	protected Transform rotatePartTransform;
 
-	[SyncVar]
 	public bool isBeingBuilt;
 
 	public Vector3 buildAt;
@@ -81,7 +81,7 @@ public abstract class Tower : NetworkBehaviour
 		}
 		attackRange = this.gameObject.GetComponent<SphereCollider>().radius * this.transform.lossyScale.x * 100f;
 
-		rotationSpeed = 10f;
+		//rotationSpeed = 10f;
 
 		sourceSFX = this.gameObject.GetComponent<AudioSource>();
 
@@ -94,8 +94,11 @@ public abstract class Tower : NetworkBehaviour
 		bulletPointTransform = rotatePartTransform.GetChild (0);
 
 		unitsInRange = new List<GameObject>();
+		dyingUnitsInRange = new List<GameObject> ();
 
 		sourceSFX.PlayOneShot (buildSFX);
+
+		StartCoroutine(startTargetAnimationPoint (transform.position + Vector3.up * 2f, 1.5f));
 	}
 
 	protected virtual void Update()
@@ -104,7 +107,7 @@ public abstract class Tower : NetworkBehaviour
 			timeUntilAttack -= Time.deltaTime;
 
 			if (currentTarget != null) {
-				if (targetIsDead () == false) {
+				if (targetIsDying () == false) {
 
 					Vector3 targetNoYAxis = currentTargetT.position;
 					targetNoYAxis.y = rotatePartTransform.position.y;
@@ -118,12 +121,14 @@ public abstract class Tower : NetworkBehaviour
 								animator.SetTrigger (shootHash);
 							}
 						}
+
 						Attack ();
 
 					} 
 
 				} else {
 					findNewTarget ();
+					currentTarget = null;
 				}
 			} else {
 				findNewTarget ();
@@ -146,19 +151,6 @@ public abstract class Tower : NetworkBehaviour
 		}
 	}
 
-	void OnTriggerStay(Collider other)
-	{
-
-		GameObject newTarget = other.gameObject;
-
-		if (newTarget.CompareTag ("Enemy")) {			
-			if (!unitsInRange.Contains (newTarget)) {
-				unitsInRange.Add (newTarget);
-			}
-
-		}
-	}
-
 	void OnTriggerExit(Collider other)
 	{
 		GameObject newTarget = other.gameObject;
@@ -168,9 +160,16 @@ public abstract class Tower : NetworkBehaviour
 			if (unitsInRange.Contains (newTarget)) {
 				unitsInRange.Remove (newTarget);
 			}
-			if (currentTarget == newTarget) {
-				currentTarget = null;
-				findNewTarget ();
+
+			if (dyingUnitsInRange.Contains (newTarget)) {
+				dyingUnitsInRange.Remove (newTarget);
+			}
+
+			if (currentTarget != null) {
+				if (currentTarget == newTarget) {
+					currentTarget = null;
+					findNewTarget ();
+				}
 			}
 
 		}
@@ -179,36 +178,66 @@ public abstract class Tower : NetworkBehaviour
 	void findNewTarget()
 	{
 		if (unitsInRange.Count > 0) {
-			foreach (var unit in unitsInRange) {
-				if (unit == null || unit.activeSelf == false) {
-					unitsInRange.Remove (unit);
-					continue;
-				} else {
-					if (currentTargetUnit != null) {
-						if (unit.GetInstanceID () == currentTargetUnit.GetInstanceID ()) {
-							//Don't switch to the same target!!!
-							continue;
-						} 
-					}
+			
+			for (int i = 0; i < unitsInRange.Count; i++) {
+				GameObject unit = unitsInRange [i];
 
+				if (unit == null) {
+					unitsInRange [0] = null;
+					unitsInRange.Remove (unit);
+				} else {
 					currentTargetUnit = unit.GetComponent<Unit> ();
-					if (currentTargetUnit.sendPlayer.name != OwnerPlayerId && !currentTargetUnit.isDying) {
+					if (currentTargetUnit.sendPlayer.name != OwnerPlayerId) {
 						currentTarget = unit;
 						currentTargetT = currentTarget.transform;
-						recentNewTarget = true;
+						//recentNewTarget = true;
 						break;
-					}
 
+					}
+				}
+			}
+
+		} else {
+
+			if (dyingUnitsInRange.Count > 0) {
+				for (int i = 0; i < dyingUnitsInRange.Count; i++) {
+					
+					GameObject dyingUnit = dyingUnitsInRange [i];
+
+					if (dyingUnit == null) {
+						dyingUnitsInRange.Remove (dyingUnit);
+					} else {
+						Unit TempTargetUnit = dyingUnit.GetComponent<Unit> ();
+						if (TempTargetUnit.sendPlayer.name != OwnerPlayerId) {
+
+							if (TempTargetUnit.isDead) {
+								dyingUnitsInRange.Remove (dyingUnit);
+								continue;
+							}
+							else if (TempTargetUnit.isDying == false) {
+								unitsInRange.Add (dyingUnit);
+								dyingUnitsInRange.Remove (dyingUnit);
+								currentTargetUnit = TempTargetUnit;
+								currentTarget = dyingUnit;
+								currentTargetT = currentTarget.transform;
+								//recentNewTarget = true;
+								break;
+							}
+						}
+					}
 
 				}
 			}
-		} 
+
+		}
 	}
 
-	protected bool targetIsDead()
+	protected bool targetIsDying()
 	{
 		if (currentTarget != null) {
 			if (currentTargetUnit.isDying == true) {
+				unitsInRange.Remove (currentTarget);
+				dyingUnitsInRange.Add (currentTarget);
 				return true;
 			} else {
 				return false;
@@ -257,11 +286,31 @@ public abstract class Tower : NetworkBehaviour
 
 		if (angle < 5f)
 		{
-			recentNewTarget = false;
+			//recentNewTarget = false;
 		}
 
 	}
 		
+	public IEnumerator startTargetAnimationPoint(Vector3 moveTo, float _timedelay)
+	{
+		yield return new WaitForSeconds (_timedelay);
+
+		StartCoroutine (buildAnimation(moveTo));
+	}
+
+	IEnumerator buildAnimation(Vector3 buildAt)
+	{
+
+		while (Vector3.Distance (transform.position, buildAt) > 0.05) {
+
+			transform.position = Vector3.Lerp (transform.position, buildAt, 4 * Time.deltaTime);
+
+			yield return new WaitForSeconds (Time.deltaTime);
+		}
+
+		transform.position = buildAt;
+		isBeingBuilt = false;
+	}
 
 	public string[] Stats
 	{

@@ -34,14 +34,12 @@ public class Unit : NetworkBehaviour {
 
 	protected float maxHealth;
 
-	[SyncVar]
 	protected float health;
 
 	protected float damageAmplifier;
 
 	protected float baseTemperature;
 
-	[SyncVar]
 	protected float temperature;
 
 	protected float homeostasisTendency;
@@ -60,10 +58,8 @@ public class Unit : NetworkBehaviour {
 	//Audio
 
 	protected AudioSource myAudioSource;
-	AudioClip deathSound;
-	AudioClip goodSound;
-	AudioClip badSound;
-
+	protected AudioClip[] deathSounds;
+	protected bool isFemale;
 
 	//===============================================================
 	//Visuals
@@ -74,9 +70,9 @@ public class Unit : NetworkBehaviour {
 	//===============================================================
 	//Owner and References
 
-	bool requestedID = false;
 	public GameObject attackPlayer;
 	public GameObject sendPlayer;
+
 
 	Bank bank;
 
@@ -105,14 +101,14 @@ public class Unit : NetworkBehaviour {
 
 		//Audio Initialization
 		myAudioSource = GetComponent<AudioSource> ();
-		deathSound = (AudioClip)Resources.Load ("Sounds/enemydeath");
-		goodSound  = (AudioClip)Resources.Load ("Sounds/GoodBeep");
-		badSound  = (AudioClip)Resources.Load ("Sounds/BadBeep");
+
+
 	}
 
 	protected virtual void Start () {
 			
 		Initialize ();
+		LoadSounds ();
 
 	}
 
@@ -133,6 +129,20 @@ public class Unit : NetworkBehaviour {
 		killValue = 3;
 	}
 
+	void LoadSounds()
+	{
+		deathSounds = new AudioClip[3];
+		if (isFemale) {
+			deathSounds[0] = (AudioClip)Resources.Load ("Sounds/Death/FemaleDeath1");
+			deathSounds[1] = (AudioClip)Resources.Load ("Sounds/Death/FemaleDeath2");
+			deathSounds[2] = (AudioClip)Resources.Load ("Sounds/Death/FemaleDeath3");
+		} else {
+			deathSounds[0] = (AudioClip)Resources.Load ("Sounds/Death/MaleDeath1");
+			deathSounds[1] = (AudioClip)Resources.Load ("Sounds/Death/MaleDeath2");
+			deathSounds[2] = (AudioClip)Resources.Load ("Sounds/Death/MaleDeath3");
+		}
+	}
+
 	//Apply damage to unit
 	public void Damage(float dmg)
 	{		
@@ -144,6 +154,7 @@ public class Unit : NetworkBehaviour {
 				//if (isServer) {
 				//	RpcDie ();
 				//} else {
+				health = 0;
 				HPBar.localScale = new Vector3 (0, 1, 1);
 				Death ();
 				//}
@@ -236,10 +247,9 @@ public class Unit : NetworkBehaviour {
 	//Unit died before reaching target
 	void Death()
 	{
-		OnDeath ();
 		isDying = true;
 		animator.SetTrigger (deathHash);
-		myAudioSource.PlayOneShot (deathSound);
+		PlayRandomDeathSound ();
 		HPBarCanvas.gameObject.SetActive (false);
 
 		//Death Animation Particle Effect
@@ -249,7 +259,17 @@ public class Unit : NetworkBehaviour {
 		//myFader.FadeOut();
 		Invoke("temporaryWorkAround", animator.GetCurrentAnimatorClipInfo(0).Length + 10);
 		bank.addMoney(killValue);
+
+		OnDeath ();
     }
+
+	void PlayRandomDeathSound()
+	{
+
+		int randomClip = Random.Range (0, 2);
+		myAudioSource.PlayOneShot (deathSounds [randomClip]);
+
+	}
 
 	public void ResurrectMe()
 	{
@@ -258,9 +278,9 @@ public class Unit : NetworkBehaviour {
 
 		CancelInvoke ();
 		animator.SetTrigger (beingResurrectedHash);
-		animator.speed = 1.5f;
+		animator.speed = 2f;
 
-		Invoke ("SetAlive", 2.5f);
+		Invoke ("SetAlive", 2f);
 
 	}
 
@@ -285,11 +305,6 @@ public class Unit : NetworkBehaviour {
 		isDead = true;
 		isDying = true;
 		animator.SetTrigger (finishHash);
-		if (attackPlayer.transform.name == "Player 4") {
-			myAudioSource.PlayOneShot (goodSound);
-		} else {
-			myAudioSource.PlayOneShot (badSound);
-		}
 		//myFader.FadeOut();
 		Invoke("temporaryWorkAround", animator.GetCurrentAnimatorClipInfo(0).Length + 1);
 
