@@ -251,6 +251,7 @@ GameObject:
   - 82: {fileID: 82000011952402198}
   - 114: {fileID: 114000010331773850}
   - 114: {fileID: 114000011423749796}
+  - 114: {fileID: 114000011187682324}
   m_Layer: 12
   m_Name: Mercy
   m_TagString: Enemy
@@ -2260,6 +2261,26 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &114000011187682324
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010699924318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 0
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 3
+  m_InterpolateRotation: 0
+  m_InterpolateMovement: 0
 --- !u!114 &114000011423749796
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2375,7 +2396,9 @@ MonoBehaviour:
   unitsInRange: []
   resurrectedParticle: {fileID: 1000010435833094, guid: 30e69fec775a4f04a9872af0b736db2a,
     type: 2}
-  myMercy: {fileID: 1000010699924318}
+  myMercyObj: {fileID: 1000010699924318}
+  myMercy: {fileID: 114000011423749796}
+  myUnitId: {fileID: 114000010331773850}
 --- !u!135 &135000011275280410
 SphereCollider:
   m_ObjectHideFlags: 1

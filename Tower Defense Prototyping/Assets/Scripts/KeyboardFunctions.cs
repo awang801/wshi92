@@ -420,11 +420,19 @@ public class KeyboardFunctions : NetworkBehaviour
 				break;
 			case "Potato":
 				unitCost = 5;
-				incomeGain = 1;
+				incomeGain = 2;
 				break;
 			case "Cloud":
 				unitCost = 30;
 				incomeGain = 8;
+				break;
+			case "Paladin":
+				unitCost = 80;
+				incomeGain = 15;
+				break;
+			case "Vampire":
+				unitCost = 150;
+				incomeGain = 25;
 				break;
 			case "Reinhardt":
 				unitCost = 500;
@@ -523,7 +531,7 @@ public class KeyboardFunctions : NetworkBehaviour
 			if (this.mode == 1) {
 				BuildCannonTower ();
 			} else if (this.mode == 2) {
-				
+				CheckSendUnit ("Paladin");
 			}
 		}
         
@@ -542,6 +550,7 @@ public class KeyboardFunctions : NetworkBehaviour
 			if (this.mode == 1) {
 				BuildLaserTower ();
 			} else if (this.mode == 2) {
+				CheckSendUnit ("Vampire");
 			}
 		}
 

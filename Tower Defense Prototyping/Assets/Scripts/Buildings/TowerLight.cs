@@ -53,7 +53,7 @@ public class TowerLight : Tower
 
 		while (isAttacking) {
 
-			attackTime += Time.deltaTime;
+			attackTime += 0.1f;
 			if (isCharging) {
 				
 				if (attackTime >= chargeTime) isCharging = false;
@@ -65,15 +65,7 @@ public class TowerLight : Tower
 
 					attackTime = 0;
 
-					if (attackCharges <= 0 || sourceSFX.isPlaying == false) {
-
-						attackCharges = 0;
-						particle.Stop ();
-						isAttacking = false;
-						sourceSFX.Stop ();
-						timeUntilAttack = attackDelay;
-
-					} else if (!targetIsDying ()) {
+					if (!targetIsDying ()) {
 
 						LightBullet myBullet = ((GameObject)(Instantiate (bullet, currentTargetT.position, bullet.transform.rotation))).GetComponent<LightBullet>();
 						sourceSFX.PlayOneShot (shootSFX);
@@ -81,11 +73,23 @@ public class TowerLight : Tower
 						attackCharges -= 1;
 
 					}
+
+					if (attackCharges <= 0 || sourceSFX.isPlaying == false) {
+
+						attackCharges = 0;
+						particle.Stop ();
+						timeUntilAttack = attackDelay;
+						isAttacking = false;
+						sourceSFX.Stop ();
+						break;
+
+					}
+
 				}
 
 			}
 
-			yield return new WaitForSeconds(Time.deltaTime);
+			yield return new WaitForSeconds(0.1f);
 
 		}
 

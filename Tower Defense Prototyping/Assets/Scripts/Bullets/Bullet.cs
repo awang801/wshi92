@@ -23,7 +23,7 @@ public class Bullet : MonoBehaviour
 			transform.Translate(Vector3.forward * velocity * Time.deltaTime);
 
             if (Vector3.Distance(targetT.transform.position, transform.position) < 1f)
-            {
+            {				
                 target.Damage(damage);
                 Destroy(gameObject);
             }

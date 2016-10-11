@@ -314,6 +314,7 @@ GameObject:
   - 82: {fileID: 82000012438583030}
   - 114: {fileID: 114000013284220110}
   - 114: {fileID: 114000013595991956}
+  - 114: {fileID: 114000011464980832}
   m_Layer: 12
   m_Name: Cloud
   m_TagString: Enemy
@@ -1022,6 +1023,26 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &114000011464980832
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012830299420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 0
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 3
+  m_InterpolateRotation: 0
+  m_InterpolateMovement: 0
 --- !u!114 &114000012514096386
 MonoBehaviour:
   m_ObjectHideFlags: 1

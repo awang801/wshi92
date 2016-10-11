@@ -207,6 +207,8 @@ GameObject:
   - 114: {fileID: 114000010359916916}
   - 136: {fileID: 136000011188274806}
   - 82: {fileID: 82000010330016466}
+  - 114: {fileID: 114000011682801960}
+  - 114: {fileID: 114000014009053700}
   m_Layer: 12
   m_Name: Potato 1
   m_TagString: Enemy
@@ -817,9 +819,11 @@ MonoBehaviour:
   PathPending: 0
   PathStale: 0
   PathStatus: 2
-  target: {fileID: 0}
+  target: {x: 0, y: 0, z: 0}
   MixedMode: 0
   isDying: 0
+  isDead: 0
+  isBeingResurrected: 0
   HPBarRotation: {x: 0, y: 0, z: 0, w: 0}
   attackPlayer: {fileID: 0}
   sendPlayer: {fileID: 0}
@@ -850,6 +854,38 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114000011682801960
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012830299420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 105
+    i1: 228
+    i2: 109
+    i3: 206
+    i4: 27
+    i5: 249
+    i6: 237
+    i7: 4
+    i8: 27
+    i9: 123
+    i10: 170
+    i11: 250
+    i12: 204
+    i13: 194
+    i14: 85
+    i15: 233
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114000012818277692
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -941,6 +977,26 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!114 &114000014009053700
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012830299420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.09090909
+  m_SyncRotationAxis: 0
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 99999
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 0
+  m_InterpolateMovement: 0
 --- !u!136 &136000011188274806
 CapsuleCollider:
   m_ObjectHideFlags: 1

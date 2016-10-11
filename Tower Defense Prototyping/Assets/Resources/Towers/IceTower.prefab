@@ -551,6 +551,8 @@ MonoBehaviour:
   damage: 0
   coldness: 0
   attacking: 0
+  everyXFrames: 3
+  frameCounter: 0
 --- !u!135 &135000010529433562
 SphereCollider:
   m_ObjectHideFlags: 1

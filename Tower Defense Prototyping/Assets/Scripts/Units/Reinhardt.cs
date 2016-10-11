@@ -76,6 +76,9 @@ public class Reinhardt : Unit {
 	{
 		base.Update ();
 
+		if (!isServer)
+			return;
+		
 		if (!ultReady) {
 			GainPassiveUltCharge ();
 		}
@@ -90,19 +93,35 @@ public class Reinhardt : Unit {
 
 	public void ShieldOn()
 	{
+		RpcShieldOn ();
+	}
+
+	[ClientRpc]
+	public void RpcShieldOn()
+	{
+		
 		myAudioSource.PlayOneShot (barrierActivated);
 		myShield.gameObject.SetActive (true);
 		myShield.AnimateOn ();
 		animator.SetBool (shieldingHash, true);
 		ultCharge = 0f;
+
 	}
 
 	public void ShieldOff()
 	{
+		RpcShieldOff ();
+	}
+
+	[ClientRpc]
+	public void RpcShieldOff()
+	{
+
 		myShield.gameObject.SetActive (false);
 		animator.SetBool (shieldingHash, false);
 		ultReady = false;
 		baseSpeed = 0.75f;
+
 	}
 		
 	void GainUltCharge(float amt)
@@ -122,6 +141,23 @@ public class Reinhardt : Unit {
 	{
 
 		GainUltCharge (ultPassiveGain * Time.deltaTime);
+
+	}
+
+	public void ShieldTakeDamage(float dmg)
+	{
+
+		if (isServer) {
+			RpcShieldTakeDamage (dmg);
+		}
+
+	}
+
+	[ClientRpc]
+	void RpcShieldTakeDamage(float dmg)
+	{
+
+		myShield.TakeDamage (dmg);
 
 	}
 

@@ -18,7 +18,7 @@ public class Cloud : Unit {
 
 		baseSpeed = 1.2f;
 
-		killValue = 15;
+		killValue = 5;
 
 		isFemale = false;
 	}

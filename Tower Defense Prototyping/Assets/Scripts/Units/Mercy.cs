@@ -35,7 +35,7 @@ public class Mercy : Unit {
 
 		baseSpeed = 0.9f;
 
-		killValue = 50;
+		killValue = 25;
 
 		ultGainRatio = 1.5f;
 		ultPassiveGain = 3f;
@@ -80,20 +80,26 @@ public class Mercy : Unit {
 
 	void Resurrect()
 	{
+		RpcResurrect ();
+	}
 
+	[ClientRpc]
+	void RpcResurrect()
+	{
 		ultReady = false;
 		ultCharge = 0;
 		animator.SetTrigger (resurrectingHash);
 		myAudioSource.PlayOneShot (heroesNeverDie);
 		myHealBot.CastResurrect ();
 		Instantiate (castParticle, transform, false);
-
-
 	}
 
 	protected override void Update ()
 	{
 		base.Update ();
+
+		if (!isServer)
+			return;
 
 		if (!isDying) {
 			if (!ultReady) {
@@ -126,6 +132,29 @@ public class Mercy : Unit {
 	{
 
 		GainUltCharge (ultPassiveGain * Time.deltaTime);
+
+	}
+
+	[ClientRpc]
+	public void RpcResurrectUnit(NetworkInstanceId unitId)
+	{
+
+		GameObject findUnit = null;
+		Unit unitToRes;
+
+		if (isServer) {
+			findUnit = NetworkServer.FindLocalObject(unitId);
+		} else if (isClient) {
+			findUnit = ClientScene.FindLocalObject (unitId);
+		}
+
+		if (findUnit != null) {
+			unitToRes = findUnit.GetComponent <Unit> ();
+			myHealBot.ResurrectUnit (unitToRes);
+		} else {
+			Debug.Log ("Error: Resurrection Unit Not Found");
+		}
+
 
 	}
 

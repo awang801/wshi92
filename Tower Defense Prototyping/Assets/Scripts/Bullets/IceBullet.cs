@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
 public class IceBullet : MonoBehaviour {
 
@@ -14,19 +15,25 @@ public class IceBullet : MonoBehaviour {
 
 	public bool attacking;
 
-	public int everyXFrames = 3;
+	public int everyXFrames = 5;
 	public int frameCounter = 0;
+
+	NetworkIdentity myTowerId;
 
 	public void Setup(float dmg, float cold)
 	{
 		damage = dmg;
 		coldness = cold;
 		ToggleOff ();
+		myTowerId = transform.root.gameObject.GetComponent<NetworkIdentity> ();
 
 	}
 
 	void Update()
 	{
+		if (!myTowerId.isServer)
+			return;
+		
 		if (frameCounter < everyXFrames) {
 			frameCounter += 1;
 		} else {

@@ -16,9 +16,6 @@ public class TowerLaser : Tower
 	AudioClip whileShootingSFX;
 	AudioClip onShootSFX;
 
-	public int everyXFrames = 3;
-	public int frameCounter = 0;
-
 	protected override void Awake()
 	{
 		base.Awake ();
@@ -59,7 +56,7 @@ public class TowerLaser : Tower
 
 		while (isAttacking) {
 
-			attackTime += Time.deltaTime;
+			attackTime += 0.1f;
 
 			if (attackTime >= maxAttackTime && sourceSFX.isPlaying == false) {
 				laser.enabled = false;
@@ -68,12 +65,13 @@ public class TowerLaser : Tower
 
 			} else if (attackTime >= chargeTime) {
 				if (!laser.enabled) {
-					sourceSFX.PlayOneShot(onShootSFX);
+					sourceSFX.PlayOneShot (onShootSFX);
 					laser.enabled = true;
 					sourceSFX.PlayOneShot (whileShootingSFX);
 				}
 
-				if (sourceSFX.isPlaying == false) sourceSFX.PlayOneShot (whileShootingSFX);
+				if (sourceSFX.isPlaying == false)
+					sourceSFX.PlayOneShot (whileShootingSFX);
 
 				laser.material.mainTextureOffset = new Vector2 (-Time.time, 0);
 
@@ -85,7 +83,7 @@ public class TowerLaser : Tower
 
 				laser.SetPosition (0, ray.origin);
 
-				if (!targetIsDying() && currentTarget != null) {
+				if (!targetIsDying () && currentTarget != null) {
 					hasTarget = true;
 					laser.SetPosition (1, ray.GetPoint (100f));
 				} else {
@@ -94,29 +92,25 @@ public class TowerLaser : Tower
 				}
 
 
-				if (frameCounter < everyXFrames) {
-					frameCounter += 1;
-				} else {
-					frameCounter = 0;
-					if (hasTarget) {
+				if (hasTarget) {
 
-						hit = Physics.SphereCastAll (bulletPointTransform.position, 0.5f, shootDirection, 100f, enemyLayerMask);
+					hit = Physics.SphereCastAll (bulletPointTransform.position, 0.5f, shootDirection, 100f, enemyLayerMask);
 
-						for (int i = 0; i < hit.Length; i++) {
+					for (int i = 0; i < hit.Length; i++) {
 
-							if (hit [i].transform.CompareTag ("Enemy")) {
-								Unit currentUnit = hit [i].transform.GetComponent<Unit> ();
-								currentUnit.Damage (attackDamage * Time.deltaTime * everyXFrames);
-							}
+						if (hit [i].transform.CompareTag ("Enemy")) {
+							Unit currentUnit = hit [i].transform.GetComponent<Unit> ();
+							currentUnit.Damage (attackDamage * 0.1f);
 						}
 					}
 				}
-
-
-
 			}
 
-			yield return new WaitForSeconds(Time.deltaTime);
+
+
+		
+
+			yield return new WaitForSeconds (0.1f);
 		}
 
 

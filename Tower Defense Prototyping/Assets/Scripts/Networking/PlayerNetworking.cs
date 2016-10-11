@@ -85,20 +85,7 @@ public class PlayerNetworking : NetworkBehaviour {
 		Debug.Log ("Server has been commanded to add player " + myID);
 		gm.AddPlayer (myID);
 	}
-	/*
-	IEnumerable AddPlayerWIthDelay(string _myID)
-	{
-		while (true) {
-			if (gm != null) {
-				gm.AddPlayer (_myID);
-				break;
-			} else {
-				yield return new WaitForSeconds (0.1f);
-			}
 
-		}
-	}
-*/
 	[Client]
 	void GetNetIdentity()
 	{

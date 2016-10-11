@@ -1210,6 +1210,7 @@ GameObject:
   - 82: {fileID: 82000011417531540}
   - 114: {fileID: 114000013507834314}
   - 114: {fileID: 114000011602100124}
+  - 114: {fileID: 114000012195031422}
   m_Layer: 12
   m_Name: Reinhardt
   m_TagString: Enemy
@@ -2738,6 +2739,26 @@ MonoBehaviour:
   attackPlayer: {fileID: 0}
   sendPlayer: {fileID: 0}
   myShield: {fileID: 114000013510679338}
+--- !u!114 &114000012195031422
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013954492026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 0
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 3
+  m_InterpolateRotation: 0
+  m_InterpolateMovement: 0
 --- !u!114 &114000012440328008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2817,6 +2838,7 @@ MonoBehaviour:
   shieldLayerMask:
     serializedVersion: 2
     m_Bits: 8192
+  myUnitId: {fileID: 114000013507834314}
 --- !u!114 &114000013559409254
 MonoBehaviour:
   m_ObjectHideFlags: 1

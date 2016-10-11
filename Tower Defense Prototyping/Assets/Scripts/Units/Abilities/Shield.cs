@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
 public class Shield : MonoBehaviour {
 
@@ -20,21 +21,24 @@ public class Shield : MonoBehaviour {
 
 	public LayerMask shieldLayerMask;
 
+	public NetworkIdentity myUnitId;
+
 	void Start()
 	{
 		myShieldMaterial = myRenderer.materials;
 	}
 
-	void TakeDamage(float dmg)
+	public void TakeDamage(float dmg)
 	{
+		
 		health -= dmg;
 
 		float newRed = ((maxHealth - health) / maxHealth);
 
-		myShieldMaterial[1].SetColor ("_EmissionColor", new Color (newRed, 0.4f, 0.5f));
+		myShieldMaterial [1].SetColor ("_EmissionColor", new Color (newRed, 0.4f, 0.5f));
 
 		if (health <= 0) {
-			
+
 			AnimateOff ();
 
 		}
@@ -88,9 +92,7 @@ public class Shield : MonoBehaviour {
 
 				Bullet tempBullet = collision.GetComponent<Bullet> ();
 
-				TakeDamage (tempBullet.damage);
-
-
+				myReinhardt.ShieldTakeDamage (tempBullet.damage);
 
 				Destroy (collision);
 

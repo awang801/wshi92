@@ -15,7 +15,7 @@ public class Unit : NetworkBehaviour {
 	NavMeshPath path;
 	NavMeshPath calcPath;
 
-	NavMeshAgent navAgent = null;
+	protected NavMeshAgent navAgent = null;
 	//==============================================================
 	//Animation
 	protected Animator animator = null;
@@ -26,7 +26,7 @@ public class Unit : NetworkBehaviour {
 	protected int finishHash;
 	protected int beingResurrectedHash;
 
-	float smoothAngle = 0f;
+	protected float smoothAngle = 0f;
 	public bool MixedMode = false;
 
 	//==============================================================
@@ -74,6 +74,7 @@ public class Unit : NetworkBehaviour {
 	public GameObject sendPlayer;
 
 
+
 	Bank bank;
 
 	//==============================================================
@@ -115,6 +116,7 @@ public class Unit : NetworkBehaviour {
 	protected virtual void Initialize()
 	{
 		//Stats Initialization
+
 		maxHealth = 10;
 		health = 10;
 		homeostasisTendency = 0.4f;
@@ -146,6 +148,15 @@ public class Unit : NetworkBehaviour {
 	//Apply damage to unit
 	public void Damage(float dmg)
 	{		
+		if (isServer) {
+			RpcDamage (dmg);
+		}
+
+	}
+
+	[ClientRpc]
+	void RpcDamage(float dmg)
+	{
 		if (!isDying) {
 			health -= damageAmplifier * dmg;
 			OnDamageTaken (dmg);
@@ -156,17 +167,25 @@ public class Unit : NetworkBehaviour {
 				//} else {
 				health = 0;
 				HPBar.localScale = new Vector3 (0, 1, 1);
+					
 				Death ();
 				//}
 			} else {
 				HPBar.localScale = new Vector3 (Mathf.Clamp(health / maxHealth, 0f, 1f), 1, 1);
 			}
 		}
-
-
 	}
 
 	public void Heal(float amt)
+	{
+		if (isServer) {
+			RpcHeal (amt);
+		}
+
+	}
+
+	[ClientRpc]
+	void RpcHeal(float amt)
 	{
 		health += amt;
 
@@ -177,8 +196,8 @@ public class Unit : NetworkBehaviour {
 		} else {
 			HPBar.localScale = new Vector3 (Mathf.Clamp(health / maxHealth, 0f, 1f), 1, 1);
 		}
-
 	}
+
 
 	protected virtual void OnDamageTaken(float dmg)
 	{
@@ -248,6 +267,7 @@ public class Unit : NetworkBehaviour {
 	void Death()
 	{
 		isDying = true;
+		animator.speed = 1f;
 		animator.SetTrigger (deathHash);
 		PlayRandomDeathSound ();
 		HPBarCanvas.gameObject.SetActive (false);
@@ -304,6 +324,7 @@ public class Unit : NetworkBehaviour {
 		OnFinish ();
 		isDead = true;
 		isDying = true;
+		animator.speed = 1f;
 		animator.SetTrigger (finishHash);
 		//myFader.FadeOut();
 		Invoke("temporaryWorkAround", animator.GetCurrentAnimatorClipInfo(0).Length + 1);
@@ -314,11 +335,12 @@ public class Unit : NetworkBehaviour {
 		//Destroy(gameObject, animator.GetCurrentAnimatorClipInfo(0).Length);
     }
 
-	void OnAnimatorMove() //Access to Root Motion 
+	protected virtual void OnAnimatorMove() //Access to Root Motion 
 	{
 		if (MixedMode && !animator.GetCurrentAnimatorStateInfo (0).IsName ("Base Layer.Locomotion")) {
 			transform.rotation = animator.rootRotation;
 		}
+
 
 		navAgent.velocity = animator.deltaPosition / Time.deltaTime;
 	}
@@ -328,12 +350,20 @@ public class Unit : NetworkBehaviour {
 	//TEMPERATURE MECHANIC
 	//==================================================================================
 
-	public void addTemperature(float amount)
+	[ClientRpc]
+	public void RpcAddTemperature(float amount)
 	{
 		if (!(amount < 0 && temperature <= minTemp) && !(amount > 0 && temperature >= maxTemp)) {
 			temperature += amount;
 		} 
 
+	}
+
+	public void addTemperature(float amount)
+	{
+		if (isServer) {
+			RpcAddTemperature (amount);
+		}
 	}
 
 	public void setTemperature(float amount)
@@ -438,7 +468,7 @@ public class Unit : NetworkBehaviour {
 
 	//Update HP bar rotations
 
-	void Navigate()
+	protected virtual void Navigate()
 	{
 		//FROM DEAD EARTH TUTORIAL
 		//**************************************************************************************

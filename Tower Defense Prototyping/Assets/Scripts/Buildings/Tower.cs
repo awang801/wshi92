@@ -104,7 +104,11 @@ public abstract class Tower : NetworkBehaviour
 	protected virtual void Update()
 	{
 		if (!isBeingBuilt) {
-			timeUntilAttack -= Time.deltaTime;
+
+			if (isServer) {
+				timeUntilAttack -= Time.deltaTime;
+			}
+
 
 			if (currentTarget != null) {
 				if (targetIsDying () == false) {
@@ -113,25 +117,32 @@ public abstract class Tower : NetworkBehaviour
 					targetNoYAxis.y = rotatePartTransform.position.y;
 					rotatePartTransform.LookAt (targetNoYAxis, Vector3.up);
 
-					if (timeUntilAttack <= 0) {
-						
-						if (animator != null) {
-							if (!animator.GetCurrentAnimatorStateInfo (0).IsName ("Base_Layer.Shooting"))
-							{
-								animator.SetTrigger (shootHash);
-							}
-						}
 
-						Attack ();
+					if (isServer) {
+						if (timeUntilAttack <= 0) {
 
-					} 
+							RpcAttack ();
+
+						} 
+					}
+
 
 				} else {
-					findNewTarget ();
+
 					currentTarget = null;
+
+					if (isServer) {
+						findNewTarget ();
+					}
+
+
 				}
 			} else {
-				findNewTarget ();
+
+				if (isServer) {
+					findNewTarget ();
+				}
+
 			}
 		}
 	}
@@ -141,18 +152,27 @@ public abstract class Tower : NetworkBehaviour
 	void OnTriggerEnter(Collider other)
 	{
 
-		GameObject newTarget = other.gameObject;
+		if (!isServer) {
+			return;
+		}
+			GameObject newTarget = other.gameObject;
 
-		if (newTarget.CompareTag ("Enemy")) {			
-			if (!unitsInRange.Contains (newTarget)) {
-				unitsInRange.Add (newTarget);
+			if (newTarget.CompareTag ("Enemy")) {			
+				if (!unitsInRange.Contains (newTarget)) {
+					unitsInRange.Add (newTarget);
+				}
+
 			}
 
-		}
+
 	}
 
 	void OnTriggerExit(Collider other)
 	{
+		if (!isServer) {
+			return;
+		}
+
 		GameObject newTarget = other.gameObject;
 
 		if (newTarget.CompareTag ("Enemy")) {
@@ -175,6 +195,21 @@ public abstract class Tower : NetworkBehaviour
 		}
 	}
 
+	[ClientRpc]
+	void RpcSetTarget(NetworkInstanceId targetID)
+	{
+		
+		if (isServer) { //Not sure if this is needed, does the server client also get called during a Rpc?
+			currentTarget = NetworkServer.FindLocalObject (targetID);
+		} else if (isClient) {
+			currentTarget = ClientScene.FindLocalObject (targetID);
+		}
+
+		currentTargetUnit = currentTarget.GetComponent<Unit> ();
+		currentTargetT = currentTarget.transform;
+
+	}
+
 	void findNewTarget()
 	{
 		if (unitsInRange.Count > 0) {
@@ -188,8 +223,13 @@ public abstract class Tower : NetworkBehaviour
 				} else {
 					currentTargetUnit = unit.GetComponent<Unit> ();
 					if (currentTargetUnit.sendPlayer.name != OwnerPlayerId) {
+
 						currentTarget = unit;
 						currentTargetT = currentTarget.transform;
+
+						NetworkIdentity newTargetID = currentTarget.GetComponent<NetworkIdentity> ();
+						RpcSetTarget (newTargetID.netId);
+
 						//recentNewTarget = true;
 						break;
 
@@ -220,6 +260,9 @@ public abstract class Tower : NetworkBehaviour
 								currentTargetUnit = TempTargetUnit;
 								currentTarget = dyingUnit;
 								currentTargetT = currentTarget.transform;
+
+								NetworkIdentity newTargetID = currentTarget.GetComponent<NetworkIdentity> ();
+								RpcSetTarget (newTargetID.netId);
 								//recentNewTarget = true;
 								break;
 							}
@@ -245,6 +288,19 @@ public abstract class Tower : NetworkBehaviour
 		} else {
 			return true;
 		}
+	}
+
+	[ClientRpc]
+	protected void RpcAttack()
+	{
+		if (animator != null) {
+			if (!animator.GetCurrentAnimatorStateInfo (0).IsName ("Base_Layer.Shooting"))
+			{
+				animator.SetTrigger (shootHash);
+			}
+		}
+
+		Attack ();
 	}
 
 	protected virtual void Attack()

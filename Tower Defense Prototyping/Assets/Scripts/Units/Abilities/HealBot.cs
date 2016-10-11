@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
 public class HealBot : MonoBehaviour {
 
 	public List<GameObject> unitsInRange;
 	public GameObject resurrectedParticle;
-	public GameObject myMercy;
+	public GameObject myMercyObj;
+	public Mercy myMercy;
 
 	GameObject currentTarget;
 	Unit currentTargetUnit;
@@ -15,9 +17,13 @@ public class HealBot : MonoBehaviour {
 
 	string OwnerPlayerId;
 
+	public NetworkIdentity myUnitId;
 
 	public void CastResurrect()
 	{
+		if (!myUnitId.isServer)
+			return;
+		
 		int counter = 0;
 
 		foreach (var unit in unitsInRange)
@@ -27,8 +33,7 @@ public class HealBot : MonoBehaviour {
 
 				if (currentUnit.isDying && !currentUnit.isDead && !currentUnit.isBeingResurrected && !currentUnit.attackPlayer.name.Equals(OwnerPlayerId)) {
 
-					currentUnit.ResurrectMe ();
-					Instantiate (resurrectedParticle, currentUnit.transform, false);
+					myMercy.RpcResurrectUnit (currentUnit.netId);
 					counter++;
 
 					if (counter >= maxResNumber) {
@@ -41,6 +46,15 @@ public class HealBot : MonoBehaviour {
 
 	}
 
+	public void ResurrectUnit(Unit resUnit)
+	{
+
+		resUnit.ResurrectMe ();
+		Instantiate (resurrectedParticle, resUnit.transform, false);
+
+	}
+
+
 	public void SetOwnerID(string id)
 	{
 		OwnerPlayerId = id;
@@ -49,9 +63,13 @@ public class HealBot : MonoBehaviour {
 	void OnTriggerEnter(Collider other)
 	{
 
+		if (!myUnitId.isServer)
+			return;
+
+
 		GameObject newTarget = other.gameObject;
 
-		if (newTarget.GetInstanceID() == myMercy.GetInstanceID())
+		if (newTarget.GetInstanceID() == myMercyObj.GetInstanceID())
 			return;
 
 	
@@ -66,6 +84,9 @@ public class HealBot : MonoBehaviour {
 
 	void OnTriggerExit(Collider other)
 	{
+		if (!myUnitId.isServer)
+			return;
+
 		GameObject newTarget = other.gameObject;
 
 		if (newTarget.CompareTag ("Enemy")) {

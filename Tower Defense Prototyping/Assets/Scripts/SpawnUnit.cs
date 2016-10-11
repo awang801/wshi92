@@ -15,6 +15,8 @@ public class SpawnUnit : NetworkBehaviour
 	GameObject enemyType1;
 	GameObject potato;
 	GameObject cloud;
+	GameObject paladin;
+	GameObject vampire;
 	GameObject reinhardt;
 	GameObject mercy;
 
@@ -31,6 +33,8 @@ public class SpawnUnit : NetworkBehaviour
 		enemyType1 = (GameObject)Resources.Load ("Enemies/EnemyType1");
 		potato = (GameObject)Resources.Load ("Enemies/Potato");
 		cloud = (GameObject)Resources.Load ("Enemies/Cloud");
+		paladin = (GameObject)Resources.Load ("Enemies/Paladin");
+		vampire = (GameObject)Resources.Load ("Enemies/Vampire");
 		reinhardt = (GameObject)Resources.Load ("Enemies/Reinhardt");
 		mercy = (GameObject)Resources.Load ("Enemies/Mercy");
 
@@ -70,6 +74,12 @@ public class SpawnUnit : NetworkBehaviour
 			break;
 		case "Cloud":
 			spawnUnit = cloud;
+			break;
+		case "Paladin":
+			spawnUnit = paladin;
+			break;
+		case "Vampire":
+			spawnUnit = vampire;
 			break;
 		case "Reinhardt":
 			spawnUnit = reinhardt;

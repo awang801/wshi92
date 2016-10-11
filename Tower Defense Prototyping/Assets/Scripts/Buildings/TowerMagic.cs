@@ -15,7 +15,7 @@ public class TowerMagic : Tower
 
 	protected override void Attack()
 	{
-		Bullet newBullet = ((GameObject)(Instantiate(bullet, bulletPointTransform.position, Quaternion.identity))).GetComponent<Bullet>();
+		Bullet newBullet = ((GameObject)(Instantiate(bullet, bulletPointTransform.position, bullet.transform.rotation))).GetComponent<Bullet>();
 		Instantiate (shootParticle, bulletPointTransform.position, bulletPointTransform.rotation);
 		newBullet.Setup(currentTargetUnit, attackDamage, 10f);
 

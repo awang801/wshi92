@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
 public class TowerIce : Tower
 {
@@ -19,7 +20,7 @@ public class TowerIce : Tower
 
 		ice = shootParticle.GetComponent<IceBullet> ();
 
-		ice.Setup (attackDamage, 40f);
+		ice.Setup (attackDamage, 50f);
 
 
 	}
@@ -45,6 +46,8 @@ public class TowerIce : Tower
 				isAttacking = false;
 				sourceSFX.Stop ();
 
+				if (isServer) RpcStopIce ();
+
 			} else {
 				
 				if (sourceSFX.isPlaying == false) sourceSFX.Play();
@@ -57,6 +60,14 @@ public class TowerIce : Tower
 		}
 
 
+	}
+
+	[ClientRpc]
+	void RpcStopIce()
+	{
+		ice.ToggleOff ();
+		isAttacking = false;
+		sourceSFX.Stop ();
 	}
 
 }
